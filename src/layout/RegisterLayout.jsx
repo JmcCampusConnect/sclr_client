@@ -10,7 +10,7 @@ function RegisterLayout() {
         {
             icon: faClipboard,
             name: 'Application',
-            path: '/student/fresher/application'
+            path: '/student/register/application'
         }
     ]
 
