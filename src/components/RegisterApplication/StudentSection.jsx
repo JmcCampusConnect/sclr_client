@@ -3,7 +3,7 @@ import DropDown from '../../common/DropDown'
 import HeaderTag from '../../common/HeaderTag'
 import InputBox from '../../common/InputBox'
 
-function StudentSection() {
+function StudentSection({register, errors}) {
 
     return (
         <>
@@ -14,18 +14,24 @@ function StudentSection() {
                     label='Religion'
                     options={['Islam', 'Hindu', 'Christian', 'Others']}
                     required
+                    register={register}
+                    errors={errors}
                 />
                 <InputBox
                     name='mobileNo'
                     label='Mobile No.'
                     type='text'
                     required
+                    register={register}
+                    errors={errors}
                 />
                 <InputBox
                     name='aadharNo'
                     label='Aadhar No.'
                     type='text'
                     required
+                    register={register}
+                    errors={errors}
                 />
             </div>
         </>

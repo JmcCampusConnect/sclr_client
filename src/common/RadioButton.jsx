@@ -1,6 +1,6 @@
 import React from "react";
 
-function RadioButton({ label, name, options = [], value, onChange, required, errors }) {
+function RadioButton({ label, name, options = [], required, register, errors }) {
 
     return (
         <div>
@@ -11,14 +11,17 @@ function RadioButton({ label, name, options = [], value, onChange, required, err
                 {options.map((option) => (
                     <label key={option} className="flex items-center space-x-2">
                         <input
+                            {...register(name)}
                             type="radio"
+                            value={option}
                             name={name}
+                            className="scale-125"
                         />
-                        <span>{option}</span>
+                        <span className="text-lg">{option}</span>
                     </label>
                 ))}
             </div>
-            {errors?.[name] && <p className="text-red-500 text-sm">{errors[name].message}</p>}
+            {errors?.[name] && <p className="text-red-500 text-sm mt-4">{errors[name].message}</p>}
         </div>
     )
 }

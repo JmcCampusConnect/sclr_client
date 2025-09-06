@@ -3,7 +3,7 @@ import InputBox from '../../common/InputBox'
 import DropDown from '../../common/DropDown'
 import FileInput from '../../common/FileInput'
 
-function AddressSection() {
+function AddressSection({ register, errors }) {
 
     return (
         <div className="border border-black p-6 rounded-lg bg-gray-50 shadow-md space-y-6">
@@ -14,6 +14,8 @@ function AddressSection() {
                     type='text'
                     placeholder='Door No and Street Name'
                     required
+                    register={register}
+                    errors={errors}
                 />
             </div>
             <div className="grid grid-cols-3 gap-6">
@@ -27,6 +29,8 @@ function AddressSection() {
                         'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim',
                         'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Other']}
                     required
+                    register={register}
+                    errors={errors}
                 />
                 <DropDown
                     name='district'
@@ -39,6 +43,8 @@ function AddressSection() {
                         'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore', 'Viluppuram',
                         'Virudhunagar', 'Other']}
                     required
+                    register={register}
+                    errors={errors}
                 />
                 <InputBox
                     name='pinCode'
@@ -46,24 +52,32 @@ function AddressSection() {
                     type='text'
                     placeholder='Pincode'
                     required
+                    register={register}
+                    errors={errors}
                 />
                 <FileInput
                     name='jamathLetter'
                     label='Jamath / Self Declaration Letter'
                     type='file'
                     required
+                    register={register}
+                    errors={errors}
                 />
                 <InputBox
                     name='password'
                     label='Password'
                     type='password'
                     required
+                    register={register}
+                    errors={errors}
                 />
                 <InputBox
                     type='password'
                     name='confirmPassword'
                     label='Confirm Password'
                     required
+                    register={register}
+                    errors={errors}
                 />
             </div>
         </div>

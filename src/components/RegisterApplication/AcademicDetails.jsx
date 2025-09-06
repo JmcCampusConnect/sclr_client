@@ -4,7 +4,11 @@ import InputBox from '../../common/InputBox';
 import DropDown from '../../common/DropDown';
 import HeaderTag from '../../common/HeaderTag';
 
-function AcademicDetails() {
+function AcademicDetails({ register, errors, watch }) {
+
+    const graduate = watch('graduate')
+    const semesterOptions = graduate === 'PG' ?
+        ['I', 'II', 'III', 'IV'] : ['I', 'II', 'III', 'IV', 'V', 'VI']
 
     return (
         <>
@@ -15,24 +19,32 @@ function AcademicDetails() {
                     label='UG or PG'
                     options={['UG', 'PG']}
                     required
+                    register={register}
+                    errors={errors}
                 />
                 <RadioButton
                     name='programCategory'
                     label='Programme Category'
                     options={['Aided', 'SFM', 'SFW']}
                     required
+                    register={register}
+                    errors={errors}
                 />
                 <RadioButton
                     name='semester'
                     label='Semester'
-                    // options={graduate === 'PG' ? ['I', 'II', 'III', 'IV'] : ['I', 'II', 'III', 'IV', 'V', 'VI']}
+                    options={semesterOptions}
                     required
+                    register={register}
+                    errors={errors}
                 />
                 <RadioButton
                     name='hostelStatus'
                     label='Hostel'
                     options={['Yes', 'No']}
                     required
+                    register={register}
+                    errors={errors}
                 />
             </div>
             <div className="space-y-6 border border-black p-6 rounded-lg bg-gray-50 shadow-md">
@@ -43,6 +55,8 @@ function AcademicDetails() {
                         name='registerNo'
                         placeholder='24MCAXYZ'
                         required
+                        register={register}
+                        errors={errors}
                     />
                     <InputBox
                         label='Name'
@@ -50,6 +64,8 @@ function AcademicDetails() {
                         name='name'
                         placeholder='Name as per ID-Card'
                         required
+                        register={register}
+                        errors={errors}
                     />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -59,6 +75,8 @@ function AcademicDetails() {
                         name='yearOfAdmission'
                         placeholder='e.g. : 2024'
                         required
+                        register={register}
+                        errors={errors}
                     />
                     <DropDown
                         name='department'
@@ -69,12 +87,16 @@ function AcademicDetails() {
                             'UHS', 'UIC', 'UIF', 'UIT', 'UMA', 'UMB', 'UND', 'UPH', 'UTA', 'UVC', 'UZO',
                             'UAI', 'UAM', 'UAR']}
                         required
+                        register={register}
+                        errors={errors}
                     />
                     <DropDown
                         name='section'
                         label='Section'
                         options={['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']}
                         required
+                        register={register}
+                        errors={errors}
                     />
                 </div>
             </div>
