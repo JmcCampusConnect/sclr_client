@@ -4,7 +4,6 @@ import RadioButton from '../../common/RadioButton';
 
 function ParentSection() {
 
-
     return (
         <div className="border border-black p-6 rounded-lg bg-gray-50 shadow-md space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -35,6 +34,8 @@ function ParentSection() {
                     type='text'
                     placeholder='e.g. : 10000'
                     required
+                    numberField
+                    noSpaces
                 />
                 <RadioButton
                     name='siblingsStatus'
@@ -50,8 +51,6 @@ function ParentSection() {
                             type='text'
                             placeholder='e.g. : 2'
                             required
-                            numberField
-                            noSpaces
                         />
                         <InputBox
                             name='siblingsOccupation'
@@ -65,8 +64,6 @@ function ParentSection() {
                             label='Siblings Annual Income'
                             type='text'
                             required
-                            numberField
-                            noSpaces
                         />
                     </>
                 {/* )} */}

@@ -1,4 +1,7 @@
-import React from 'react'
+import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import InstructionModal from '../components/RegisterApplication/InstructionModal';
 import SpecialCategory from '../components/RegisterApplication/SpecialCategory';
 import AcademicDetails from '../components/RegisterApplication/AcademicDetails';
@@ -12,7 +15,7 @@ import Button from '../common/Button';
 function RegisterApplication() {
 
     const customBtnStyle = `bg-blue-500 hover:bg-blue-700`;
-    const label = 'Submit'
+    const label = 'Submit';
 
     return (
         <div className='space-y-7'>
