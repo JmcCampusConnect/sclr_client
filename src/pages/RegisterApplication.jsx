@@ -1,5 +1,5 @@
-import React from 'react';
-import { useForm, Controller, set } from 'react-hook-form';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import InstructionModal from '../components/RegisterApplication/InstructionModal';
@@ -10,6 +10,10 @@ import ParentSection from '../components/RegisterApplication/ParentSection';
 import AddressSection from '../components/RegisterApplication/AddressSection';
 import LastInstitution from '../components/RegisterApplication/LastInstitution';
 import Button from '../common/Button';
+import { useAdd } from '../hook/useAdd';
+import axios from 'axios';
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 const schema = Yup.object().shape({
     specialCategory: Yup.string().required('Special Category is required'),
@@ -24,8 +28,8 @@ const schema = Yup.object().shape({
     department: Yup.string().required('Department is required'),
     section: Yup.string().required('Section is required'),
     religion: Yup.string().required('Religion is required'),
-    mobileNo: Yup.string().required('Mobile Number is required'),
-    aadharNo: Yup.string().required('Aadhar Number is required'),
+    mobileNo: Yup.string().required('Mobile Number is required').matches(/^[0-9]{10}$/, 'Mobile Number must contain 10 digits'),
+    aadharNo: Yup.string().required('Aadhar Number is required').matches(/^[0-9]{12}$/, 'Aadhar Number must contain 12 digits'),
     parentName: Yup.string().required("Parent / Guardian Name is required"),
     parentNo: Yup.string().required("Parent / Guardian No. is required"),
     parentOccupation: Yup.string().required("Parent Occupation is required"),
@@ -62,22 +66,19 @@ const schema = Yup.object().shape({
 
     yearOfPassing: Yup.number().when("semester", {
         is: "I",
-        then: (schema) =>
-            schema.required("Year of Passing is required").typeError("Must be a number"),
+        then: (schema) => schema.required("Year of Passing is required").typeError("Must be a number"),
         otherwise: (schema) => schema.notRequired(),
     }),
 
     marksSecured: Yup.number().when("semester", {
         is: "I",
-        then: (schema) =>
-            schema.required("Marks Secured is required").typeError("Must be a number"),
+        then: (schema) => schema.required("Marks Secured is required").typeError("Must be a number"),
         otherwise: (schema) => schema.notRequired(),
     }),
 
     maxMarks: Yup.number().when("semester", {
         is: "I",
-        then: (schema) =>
-            schema.required("Maximum Marks is required").typeError("Must be a number"),
+        then: (schema) => schema.required("Maximum Marks is required").typeError("Must be a number"),
         otherwise: (schema) => schema.notRequired(),
     }),
 
@@ -90,18 +91,24 @@ const schema = Yup.object().shape({
 
 function RegisterApplication() {
 
-    const customBtnStyle = `bg-blue-500 hover:bg-blue-700`;
-    const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
+    const [instructionModal, setInstructionModal] = useState(true);
+    const { register, handleSubmit, formState: { errors, isSubmitting }, watch, setValue } = useForm({
         resolver: yupResolver(schema)
-    })
+    });
+    const { addData, addError } = useAdd();
 
-    const onSubmit = (data) => {
-        console.log('Datas : ', data)
+    const registerFormSubmit = async (formData) => {
+        console.log('Data to send : ', formData)
+        try {
+            const response = await addData(`${apiUrl}/register/application`, formData)
+        } catch (error) {
+            console.log('Error in saving Register Application : ', error)
+        }
     }
 
     return (
-        <form className='space-y-7' onSubmit={handleSubmit(onSubmit)}>
-            {/* <InstructionModal instructionModal={instructionModal} onClose={() => setInstructionModal(false)} /> */}
+        <form className='space-y-7' onSubmit={handleSubmit(registerFormSubmit)}>
+            <InstructionModal instructionModal={instructionModal} onClose={() => setInstructionModal(false)} />
             <SpecialCategory register={register} errors={errors} />
             <AcademicDetails register={register} errors={errors} watch={watch} />
             <StudentSection register={register} errors={errors} />
@@ -109,7 +116,13 @@ function RegisterApplication() {
             <AddressSection register={register} errors={errors} />
             <LastInstitution register={register} errors={errors} watch={watch} setValue={setValue} />
             <div className='flex justify-end'>
-                <Button customBtnStyle={customBtnStyle} label='Submit' type="submit" />
+                <Button
+                    customBtnStyle=
+                    {
+                        `bg-blue-500 hover:bg-blue-700 
+                        ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`
+                    }
+                    label={isSubmitting ? "Submitting..." : "Submit"} type="submit" />
             </div>
         </form>
     )
