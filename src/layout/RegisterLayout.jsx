@@ -1,10 +1,12 @@
 import React from 'react'
 import JmcLogo from '../assets/logos/JmcLogo.png'
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faUndo } from '@fortawesome/free-solid-svg-icons';
 
 function RegisterLayout() {
+
+    const navigate = useNavigate()
 
     let menus = [
         {
@@ -36,6 +38,7 @@ function RegisterLayout() {
                         </NavLink>
                     ))}
                     <button
+                        onClick={() => navigate('/student')}
                         className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-300 hover:bg-emerald-900 hover:bg-opacity-30"
                     >
                         <FontAwesomeIcon icon={faUndo} className="text-base w-4" />

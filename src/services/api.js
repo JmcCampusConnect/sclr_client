@@ -16,6 +16,7 @@ export const authAPI = async (apiUrl, formData) => {
 
 export const addDataAPI = async (apiUrl, formData) => {
     let headers = {};
+    // console.log('Triggered')
     if (!(formData instanceof FormData)) { headers['Content-Type'] = 'application/json';}
     const response = await axios.post(apiUrl, formData, { headers });
     return response;

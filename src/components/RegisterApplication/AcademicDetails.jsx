@@ -57,6 +57,7 @@ function AcademicDetails({ register, errors, watch }) {
                         required
                         register={register}
                         errors={errors}
+                        readOnly
                     />
                     <InputBox
                         label='Name'

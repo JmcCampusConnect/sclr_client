@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -90,7 +91,27 @@ function RegisterApplication() {
     const { register, handleSubmit, formState: { errors, isSubmitting }, watch, setValue } = useForm({
         resolver: yupResolver(schema)
     });
+    const navigate = useNavigate();
     const { addData, addError } = useAdd();
+    const [newStudent, setNewStudent] = useState(false);
+    const [registerNo, setRegisterNo] = useState('');
+
+    const checkRegisterNumber = async () => {
+        try {
+            const response = await axios.post(`${apiUrl}/api/register/checkRegisterNo`, { registerNo });
+            console.log(response)
+            if (response.data.message === 'Allow to apply') {
+                setValue('registerNo', registerNo);
+                setNewStudent(true)
+            } else {
+                const confirmed = window.confirm('You already registered with this Register Number \nDo you want go to Login Page');
+                if (confirmed) { navigate('/student') }
+            }
+        } catch (err) {
+            console.error('Error checking register number:', err);
+            alert('Something went wrong. Please try again.');
+        }
+    }
 
     const registerFormSubmit = async (formData) => {
         // console.log('Data to send : ', formData);
@@ -98,12 +119,16 @@ function RegisterApplication() {
         Object.keys(formData).forEach((key) => {
             if (key === "jamathLetter" && formData[key] instanceof FileList) {
                 dataToSend.append(key, formData[key][0]);
-            } else { 
-                dataToSend.append(key, formData[key]) 
-            }
+            } else { dataToSend.append(key, formData[key]) }
         })
         try {
-            const response = await addData(`${apiUrl}/register/application`, dataToSend);
+            const response = await addData(`${apiUrl}/api/register/application`, dataToSend);
+            if (response.data.status === 201) {
+                alert(response.data?.message || 'Application submitted successfully')
+            }
+            else {
+                alert('Error in saving Application')
+            }
         } catch (error) {
             console.log('Error in saving Register Application : ', error);
         }
@@ -111,24 +136,58 @@ function RegisterApplication() {
 
     return (
         <form className='space-y-7' onSubmit={handleSubmit(registerFormSubmit)}>
-            {/* <InstructionModal instructionModal={instructionModal} onClose={() => setInstructionModal(false)} /> */}
-            <SpecialCategory register={register} errors={errors} />
-            <AcademicDetails register={register} errors={errors} watch={watch} />
-            <StudentSection register={register} errors={errors} />
-            <ParentSection register={register} errors={errors} watch={watch} />
-            <AddressSection register={register} errors={errors} />
-            <LastInstitution register={register} errors={errors} watch={watch} setValue={setValue} />
-            <div className='flex justify-end'>
-                <Button
-                    customBtnStyle=
-                    {
-                        `bg-blue-500 hover:bg-blue-700 
-                        ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`
-                    }
-                    label={isSubmitting ? "Submitting..." : "Submit"} type="submit" />
-            </div>
+            {/* Instruction Modal */}
+            {instructionModal && <InstructionModal instructionModal={instructionModal} onClose={() => setInstructionModal(false)} />}
+            {/* Register Number Check */}
+            {!newStudent ? (
+                <div className="border border-black p-6 rounded-lg bg-gray-50 shadow-md mb-6">
+                    <label className="block mb-2 text-center font-semibold text-slate-700">
+                        Before applying for scholarship, check whether you are registered or not
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block mb-2 font-semibold text-slate-700">
+                                Register Number: <span className="text-red-500">*</span>
+                            </label>
+                            <div className="flex items-center gap-4">
+                                <input
+                                    type="text"
+                                    placeholder="Ex: 24MCAXXX"
+                                    className="w-full p-2 border border-black rounded-md text-slate-950"
+                                    value={registerNo}
+                                    onChange={(e) => setRegisterNo(e.target.value.toUpperCase())}
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                                    onClick={checkRegisterNumber}
+                                >
+                                    Check
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    <SpecialCategory register={register} errors={errors} />
+                    <AcademicDetails register={register} errors={errors} watch={watch} />
+                    <StudentSection register={register} errors={errors} />
+                    <ParentSection register={register} errors={errors} watch={watch} />
+                    <AddressSection register={register} errors={errors} />
+                    <LastInstitution register={register} errors={errors} watch={watch} setValue={setValue} />
+                    <div className='flex justify-end'>
+                        <Button
+                            type="submit" label={isSubmitting ? "Submitting..." : "Submit"}
+                            customBtnStyle={`bg-blue-500 hover:bg-blue-700 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                        />
+                    </div>
+                </>
+            )}
         </form>
     )
 }
+
 
 export default RegisterApplication

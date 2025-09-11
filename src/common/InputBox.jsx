@@ -1,6 +1,6 @@
 import React from 'react'
 
-function InputBox({ name, label, required = false, type, placeholder, register, errors, maxLength = false }) {
+function InputBox({ name, label, required = false, type, placeholder, register, errors, readOnly = false }) {
 
 	return (
 		<div>
@@ -22,6 +22,7 @@ function InputBox({ name, label, required = false, type, placeholder, register, 
 					} 
 					focus:outline-none focus:ring-1`
 				}
+				readOnly
 			/>
 			{errors?.[name] && <p className="text-red-500 text-sm mt-2">{errors[name].message}</p>}
 		</div>
