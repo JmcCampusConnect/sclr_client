@@ -15,7 +15,7 @@ function LastInstitution({ register, errors, watch, setValue }) {
             setValue("lastStudiedInstitutionPercentage", percentage);
         } else { setValue("lastStudiedInstitutionPercentage", "") }
     }, [marksSecured, maxMarks, setValue]);
-
+ 
     return (
         <>
             {semester === "I" && (graduate === "UG" || graduate === "PG") && (

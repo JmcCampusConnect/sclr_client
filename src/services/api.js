@@ -16,10 +16,12 @@ export const authAPI = async (apiUrl, formData) => {
 
 export const addDataAPI = async (apiUrl, formData) => {
     let headers = {};
-    // console.log(apiUrl)
-    if (formData instanceof FormData) { headers['Content-Type'] = 'multipart/form-data' }
-    else { headers['Content-Type'] = 'application/json' }
-    const response = await axios.post(apiUrl, formData, { headers })
-    // console.log('Response in AddDataApi : ', response)
+    if (!(formData instanceof FormData)) { headers['Content-Type'] = 'application/json';}
+    const response = await axios.post(apiUrl, formData, { headers });
     return response;
 }
+
+// -----------------------------------------------------------------------------------------------------------------
+
+
+// -----------------------------------------------------------------------------------------------------------------

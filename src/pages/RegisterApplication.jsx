@@ -14,7 +14,6 @@ import { useAdd } from '../hook/useAdd';
 import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
 
-
 const schema = Yup.object().shape({
     specialCategory: Yup.string().required('Special Category is required'),
     hasAppliedOtherScholarships: Yup.string().required('Applied Scholarship is required'),
@@ -63,25 +62,21 @@ const schema = Yup.object().shape({
         then: (schema) => schema.required("Last Institution Name is required"),
         otherwise: (schema) => schema.notRequired(),
     }),
-
     yearOfPassing: Yup.number().when("semester", {
         is: "I",
         then: (schema) => schema.required("Year of Passing is required").typeError("Must be a number"),
         otherwise: (schema) => schema.notRequired(),
     }),
-
     marksSecured: Yup.number().when("semester", {
         is: "I",
         then: (schema) => schema.required("Marks Secured is required").typeError("Must be a number"),
         otherwise: (schema) => schema.notRequired(),
     }),
-
     maxMarks: Yup.number().when("semester", {
         is: "I",
         then: (schema) => schema.required("Maximum Marks is required").typeError("Must be a number"),
         otherwise: (schema) => schema.notRequired(),
     }),
-
     lastStudiedInstitutionPercentage: Yup.string().when("semester", {
         is: "I",
         then: (schema) => schema.required("Percentage is required"),
@@ -98,17 +93,25 @@ function RegisterApplication() {
     const { addData, addError } = useAdd();
 
     const registerFormSubmit = async (formData) => {
-        console.log('Data to send : ', formData)
+        // console.log('Data to send : ', formData);
+        const dataToSend = new FormData();
+        Object.keys(formData).forEach((key) => {
+            if (key === "jamathLetter" && formData[key] instanceof FileList) {
+                dataToSend.append(key, formData[key][0]);
+            } else { 
+                dataToSend.append(key, formData[key]) 
+            }
+        })
         try {
-            const response = await addData(`${apiUrl}/register/application`, formData)
+            const response = await addData(`${apiUrl}/register/application`, dataToSend);
         } catch (error) {
-            console.log('Error in saving Register Application : ', error)
+            console.log('Error in saving Register Application : ', error);
         }
     }
 
     return (
         <form className='space-y-7' onSubmit={handleSubmit(registerFormSubmit)}>
-            <InstructionModal instructionModal={instructionModal} onClose={() => setInstructionModal(false)} />
+            {/* <InstructionModal instructionModal={instructionModal} onClose={() => setInstructionModal(false)} /> */}
             <SpecialCategory register={register} errors={errors} />
             <AcademicDetails register={register} errors={errors} watch={watch} />
             <StudentSection register={register} errors={errors} />
