@@ -1,13 +1,15 @@
 import React from 'react'
 
-function InputBox({ name, label, required = false, type, placeholder, register, errors, readOnly = false }) {
+function InputBox({ name, label = false, required = false, type, placeholder, register, errors, readOnly = false }) {
 
 	return (
 		<div>
-			<label className="block mb-2 font-medium text-slate-700">
-				<span>{label} : </span>
-				{required && (<span className="text-red-500 text-lg">*</span>)}
-			</label>
+			{label && (
+				<label className="block mb-2 font-medium text-slate-700">
+					<span>{label} : </span>
+					{required && (<span className="text-red-500 text-lg">*</span>)}
+				</label>
+			)}
 			<input
 				{...register(name)}
 				name={name}
@@ -22,7 +24,7 @@ function InputBox({ name, label, required = false, type, placeholder, register, 
 					} 
 					focus:outline-none focus:ring-1`
 				}
-				readOnly
+				readOnly={readOnly}
 			/>
 			{errors?.[name] && <p className="text-red-500 text-sm mt-2">{errors[name].message}</p>}
 		</div>
