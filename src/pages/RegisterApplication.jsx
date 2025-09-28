@@ -99,7 +99,9 @@ function RegisterApplication() {
 
     const checkRegisterNumber = async () => {
         try {
-            const response = await axios.post(`${apiUrl}/api/register/checkRegisterNo`, { registerNo });
+            const response = await axios.get(
+                `${apiUrl}/api/register/checkRegisterNo?registerNo=${registerNo}`
+            )
             // console.log(response)
             if (response.data.message === 'Allow to apply') {
                 setValue('registerNo', registerNo);
