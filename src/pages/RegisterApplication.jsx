@@ -45,8 +45,9 @@ const schema = Yup.object().shape({
         otherwise: (schema) => schema.notRequired()
     }),
     siblingsIncome: Yup.number().when('siblingsStatus', {
-        is: 'Yes', then: (schema) => schema.required('Siblings Income is required')
-            .typeError('Must be a number'), otherwise: (schema) => schema.notRequired()
+        is: 'Yes',
+        then: (schema) => schema.required('Siblings Income is required').typeError('Must be a number'),
+        otherwise: (schema) => schema.notRequired()
     }),
     address: Yup.string().required("Permanent Address is required"),
     state: Yup.string().required("State is required"),
@@ -99,7 +100,7 @@ function RegisterApplication() {
     const checkRegisterNumber = async () => {
         try {
             const response = await axios.post(`${apiUrl}/api/register/checkRegisterNo`, { registerNo });
-            console.log(response)
+            // console.log(response)
             if (response.data.message === 'Allow to apply') {
                 setValue('registerNo', registerNo);
                 setNewStudent(true)
@@ -108,7 +109,7 @@ function RegisterApplication() {
                 if (confirmed) { navigate('/student') }
             }
         } catch (err) {
-            console.error('Error checking register number:', err);
+            console.error('Error checking register number : ', err);
             alert('Something went wrong. Please try again.');
         }
     }
@@ -126,9 +127,7 @@ function RegisterApplication() {
             if (response.data.status === 201) {
                 alert(response.data?.message || 'Application submitted successfully')
             }
-            else {
-                alert('Error in saving Application')
-            }
+            else { alert('Error in saving Application') }
         } catch (error) {
             console.log('Error in saving Register Application : ', error);
         }
@@ -188,6 +187,5 @@ function RegisterApplication() {
         </form>
     )
 }
-
 
 export default RegisterApplication
