@@ -10,6 +10,7 @@ import AdminLayout from './layout/AdminLayout';
 import { useAuth } from './hook/useAuth';
 import StaffLayout from './layout/StaffLayout';
 import StudentLayout from './layout/StudentLayout';
+import ClassAttendance from './pages/ClassAttendance';
 
 function App() {
 
@@ -75,13 +76,15 @@ function App() {
 
 				{/* Protected Staff */}
 				<Route
-					path='/staff/:userId'
+					path='/staff/:userId/*'
 					element={
 						<ProtectedRoute isAuthenticated={isAuthenticated}>
 							<StaffLayout setIsAuthenticated={setIsAuthenticated} />
 						</ProtectedRoute>
 					}
-				/>
+				>
+					<Route path='attendance' element={<ClassAttendance />} />
+				</Route>
 			</Routes>
 		</Router>
 	);

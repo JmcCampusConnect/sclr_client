@@ -1,6 +1,6 @@
 import React from 'react'
 import JmcLogo from '../assets/logos/JmcLogo.png'
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faChalkboard, faTools, faBuilding, faBook, faClipboardList, faUndo
@@ -9,13 +9,12 @@ import '../App.css'
 
 function StaffLayout() {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { userId } = useParams();
 
     const menus = [
         { icon: faChalkboard, name: 'Dashboard', path: `/staff/dashboard`, show: true },
-        { icon: faClipboardList, name: 'Attendance Aided', path: `/staff/attendance`, show: true },
-        { icon: faClipboardList, name: 'Attendance SFM', path: `/staff/attendance/sfm`, show: true },
-        { icon: faClipboardList, name: 'Attendance SFW', path: `/staff/attendance/sfw`, show: true },
+        { icon: faClipboardList, name: `Attendance ${userId}`, path: `/staff/${userId}/attendance`, show: true },
         { icon: faBook, name: 'Deeniyath Men', path: `/staff/deeniyath`, show: true },
         { icon: faBook, name: 'Deeniyath Women', path: `/staff/deeniyathsfw`, show: true },
         { icon: faBook, name: 'Moral Men', path: `/staff/moral`, show: true },

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import JmcLogo from "../assets/logos/JmcLogo.png";
-import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import { Outlet, NavLink, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChalkboard, faHandHoldingHeart, faFileAlt, faIdCard, faTools,
@@ -12,6 +12,7 @@ import '../App.css'
 function AdminLayout() {
 
     const navigate = useNavigate();
+    const { userId } = useParams()
     const [manageOpen, setManageOpen] = useState(false);
 
     const navItems = [

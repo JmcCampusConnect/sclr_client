@@ -1,29 +1,30 @@
-import React from 'react'
+import React, { useId } from 'react'
 import JmcLogo from '../assets/logos/JmcLogo.png'
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faUndo, faChalkboard, faMapSigns } from '@fortawesome/free-solid-svg-icons';
 
 function StudentLayout() {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { userId } = useParams();
 
     let menus = [
         {
-			icon: faChalkboard,
-			name: 'Dashboard',
-			path: `/student/status`
-		},
-		{
-			icon: faClipboard,
-			name: 'Application',
-			path: `/student/application/renewal`
-		},
-		{
-			icon: faMapSigns,
-			name: 'Guidelines',
-			path: `/student/guidelines`
-		}
+            icon: faChalkboard,
+            name: 'Dashboard',
+            path: `/student/status`
+        },
+        {
+            icon: faClipboard,
+            name: 'Application',
+            path: `/student/application/renewal`
+        },
+        {
+            icon: faMapSigns,
+            name: 'Guidelines',
+            path: `/student/guidelines`
+        }
     ]
 
     return (
