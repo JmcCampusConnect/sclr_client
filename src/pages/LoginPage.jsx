@@ -29,9 +29,9 @@ function LoginPage({ setIsAuthenticated }) {
             if (response?.status === 200) {
                 const userId = response.user.userId
                 setIsAuthenticated(true);
-                if (response.user.role === 0) navigate('/student/register/application');
+                if (response.user.role === 0) navigate(`/student/${userId}`);
                 else if (response.user.role === 1) navigate(`/admin/${userId}`);
-                else if (response.user.role === 2) navigate('/staff');
+                else if (response.user.role === 2) navigate(`/staff/${userId}`); 
                 else navigate('/');
             }
         } catch (error) {
