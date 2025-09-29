@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "../services/api";
+import api from "..//services/api";
 
 export const useAuth = () => {
 
@@ -7,31 +7,26 @@ export const useAuth = () => {
 
     const login = async (formData) => {
         try {
-            const response = await api.post("/user/login", formData);
-            return response.data;
+            const res = await api.post("/user/login", formData);
+            return res.data;
         } catch (error) {
-            setErrorData(error.response?.data?.message || "Something went wrong");
+            setErrorData(error.response?.data?.message || "Login failed");
             throw error;
         }
     }
 
-    const logout = async () => {
-        try {
-            await api.post("/user/logout");
-        } catch (error) {
-            console.error("Logout error:", error);
-        }
-    };
-
     const checkAuth = async () => {
         try {
-            const response = await api.get("/user/profile");
-            return response.status === 200;
+            const res = await api.get("/user/profile"); 
+            return res.data?.status === 200 ? res.data : null;
         } catch {
-            return false;
+            return null;
         }
     }
 
-    return { errorData, login, logout, checkAuth }
+    const logout = async () => {
+        await api.post("/api/user/logout");
+    }
 
+    return { login, checkAuth, logout, errorData };
 }

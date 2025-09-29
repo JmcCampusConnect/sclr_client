@@ -14,20 +14,29 @@ import StudentLayout from './layout/StudentLayout';
 function App() {
 
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const { checkAuth } = useAuth();
 
 	useEffect(() => {
 		const verifyAuth = async () => {
 			const auth = await checkAuth();
-			setIsAuthenticated(auth);
+			if (auth) {
+				setIsAuthenticated(true);
+			} else {
+				setIsAuthenticated(false);
+			}
+			setLoading(false);
 		};
 		verifyAuth();
 	}, []);
 
+	if (loading) { return <div>Loading...</div> }
+
 	return (
 		<Router>
 			<Routes>
-				{/* Public routes */}
+
+				{/* Public */}
 				<Route path='/' element={<LandingPage />} />
 				<Route path='/login' element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
 				<Route path='/student' element={<StudentHome setIsAuthenticated={setIsAuthenticated} />} />
@@ -52,8 +61,7 @@ function App() {
 							<StudentLayout setIsAuthenticated={setIsAuthenticated} />
 						</ProtectedRoute>
 					}
-				>
-				</Route>
+				/>
 
 				{/* Protected Admin */}
 				<Route
@@ -76,7 +84,7 @@ function App() {
 				/>
 			</Routes>
 		</Router>
-	)
+	);
 }
 
 export default App;
