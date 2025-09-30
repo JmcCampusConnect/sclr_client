@@ -16,7 +16,7 @@ function AdminLayout() {
     const [manageOpen, setManageOpen] = useState(false);
 
     const navItems = [
-        { icon: faChalkboard, name: 'Dashboard', path: 'dashboard', show: true },
+        { icon: faChalkboard, name: 'Dashboard', path: `/admin/dashboard`, show: true },
         { icon: faHandHoldingHeart, name: 'Donor', path: '/admin/donormenu', show: true },
         { icon: faClipboard, name: 'Application', path: '/admin/application', show: true },
         { icon: faIdCard, name: 'Status', path: '/admin/status', show: true },

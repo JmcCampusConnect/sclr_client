@@ -11,6 +11,10 @@ import { useAuth } from './hook/useAuth';
 import StaffLayout from './layout/StaffLayout';
 import StudentLayout from './layout/StudentLayout';
 import ClassAttendance from './pages/ClassAttendance';
+import DmAttendance from './pages/DmAttendance';
+import CoeMark from './pages/CoeMark';
+import AdminStaffDashboard from './pages/AdminStaffDashboard';
+import StaffSettings from './pages/StaffSettings';
 
 function App() {
 
@@ -21,15 +25,12 @@ function App() {
 	useEffect(() => {
 		const verifyAuth = async () => {
 			const auth = await checkAuth();
-			if (auth) {
-				setIsAuthenticated(true);
-			} else {
-				setIsAuthenticated(false);
-			}
+			if (auth) { setIsAuthenticated(true) }
+			else { setIsAuthenticated(false) }
 			setLoading(false);
-		};
+		}
 		verifyAuth();
-	}, []);
+	}, [])
 
 	if (loading) { return <div>Loading...</div> }
 
@@ -66,13 +67,16 @@ function App() {
 
 				{/* Protected Admin */}
 				<Route
-					path='/admin/:userId'
+					path='/admin/*'
 					element={
 						<ProtectedRoute isAuthenticated={isAuthenticated}>
 							<AdminLayout setIsAuthenticated={setIsAuthenticated} />
 						</ProtectedRoute>
 					}
-				/>
+				>
+					<Route path='dashboard' element={<AdminStaffDashboard />} />
+
+				</Route>
 
 				{/* Protected Staff */}
 				<Route
@@ -83,7 +87,11 @@ function App() {
 						</ProtectedRoute>
 					}
 				>
-					<Route path='attendance' element={<ClassAttendance />} />
+					<Route path='classAttendance' element={<ClassAttendance />} />
+					<Route path='dmAttendance' element={<DmAttendance />} />
+					<Route path='markEntry' element={<CoeMark />} />
+					<Route path='dashboard' element={<AdminStaffDashboard />} />
+					<Route path='settings' element={<StaffSettings />} />
 				</Route>
 			</Routes>
 		</Router>

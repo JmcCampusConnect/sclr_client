@@ -30,7 +30,7 @@ function LoginPage({ setIsAuthenticated }) {
                 const userId = response.user.userId
                 setIsAuthenticated(true);
                 if (response.user.role === 0) navigate(`/student/${userId}`);
-                else if (response.user.role === 1) navigate(`/admin/${userId}`);
+                else if (response.user.role === 1) navigate(`/admin`);
                 else if (response.user.role === 2) navigate(`/staff/${userId}/attendance`); 
                 else navigate('/');
             }
