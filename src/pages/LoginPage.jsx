@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import LoginHeader from '../components/LoginPage/LoginHeader';
 import LoginIllustration from '../components/LoginPage/LoginIllustration';
 import LoginForm from '../components/LoginPage/LoginForm';
-import { useAuth } from '../hook/useAuth';
+import { AuthContext } from '../context/AuthContext'
 
 const schema = Yup.object().shape({
     userId: Yup.string().required('Username is required'),
@@ -15,7 +15,7 @@ const schema = Yup.object().shape({
 
 function LoginPage({ setIsAuthenticated }) {
 
-    const { errorData, login } = useAuth();
+    const { handleLogin } = useContext(AuthContext)
     const navigate = useNavigate();
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
@@ -24,23 +24,23 @@ function LoginPage({ setIsAuthenticated }) {
 
     const onSubmit = async (formData) => {
         try {
-            const response = await login(formData);
-            // console.log(response)
+            const response = await handleLogin(formData);
             if (response?.status === 200) {
-                const userId = response.user.userId
-                setIsAuthenticated(true);
-                if (response.user.role === 0) navigate(`/student/${userId}/dashboard`);
-                else if (response.user.role === 1) navigate(`/admin`);
-                else if (response.user.role === 2) navigate(`/staff/${userId}/attendance`); 
-                else navigate('/');
+                const userId = response.data.user.userId;
+                if (response.data.user.role === 0)
+                    navigate(`/student/${userId}/dashboard`);
+                else if (response.data.user.role === 1)
+                    navigate(`/admin`);
+                else if (response.data.user.role === 2)
+                    navigate(`/staff/${userId}/attendance`);
+                else
+                    navigate('/');
             }
         } catch (error) {
-            console.error('Erron during login : ', error);
-            alert(errorData || 'Error during login')
+            console.error('Error during login : ', error);
+            alert('Error during login');
         }
     }
-
-    console.log(errorData)
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center gap-4">
@@ -54,7 +54,6 @@ function LoginPage({ setIsAuthenticated }) {
                         handleSubmit={handleSubmit}
                         registerSubmit={onSubmit}
                         isSubmitting={isSubmitting}
-                        errorMessage={errorData}
                     />
                 </div>
             </div>

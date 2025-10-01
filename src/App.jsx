@@ -1,108 +1,103 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
-import StudentHome from './pages/StudentHome';
-import RegisterLayout from './layout/RegisterLayout';
-import RegisterApplication from './pages/RegisterApplication';
-import LoginPage from './pages/LoginPage';
-import ProtectedRoute from './auth/ProtectedRoute';
-import AdminLayout from './layout/AdminLayout';
-import { useAuth } from './hook/useAuth';
-import StaffLayout from './layout/StaffLayout';
-import StudentLayout from './layout/StudentLayout';
-import ClassAttendance from './pages/ClassAttendance';
-import DmAttendance from './pages/DmAttendance';
-import CoeMark from './pages/CoeMark';
-import AdminStaffDashboard from './pages/AdminStaffDashboard';
-import StaffSettings from './pages/StaffSettings';
-import StudentDashboard from './pages/StudentDashboard';
-import LoginApplication from './pages/LoginApplication';
-import StudentGuidelines from './pages/StudentGuidelines';
+import React from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./routes/PrivateRoute";
+
+// Public Pages
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
+import StudentHome from "./pages/StudentHome";
+
+// Student Pages
+import RegisterLayout from "./layout/RegisterLayout";
+import RegisterApplication from "./pages/RegisterApplication";
+import StudentLayout from "./layout/StudentLayout";
+import StudentDashboard from "./pages/StudentDashboard";
+import LoginApplication from "./pages/LoginApplication";
+import StudentGuidelines from "./pages/StudentGuidelines";
+
+// Staff Pages
+import StaffLayout from "./layout/StaffLayout";
+import ClassAttendance from "./pages/ClassAttendance";
+import DmAttendance from "./pages/DmAttendance";
+import CoeMark from "./pages/CoeMark";
+import StaffSettings from "./pages/StaffSettings";
+
+// Admin Pages
+import AdminLayout from "./layout/AdminLayout";
+import AdminStaffDashboard from "./pages/AdminStaffDashboard";
 
 function App() {
 
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
-	const [loading, setLoading] = useState(true);
-	const { checkAuth } = useAuth();
-
-	useEffect(() => {
-		const verifyAuth = async () => {
-			const auth = await checkAuth();
-			if (auth) { setIsAuthenticated(true) }
-			else { setIsAuthenticated(false) }
-			setLoading(false);
-		}
-		verifyAuth();
-	}, [])
-
-	if (loading) { return <div>Loading...</div> }
+	const ROLES = { student: 0, admin: 1, staff: 2 };
 
 	return (
-		<Router>
-			<Routes>
+		<AuthProvider>
+			<BrowserRouter>
+				<Routes>
+					{/* Public Routes */}
+					<Route path="/" element={<LandingPage />} />
+					<Route path="/login" element={<LoginPage />} />
+					<Route path="/student" element={<StudentHome />} />
 
-				{/* Public */}
-				<Route path='/' element={<LandingPage />} />
-				<Route path='/login' element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
-				<Route path='/student' element={<StudentHome setIsAuthenticated={setIsAuthenticated} />} />
+					{/* Student Register */}
+					<Route
+						path="/student/register/*"
+						element={
+							<PrivateRoute role={ROLES.student}>
+								<RegisterLayout />
+							</PrivateRoute>
+						}
+					>
+						<Route path="application" element={<RegisterApplication />} />
+					</Route>
 
-				{/* Protected Register Student */}
-				<Route
-					path='/student/register/*'
-					element={
-						<ProtectedRoute isAuthenticated={isAuthenticated}>
-							<RegisterLayout setIsAuthenticated={setIsAuthenticated} />
-						</ProtectedRoute>
-					}
-				>
-					<Route path='application' element={<RegisterApplication />} />
-				</Route>
+					{/* Student */}
+					<Route
+						path="/student/:userId/*"
+						element={
+							<PrivateRoute role="student">
+								<StudentLayout />
+							</PrivateRoute>
+						}
+					>
+						<Route path="dashboard" element={<StudentDashboard />} />
+						<Route path="application" element={<LoginApplication />} />
+						<Route path="guidelines" element={<StudentGuidelines />} />
+					</Route>
 
-				{/* Protected Login Student */}
-				<Route
-					path='/student/:userId'
-					element={
-						<ProtectedRoute isAuthenticated={isAuthenticated}>
-							<StudentLayout setIsAuthenticated={setIsAuthenticated} />
-						</ProtectedRoute>
-					}
-				>
-					<Route path='dashboard' element={<StudentDashboard />} />
-					<Route path='application' element={<LoginApplication />} />
-					<Route path='guidelines' element={<StudentGuidelines />} />
-				</Route>
+					{/* Admin */}
+					<Route
+						path="/admin/*"
+						element={
+							<PrivateRoute role={ROLES.admin}>
+								<AdminLayout />
+							</PrivateRoute>
+						}
+					>
+						<Route path="dashboard" element={<AdminStaffDashboard />} />
+					</Route>
 
-				{/* Protected Admin */}
-				<Route
-					path='/admin/*'
-					element={
-						<ProtectedRoute isAuthenticated={isAuthenticated}>
-							<AdminLayout setIsAuthenticated={setIsAuthenticated} />
-						</ProtectedRoute>
-					}
-				>
-					<Route path='dashboard' element={<AdminStaffDashboard />} />
+					{/* Staff */}
+					<Route
+						path="/staff/:userId/*"
+						element={
+							<PrivateRoute role="staff">
+								<StaffLayout />
+							</PrivateRoute>
+						}
+					>
+						<Route path="classAttendance" element={<ClassAttendance />} />
+						<Route path="dmAttendance" element={<DmAttendance />} />
+						<Route path="markEntry" element={<CoeMark />} />
+						<Route path="dashboard" element={<AdminStaffDashboard />} />
+						<Route path="settings" element={<StaffSettings />} />
+					</Route>
 
-				</Route>
-
-				{/* Protected Staff */}
-				<Route
-					path='/staff/:userId/*'
-					element={
-						<ProtectedRoute isAuthenticated={isAuthenticated}>
-							<StaffLayout setIsAuthenticated={setIsAuthenticated} />
-						</ProtectedRoute>
-					}
-				>
-					<Route path='classAttendance' element={<ClassAttendance />} />
-					<Route path='dmAttendance' element={<DmAttendance />} />
-					<Route path='markEntry' element={<CoeMark />} />
-					<Route path='dashboard' element={<AdminStaffDashboard />} />
-					<Route path='settings' element={<StaffSettings />} />
-				</Route>
-			</Routes>
-		</Router>
-	);
+				</Routes>
+			</BrowserRouter>
+		</AuthProvider>
+	)
 }
 
 export default App;
