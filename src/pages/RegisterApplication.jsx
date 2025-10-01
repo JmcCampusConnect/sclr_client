@@ -148,7 +148,7 @@ function RegisterApplication() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label className="block mb-2 font-semibold text-slate-700">
-                                Register Number: <span className="text-red-500">*</span>
+                                Register Number : <span className="text-red-500">*</span>
                             </label>
                             <div className="flex items-center gap-4">
                                 <input

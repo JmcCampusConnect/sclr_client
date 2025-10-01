@@ -52,6 +52,9 @@ function AdminLayout() {
                         <p>(Autonomous)</p>
                         <p>TIRUCHIRAPPALLI - 620 020</p>
                     </div>
+                    <div className="bg-emerald-600 text-white rounded-md py-1 px-2 mt-6 text-sm font-bold">
+                        {userId}
+                    </div>
                 </div>
 
                 {/* Nav Items */}
