@@ -13,17 +13,17 @@ function StudentLayout() {
         {
             icon: faChalkboard,
             name: 'Dashboard',
-            path: `/student/status`
+            path: `/student/${userId}/dashboard`
         },
         {
             icon: faClipboard,
             name: 'Application',
-            path: `/student/application/renewal`
+            path: `/student/${userId}/application`
         },
         {
             icon: faMapSigns,
             name: 'Guidelines',
-            path: `/student/guidelines`
+            path: `/student/${userId}/guidelines`
         }
     ]
 

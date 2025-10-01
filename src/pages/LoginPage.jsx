@@ -29,16 +29,18 @@ function LoginPage({ setIsAuthenticated }) {
             if (response?.status === 200) {
                 const userId = response.user.userId
                 setIsAuthenticated(true);
-                if (response.user.role === 0) navigate(`/student/${userId}`);
+                if (response.user.role === 0) navigate(`/student/${userId}/dashboard`);
                 else if (response.user.role === 1) navigate(`/admin`);
                 else if (response.user.role === 2) navigate(`/staff/${userId}/attendance`); 
                 else navigate('/');
             }
         } catch (error) {
             console.error('Erron during login : ', error);
-            alert('Error during login')
+            alert(errorData || 'Error during login')
         }
     }
+
+    console.log(errorData)
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center gap-4">

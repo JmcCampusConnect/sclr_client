@@ -15,6 +15,9 @@ import DmAttendance from './pages/DmAttendance';
 import CoeMark from './pages/CoeMark';
 import AdminStaffDashboard from './pages/AdminStaffDashboard';
 import StaffSettings from './pages/StaffSettings';
+import StudentDashboard from './pages/StudentDashboard';
+import LoginApplication from './pages/LoginApplication';
+import StudentGuidelines from './pages/StudentGuidelines';
 
 function App() {
 
@@ -63,7 +66,11 @@ function App() {
 							<StudentLayout setIsAuthenticated={setIsAuthenticated} />
 						</ProtectedRoute>
 					}
-				/>
+				>
+					<Route path='dashboard' element={<StudentDashboard />} />
+					<Route path='application' element={<LoginApplication />} />
+					<Route path='guidelines' element={<StudentGuidelines />} />
+				</Route>
 
 				{/* Protected Admin */}
 				<Route
