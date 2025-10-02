@@ -3,15 +3,6 @@ const apiUrl = import.meta.env.VITE_API_URL
 
 // -----------------------------------------------------------------------------------------------------------------
 
-// Login API
-
-export const authAPI = async (apiUrl, formData) => {
-	const response = await axios.post(apiUrl, formData)
-	return response;
-}
-
-// -----------------------------------------------------------------------------------------------------------------
-
 // Add Data API
 
 export const addDataAPI = async (apiUrl, formData) => {
@@ -24,13 +15,11 @@ export const addDataAPI = async (apiUrl, formData) => {
 
 // -----------------------------------------------------------------------------------------------------------------
 
-// For cookie creation
+// Fetch Data API
 
-const api = axios.create({
-	baseURL: import.meta.env.VITE_API_URL,
-	withCredentials: true,
-})
-
-export default api
+export const fetDataAPI = async (apiUrl, formData) => {
+	const response = await axios.post(apiUrl, formData)
+	return response;
+}
 
 // -----------------------------------------------------------------------------------------------------------------

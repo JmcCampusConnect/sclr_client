@@ -64,7 +64,7 @@ function StaffLayout() {
                             key={index}
                             to={item.path}
                             className={({ isActive }) =>
-                                `group flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium
+                                `group flex items-center space-x-3 px-4 py-2.5 rounded-md text-md font-medium
                                      hover:bg-emerald-900 hover:bg-opacity-30 ${isActive
                                     ? "bg-emerald-900 bg-opacity-30 border-l-2 border-white" : ""
                                 }`
