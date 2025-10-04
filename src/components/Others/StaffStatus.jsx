@@ -1,6 +1,6 @@
 import React from "react";
 
-function CoeStatus({ counts }) {
+function StaffStatus({ counts }) {
 
     return (
         <>
@@ -19,4 +19,4 @@ function CoeStatus({ counts }) {
     )
 }
 
-export default CoeStatus
+export default StaffStatus

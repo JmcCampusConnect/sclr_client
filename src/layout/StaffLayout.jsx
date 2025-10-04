@@ -3,7 +3,7 @@ import JmcLogo from '../assets/logos/JmcLogo.png'
 import { Outlet, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faChalkboard, faTools, faBuilding, faBook, faClipboardList, faUndo
+    faChalkboard, faTools, faBuilding, faBook, faClipboardList, faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
 import '../App.css';
 
@@ -74,7 +74,7 @@ function StaffLayout() {
                                 icon={item.icon}
                                 className="text-base w-4"
                             />
-                            <span className="text-md">{item.name}</span>
+                           <span className="text-md">{item.name}</span>
                         </NavLink>
                     ))}
 
@@ -84,10 +84,10 @@ function StaffLayout() {
                         className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-300 hover:bg-emerald-900 hover:bg-opacity-30"
                     >
                         <FontAwesomeIcon
-                            icon={faUndo}
+                            icon={faSignOutAlt}
                             className="text-base w-4 transition-transform hover:scale-110"
                         />
-                        <span className="text-md">Back</span>
+                        <span className="text-md">Logout</span>
                     </button>
                 </nav>
             </aside>

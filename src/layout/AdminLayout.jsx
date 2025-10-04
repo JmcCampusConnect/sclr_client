@@ -3,8 +3,8 @@ import JmcLogo from "../assets/logos/JmcLogo.png";
 import { Outlet, NavLink, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faChalkboard, faHandHoldingHeart, faFileAlt, faIdCard, faTools,
-    faRightFromBracket, faChartBar, faUserGear, faMapSigns, faClipboard, faChartLine,
+    faChalkboard, faHandHoldingHeart, faFileAlt, faIdCard, faTools, faSignOutAlt,
+    faChartBar, faUserGear, faMapSigns, faClipboard, faChartLine,
 } from '@fortawesome/free-solid-svg-icons';
 import { ChevronDown, ChevronUp } from "lucide-react";
 import '../App.css'
@@ -110,7 +110,10 @@ function AdminLayout() {
                         onClick={() => navigate("/")}
                         className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-300 hover:bg-emerald-900 hover:bg-opacity-30"
                     >
-                        <FontAwesomeIcon icon={faRightFromBracket} className="text-base w-4" />
+                        <FontAwesomeIcon
+                            icon={faSignOutAlt}
+                            className="text-base w-4 transition-transform hover:scale-110"
+                        />
                         <span className="text-md">Logout</span>
                     </button>
                 </nav>

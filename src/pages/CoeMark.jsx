@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CoeStatus from '../components/CoeMark/CoeStatus';
+import StaffStatus from '../components//Others/StaffStatus';
 import Button from '../common/Button';
 import HeaderTag from '../common/HeaderTag';
 import { useFetch } from '../hook/useFetch';
@@ -24,7 +24,7 @@ function CoeMark() {
         { key: 'percent', label: 'Percent %', style: { width: '10%' } },
         { key: 'arrears', label: 'Arrears', style: { width: '10%' } },
         { key: 'remarks', label: 'Grade', style: { width: '20%' } },
-    ];
+    ]
 
     // FETCH STUDENT DATA
 
@@ -102,7 +102,7 @@ function CoeMark() {
     return (
         <div>
             <HeaderTag label="Semester Mark Entry" />
-            <CoeStatus counts={statusCount} />
+            <StaffStatus counts={statusCount} />
             <div className="text-right font-semibold mb-4 text-lg">
                 No of Students : {StudentsData.length}
             </div>
