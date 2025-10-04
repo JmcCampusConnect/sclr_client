@@ -51,7 +51,7 @@ function RegisterLayout() {
                                 icon={item.icon}
                                 className="text-base w-4"
                             />
-                            <span className="text-md">{item.name}</span>
+                            <span className="text-sm">{item.name}</span>
                         </NavLink>
                     ))}
 
@@ -64,7 +64,7 @@ function RegisterLayout() {
                             icon={faUndo}
                             className="text-base w-4 transition-transform hover:scale-110"
                         />
-                        <span className="text-md">Back</span>
+                        <span className="text-sm">Back</span>
                     </button>
                 </nav>
             </aside>

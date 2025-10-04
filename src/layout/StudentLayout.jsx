@@ -65,7 +65,7 @@ function StudentLayout() {
                                 icon={item.icon}
                                 className="text-base w-4"
                             />
-                            <span className="text-md">{item.name}</span>
+                            <span className="text-sm">{item.name}</span>
                         </NavLink>
                     ))}
 
@@ -78,7 +78,7 @@ function StudentLayout() {
                             icon={faSignOutAlt}
                             className="text-base w-4 transition-transform hover:scale-110"
                         />
-                        <span className="text-md">Logout</span>
+                        <span className="text-sm">Logout</span>
                     </button>
                 </nav>
             </aside>

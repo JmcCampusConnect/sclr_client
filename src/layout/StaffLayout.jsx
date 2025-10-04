@@ -64,7 +64,7 @@ function StaffLayout() {
                             key={index}
                             to={item.path}
                             className={({ isActive }) =>
-                                `group flex items-center space-x-3 px-4 py-2.5 rounded-md text-md font-medium
+                                `group flex items-center space-x-3 px-4 py-2.5 rounded-md font-medium
                                      hover:bg-emerald-900 hover:bg-opacity-30 ${isActive
                                     ? "bg-emerald-900 bg-opacity-30 border-l-2 border-white" : ""
                                 }`
@@ -74,7 +74,7 @@ function StaffLayout() {
                                 icon={item.icon}
                                 className="text-base w-4"
                             />
-                           <span className="text-md">{item.name}</span>
+                           <span className="text-sm">{item.name}</span>
                         </NavLink>
                     ))}
 
@@ -87,7 +87,7 @@ function StaffLayout() {
                             icon={faSignOutAlt}
                             className="text-base w-4 transition-transform hover:scale-110"
                         />
-                        <span className="text-md">Logout</span>
+                        <span className="text-sm">Logout</span>
                     </button>
                 </nav>
             </aside>

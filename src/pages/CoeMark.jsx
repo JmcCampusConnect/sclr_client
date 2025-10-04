@@ -115,7 +115,7 @@ function CoeMark() {
                             {headers.map((header) => (
                                 <th
                                     key={header.key}
-                                    className={`px-6 py-4 text-center text-sm font-semibold tracking-wide uppercase border-r border-gray-200 ${header.className || ''}`}
+                                    className={`px-4 py-3 text-center text-md font-semibold uppercase text-white border-r border-gray-300 w-[6% ${header.className || ''}`}
                                     style={header.style}
                                 >
                                     {header.label}
@@ -130,7 +130,7 @@ function CoeMark() {
                             StudentsData.map((student, index) => (
                                 <tr
                                     key={student._id}
-                                    className="hover:bg-emerald-50 transition-colors duration-200"
+                                    className="hover:bg-gray-50 transition-colors duration-200"
                                 >
                                     {/* Serial No */}
                                     <td className="px-6 py-4 text-center font-semibold text-gray-700 border-r border-gray-200">
@@ -156,7 +156,7 @@ function CoeMark() {
                                     <td className="px-4 py-3 text-center border-r border-gray-200">
                                         <input
                                             type="number"
-                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
+                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2outline-none transition"
                                             value={student.maxMark ?? ""}
                                             onChange={(e) => handleMarkChange(index, "maxMark", e.target.value)}
                                             onFocus={(e) => {
@@ -169,7 +169,7 @@ function CoeMark() {
                                     <td className="px-4 py-3 text-center border-r border-gray-200">
                                         <input
                                             type="number"
-                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
+                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
                                             value={student.markSecured ?? ""}
                                             onChange={(e) => handleMarkChange(index, "markSecured", e.target.value)}
                                             onFocus={(e) => {
@@ -192,7 +192,7 @@ function CoeMark() {
                                     <td className="px-4 py-3 text-center border-r border-gray-200">
                                         <input
                                             type="number"
-                                            className="w-20 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
+                                            className="w-20 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
                                             value={student.semesterArrear ?? ""}
                                             onChange={(e) => handleMarkChange(index, "arrears", e.target.value)}
                                             onFocus={(e) => {
@@ -205,7 +205,7 @@ function CoeMark() {
                                     <td className="px-4 py-3 text-center border-gray-200">
                                         <input
                                             type="text"
-                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
+                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
                                             value={student.semesterGrade ?? ""}
                                             onChange={(e) => handleMarkChange(index, "remarks", e.target.value)}
                                         />
