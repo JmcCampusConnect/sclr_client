@@ -128,6 +128,7 @@ function RegisterApplication() {
             const response = await addData(`${apiUrl}/api/register/application`, dataToSend);
             if (response.data.status === 201) {
                 alert(response.data?.message || 'Application submitted successfully')
+                window.location.reload()
             }
             else { alert('Error in saving Application') }
         } catch (error) {

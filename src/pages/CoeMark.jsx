@@ -31,7 +31,7 @@ function CoeMark() {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const Students = await fetchData(`${apiUrl}/api/staff/studentsForCoe`, {});
+                const Students = await fetchData(`${apiUrl}/api/staff/coe/students`, {});
                 setStudentsData(Students.data?.data || []);
                 setStatusCount(Students.data.counts)
             } catch (err) {
@@ -87,7 +87,7 @@ function CoeMark() {
 
     const handleSubmitMark = async () => {
         try {
-            const Students = await addData(`${apiUrl}/api/staff/saveStudentMark`, { changedStudents });
+            const Students = await addData(`${apiUrl}/api/staff/coe/saveStudentMark`, { changedStudents });
             setStudentsData(Students.data.data || []);
             if (Students.status == 200) {
                 alert("Mark saved successfully")
@@ -103,11 +103,12 @@ function CoeMark() {
         <div>
             <HeaderTag label="Semester Mark Entry" />
             <StaffStatus counts={statusCount} />
+
             <div className="text-right font-semibold mb-4 text-lg">
                 No of Students : {StudentsData.length}
             </div>
 
-            <div className="overflow-x-auto rounded-2xl shadow-lg ring-1 ring-black/10">
+            <div className="overflow-y-auto overflow-x-auto rounded-2xl shadow-lg ring-1 ring-black/10 max-h-[500px]">
                 <table className="min-w-full border border-gray-200 divide-y divide-gray-200">
                     {/* Table Head */}
                     <thead className="bg-emerald-700 text-white sticky top-0 z-20">
@@ -115,7 +116,7 @@ function CoeMark() {
                             {headers.map((header) => (
                                 <th
                                     key={header.key}
-                                    className={`px-4 py-3 text-center text-md font-semibold uppercase text-white border-r border-gray-300 w-[6% ${header.className || ''}`}
+                                    className={`px-4 py-3 text-center text-md font-semibold uppercase text-white border-r border-gray-300 ${header.className || ''}`}
                                     style={header.style}
                                 >
                                     {header.label}
@@ -132,31 +133,16 @@ function CoeMark() {
                                     key={student._id}
                                     className="hover:bg-gray-50 transition-colors duration-200"
                                 >
-                                    {/* Serial No */}
-                                    <td className="px-6 py-4 text-center font-semibold text-gray-700 border-r border-gray-200">
-                                        {index + 1}
-                                    </td>
-
-                                    {/* Register No */}
-                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-800 uppercase border-r border-gray-200">
-                                        {student.registerNo}
-                                    </td>
-
-                                    {/* Name */}
-                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-800 border-r border-gray-200">
-                                        {student.name}
-                                    </td>
-
-                                    {/* Department */}
-                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-700 border-r border-gray-200">
-                                        {student.department}
-                                    </td>
+                                    <td className="px-6 py-4 text-center font-semibold text-gray-700 border-r border-gray-200"> {index + 1} </td>
+                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-800 uppercase border-r border-gray-200"> {student.registerNo} </td>
+                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-800 border-r border-gray-200"> {student.name} </td>
+                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-700 border-r border-gray-200"> {student.department} </td>
 
                                     {/* Max Mark */}
                                     <td className="px-4 py-3 text-center border-r border-gray-200">
                                         <input
                                             type="number"
-                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2outline-none transition"
+                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
                                             value={student.maxMark ?? ""}
                                             onChange={(e) => handleMarkChange(index, "maxMark", e.target.value)}
                                             onFocus={(e) => {
@@ -223,7 +209,7 @@ function CoeMark() {
                 </table>
             </div>
 
-            <div className="text-right" >
+            <div className="text-right">
                 <Button
                     customBtnStyle="bg-blue-600 mt-6 hover:bg-blue-700 text-white px-8 py-3 rounded-md font-semibold"
                     label="Submit"
@@ -231,7 +217,7 @@ function CoeMark() {
                 />
             </div>
         </div>
-    );
+    )
 }
 
 export default CoeMark;

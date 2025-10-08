@@ -37,8 +37,11 @@ function LoginPage({ setIsAuthenticated }) {
                     navigate('/');
             }
         } catch (error) {
-            console.error('Error during login : ', error);
-            alert('Error during login');
+            if (error.response) {
+                const message = error.response.data.message || "Error during login";
+                alert(message);
+            } else { alert("Network error or server not reachable") }
+            console.error("Login error : ", error);
         }
     }
 
