@@ -11,7 +11,7 @@ function AcademicYear() {
 
     useEffect(() => {
         const fetchAcademicYear = async () => {
-            const response = await axios.get(`${apiUrl}/api/manage/fetchAcademicYear`);
+            const response = await axios.get(`${apiUrl}/api/application/settings/fetchAcademicYear`);
             setAcYears(response.data.academicYears)
             setCurrAcYear(response.data.currAcYear)
         }
@@ -21,7 +21,7 @@ function AcademicYear() {
     const academicSave = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${apiUrl}/api/manage/academicYearSet`, { currAcYear });
+            const response = await axios.post(`${apiUrl}/api/application/settings/academicYearSet`, { currAcYear });
             alert('Academic year changed successfully.');
             window.location.reload();
         } catch (error) {
@@ -59,4 +59,4 @@ function AcademicYear() {
     )
 }
 
-export default AcademicYear
+export default AcademicYear;

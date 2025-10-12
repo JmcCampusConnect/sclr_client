@@ -75,7 +75,7 @@ function AdminLayout() {
             show: true,
             subItems: [
                 { name: "Academic Year", path: `/admin/academicYear` },
-                { name: "Application Schedule", path: `/admin/applicationDate` },
+                { name: "Application Date", path: `/admin/applicationDate` },
             ]
         }
     ]
