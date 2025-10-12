@@ -4,16 +4,60 @@ import { Outlet, NavLink, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChalkboard, faHandHoldingHeart, faFileAlt, faIdCard, faTools, faSignOutAlt,
-    faChartBar, faUserGear, faMapSigns, faClipboard, faChartLine,
+    faChartBar, faSliders, faMapSigns, faClipboard, faChartLine, faCalendarDays
 } from '@fortawesome/free-solid-svg-icons';
-import { ChevronDown, ChevronUp } from "lucide-react";
-import '../App.css'
+import { ChevronUp, ChevronDown } from "lucide-react";
+import '../App.css';
+
+function RecursiveMenu({ items }) {
+
+    const [openMap, setOpenMap] = useState({});
+    const toggle = key => setOpenMap(prev => ({ ...prev, [key]: !prev[key] }));
+
+    return (
+        <>
+            {items.map((item, idx) =>
+                item.subItems ? (
+                    <div key={item.name + idx}>
+                        <button
+                            onClick={() => toggle(item.name + idx)}
+                            className="group flex items-center space-x-3 px-4 py-2.5 rounded-md font-medium hover:bg-emerald-900 hover:bg-opacity-30 w-full"
+                        >
+                            {item.icon && <FontAwesomeIcon icon={item.icon} className="text-base w-4" />}
+                            <span className="text-sm">{item.name}</span>
+                            {openMap[item.name + idx] ? (
+                                <ChevronUp className="ml-auto h-4 w-4" />
+                            ) : (
+                                <ChevronDown className="ml-auto h-4 w-4" />
+                            )}
+                        </button>
+                        {openMap[item.name + idx] && (
+                            <div className="ml-6 mt-2 space-y-2 border-l border-white/30 pl-2">
+                                <RecursiveMenu items={item.subItems} />
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <NavLink
+                        key={item.path}
+                        to={item.path}
+                        className={({ isActive }) =>
+                            `group flex items-center space-x-3 px-4 py-2.5 rounded-md font-medium hover:bg-emerald-900 hover:bg-opacity-30 ${isActive ? "bg-emerald-900 bg-opacity-30 border-l-2 border-white" : ""}`
+                        }
+                    >
+                        {item.icon && <FontAwesomeIcon icon={item.icon} className="text-base w-4" />}
+                        <span className="text-sm">{item.name}</span>
+                    </NavLink>
+                )
+            )}
+        </>
+    )
+}
 
 function AdminLayout() {
 
     const navigate = useNavigate();
-    const { userId } = useParams()
-    const [manageOpen, setManageOpen] = useState(false);
+    const { userId } = useParams();
 
     const navItems = [
         { icon: faChalkboard, name: 'Dashboard', path: `/admin/dashboard`, show: true },
@@ -26,101 +70,53 @@ function AdminLayout() {
         { icon: faChartBar, name: 'Reports', path: '/admin/report', show: true },
         { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
         {
-            name: "Manage",
-            icon: faUserGear,
+            name: "Application Settings",
+            icon: faCalendarDays,
+            show: true,
             subItems: [
-                { name: "Substitution Management", path: `/layout/admin/substitutionManagement` },
-                { name: "User Management", path: `/layout/admin/userManagement` },
-                { name: "Leave Management", path: `/layout/admin/leaveManagement` },
-                { name: "Academic Management", path: `/layout/admin/academicManagement` },
-                { name: "Course Management", path: `/layout/admin/courseManagement` },
-                { name: "Attendance Management", path: `/layout/admin/attendanceManagement` },
-                { name: "Attendance Report", path: `/layout/admin/attendanceReport` },
-            ],
-        },
+                { name: "Academic Year", path: `/admin/academicYear` },
+                { name: "Application Schedule", path: `/admin/applicationDate` },
+            ]
+        }
     ]
 
     return (
-        <div className="flex w-screen h-screen overflow-hidden bg-white">
+        <div className="flex w-screen h-screen overflow-hidden bg-gray-50">
             {/* Sidebar */}
-            <aside className="bg-emerald-700 w-72 flex flex-col text-white p-4 gap-3">
-                {/* Logo + Header */}
-                <div className="flex flex-col items-center mb-4">
-                    <img src={JmcLogo} alt="JMC Logo" className="w-32 h-32" />
-                    <div className="text-center mt-2 text-sm font-semibold leading-5">
-                        <p>JAMAL MOHAMED COLLEGE</p>
-                        <p>(Autonomous)</p>
-                        <p>TIRUCHIRAPPALLI - 620 020</p>
+            <aside className="bg-gradient-to-b from-emerald-800 to-emerald-700 w-72 flex flex-col text-white p-5 shadow-xl">
+                {/* Logo Section */}
+                <div className="flex flex-col items-center mb-6">
+                    <img src={JmcLogo} alt="JMC Logo" className="w-28 h-28 mb-2 drop-shadow-md" />
+                    <div className="text-center text-sm font-semibold leading-5 tracking-wide">
+                        <p className="uppercase">Jamal Mohamed College</p>
+                        <p className="text-emerald-200">(Autonomous)</p>
+                        <p className="text-emerald-200">Tiruchirappalli - 620020</p>
                     </div>
-                    <div className="bg-emerald-600 text-white rounded-md py-1 px-2 mt-6 text-sm font-bold">
-                        {userId}
+                    <div className="bg-emerald-600 shadow-md text-white rounded-lg py-1 px-3 mt-5 text-xs font-bold tracking-wide">
+                        ADMIN
                     </div>
                 </div>
 
-                {/* Nav Items */}
-                <nav className="flex-1 space-y-3 overflow-y-auto hide-scrollbar">
-                    {navItems.map((item, index) =>
-                        item.subItems ? (
-                            <div key={index} className="space-y-1">
-                                {/* Manage Toggle */}
-                                <button
-                                    onClick={() => setManageOpen(!manageOpen)}
-                                    className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-300 hover:bg-emerald-900 hover:bg-opacity-30"
-                                >
-                                    <FontAwesomeIcon icon={item.icon} className="text-base w-4" />
-                                    <span className="text-md">{item.name}</span>
-                                    {manageOpen ? (
-                                        <ChevronUp className="ml-auto h-4 w-4" />
-                                    ) : (
-                                        <ChevronDown className="ml-auto h-4 w-4" />
-                                    )}
-                                </button>
-
-                                {/* Submenu */}
-                                {manageOpen && (
-                                    <div className="ml-6 space-y-1 border-l border-white/30 pl-2">
-                                        {item.subItems.map((sub, idx) => (
-                                            <NavLink key={idx}
-                                                to={sub.path}
-                                                className={({ isActive }) =>
-                                                    `flex items-center px-3 py-3 rounded-md text-sm font-medium transition-all duration-300 hover:bg-emerald-900 hover:bg-opacity-30 ${isActive ? "bg-emerald-900 bg-opacity-30" : ""}`
-                                                }
-                                            >
-                                                {sub.name}
-                                            </NavLink>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <NavLink key={index}
-                                to={item.path}
-                                className={({ isActive }) =>
-                                    `flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-300 hover:bg-emerald-900 hover:bg-opacity-30 ${isActive ? "bg-emerald-900 bg-opacity-30" : ""}`
-                                }
-                            >
-                                <FontAwesomeIcon icon={item.icon} className="text-base w-4" />
-                                <span className="text-sm">{item.name}</span>
-                            </NavLink>
-                        )
-                    )}
-
-                    {/* Logout Button at Bottom */}
+                {/* Menu Section with recursive rendering */}
+                <nav className="flex-1 space-y-2 overflow-y-auto hide-scrollbar">
+                    <RecursiveMenu items={navItems.filter(item => item.show)} />
+                    {/* Logout Button */}
                     <button
                         onClick={() => navigate("/")}
-                        className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-300 hover:bg-emerald-900 hover:bg-opacity-30"
+                        className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium hover:bg-emerald-900 hover:bg-opacity-30"
                     >
-                        <FontAwesomeIcon
-                            icon={faSignOutAlt}
-                            className="text-base w-4 transition-transform hover:scale-110"
-                        />
+                        <FontAwesomeIcon icon={faSignOutAlt} className="text-base w-4 transition-transform hover:scale-110" />
                         <span className="text-sm">Logout</span>
                     </button>
                 </nav>
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 p-6 2xl:p-10 overflow-auto"> <Outlet /> </div>
+            <div className="flex-1 bg-gray-100 p-6 2xl:p-10 overflow-auto">
+                <div className="bg-white shadow-md rounded-xl p-6 min-h-full">
+                    <Outlet />
+                </div>
+            </div>
         </div>
     )
 }

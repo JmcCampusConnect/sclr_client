@@ -26,6 +26,8 @@ import StaffSettings from "./pages/StaffSettings";
 // Admin Pages
 import AdminLayout from "./layout/AdminLayout";
 import AdminStaffDashboard from "./pages/AdminStaffDashboard";
+import AcademicYear from './pages/AcademicYear';
+import AcademicSchedule from './pages/AcademicSchedule';
 
 function App() {
 
@@ -76,6 +78,8 @@ function App() {
 						}
 					>
 						<Route path="dashboard" element={<AdminStaffDashboard />} />
+						<Route path="academicYear" element={<AcademicYear />} />
+						<Route path="applicationDate" element={<AcademicSchedule />} />
 					</Route>
 
 					{/* Staff */}

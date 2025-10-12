@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useAdd } from '../hook/useAdd';
 import HeaderTag from '../common/HeaderTag';
 import StaffStatus from '../components/Others/StaffStatus';
+import Button from '../common/Button'
 
 function ClassAttendance() {
 
