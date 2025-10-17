@@ -33,7 +33,6 @@ import AdminApplication from './pages/AdminApplication';
 function App() {
 
 	const ROLES = { student: 0, admin: 1, staff: 2 };
-	console.log('Branch Haneef')
 
 	return (
 		<AuthProvider>
