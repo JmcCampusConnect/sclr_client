@@ -24,50 +24,31 @@ function FilterSection({ searchMode, setSearchMode }) {
                         htmlFor="search-mode"
                         className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Search Mode :
+                        Application Status :
                     </label>
                     <select
-                        id="search-mode"
-                        value={searchMode}
-                        onChange={(e) => setSearchMode(e.target.value)}
                         className={formControlClass}
                     >
-                        <option value="all">All Applications</option>
+                        <option value="all">All</option>
+                        <option value="accepted">Accepted</option>
                         <option value="inProgress">In Progress</option>
+                        <option value="rejected">Rejected</option>
                     </select>
                 </div>
 
                 {/* Conditional Dropdown */}
                 <div className="space-y-2.5">
-                    {searchMode === "all" ? (
-                        <>
-                            <label
-                                htmlFor="application-status"
-                                className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
-                            >
-                                Application Status :
-                            </label>
-                            <select id="application-status" className={formControlClass}>
-                                <option value="all">All Statuses</option>
-                                <option value="accepted">Accepted</option>
-                                <option value="rejected">Rejected</option>
-                            </select>
-                        </>
-                    ) : (
-                        <>
-                            <label
-                                htmlFor="progress-type"
-                                className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
-                            >
-                                Progress Type :
-                            </label>
-                            <select id="progress-type" className={formControlClass}>
-                                <option value="all">All Types</option>
-                                <option value="fresher">Fresher</option>
-                                <option value="renewal">Renewal</option>
-                            </select>
-                        </>
-                    )}
+                    <label
+                        htmlFor="progress-type"
+                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
+                    >
+                        Application Type :
+                    </label>
+                    <select id="progress-type" className={formControlClass}>
+                        <option value="all">All</option>
+                        <option value="fresher">Fresher</option>
+                        <option value="renewal">Renewal</option>
+                    </select>
                 </div>
 
                 {/* Verification Status */}
@@ -79,9 +60,9 @@ function FilterSection({ searchMode, setSearchMode }) {
                         Verification Status :
                     </label>
                     <select id="verification-status" className={formControlClass}>
-                        <option value="all">All Statuses</option>
-                        <option value="verified">Verified Application</option>
-                        <option value="pending">Pending Verification</option>
+                        <option value="all">All</option>
+                        <option value="verified">Verified</option>
+                        <option value="pending">Pending</option>
                     </select>
                 </div>
             </div>
