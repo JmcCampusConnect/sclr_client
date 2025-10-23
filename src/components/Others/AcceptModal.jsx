@@ -1,4 +1,5 @@
 import React from 'react'
+import '../../App.css'
 
 function AcceptModal({ showAcceptModal, closeModal }) {
     
@@ -6,7 +7,7 @@ function AcceptModal({ showAcceptModal, closeModal }) {
         <>
             {showAcceptModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-80">
-                    <div className="bg-white w-[90%] max-w-6xl max-h-[90vh] rounded-2xl overflow-y-auto shadow-2xl p-8 relative">
+                    <div className="bg-white w-[70%] max-w-6xl max-h-[80vh] rounded-2xl overflow-y-auto shadow-2xl p-8 relative hide-scrollbar">
                         <form className="space-y-10">
                             {/* Header Info */}
                             <div className="bg-gray-100 rounded-xl p-6 shadow-inner">

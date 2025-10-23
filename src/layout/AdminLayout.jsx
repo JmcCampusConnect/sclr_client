@@ -61,7 +61,7 @@ function AdminLayout() {
 
     const navItems = [
         { icon: faChalkboard, name: 'Dashboard', path: `/admin/dashboard`, show: true },
-        { icon: faHandHoldingHeart, name: 'Donor', path: '/admin/donormenu', show: true },
+        { icon: faHandHoldingHeart, name: 'Donor', path: '/admin/donor', show: true },
         { icon: faClipboard, name: 'Application', path: '/admin/application', show: true },
         { icon: faIdCard, name: 'Status', path: '/admin/status', show: true },
         { icon: faTools, name: 'Settings', path: '/admin/action', show: true },

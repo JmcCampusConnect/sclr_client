@@ -34,17 +34,17 @@ function AdminApplication() {
 	const openAcceptModal = () => {
 		setShowAcceptModal(true);
 		setShowRejectModal(false);
-	};
+	}
 
 	const openRejectModal = () => {
 		setShowRejectModal(true);
 		setShowAcceptModal(false);
-	};
+	}
 
 	const closeModal = () => {
 		setShowAcceptModal(false);
 		setShowRejectModal(false);
-	};
+	}
 
 	return (
 		<div className="relative">
