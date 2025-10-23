@@ -34,7 +34,7 @@ function ActionBar({ totalStudents }) {
 					className={`w-full md:w-1/2 ${formControlClass}`}
 				/>
 				<p className="text-sm lg:text-base font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
-					No. of Students:{" "}
+					No. of Students : {" "}
 					<span className="font-semibold text-indigo-600 dark:text-indigo-400">
 						{totalStudents}
 					</span>

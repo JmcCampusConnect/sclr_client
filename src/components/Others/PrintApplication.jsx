@@ -39,7 +39,7 @@ function PrintApplication({ student }) {
                         <div className="border border-gray-300 rounded-md p-4 space-y-4 bg-white">
                             <div className="grid grid-cols-1 gap-3">
                                 <Detail label="Register No." value={student.registerNo} />
-                                <Detail label="Name" value={student.name} /> 
+                                <Detail label="Name" value={student.name} />
                                 <Detail label="Dept / Sem & Section" value={`${student.department} / ${student.semester} Sem - ${student.section} Sec`} />
                                 <Detail label="Mobile No." value={student.mobileNo} />
                                 <Detail label={student.procategory === 'SFW' ? 'D/o' : 'S/o'} value={`${student.parentName}`} />
@@ -86,12 +86,10 @@ function PrintApplication({ student }) {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className='flex justify-end mt-6'>
+            </div><div className="flex justify-end mt-6">
                 <button
-                    type='button'
                     onClick={handlePrint}
-                    className="bg-blue-500 text-white px-10 py-2 text-lg rounded hover:bg-blue-600"
+                    className="w-20 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md"
                 >
                     Print
                 </button>

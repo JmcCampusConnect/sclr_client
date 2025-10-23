@@ -30,7 +30,7 @@ import AcademicYear from './pages/AcademicYear';
 import ApplicationDate from './pages/ApplicationDate';
 import AdminApplication from './pages/AdminApplication';
 import AdminViewAppln from './pages/AdminViewAppln';
-import Donar from './pages/Donar';
+import Donor from './pages/Donor';
 
 function App() {
 
@@ -83,7 +83,7 @@ function App() {
 						<Route path="dashboard" element={<AdminStaffDashboard />} />
 						<Route path="academicYear" element={<AcademicYear />} />
 						<Route path="applicationDate" element={<ApplicationDate />} />
-						<Route path="donor" element={<Donar />} />
+						<Route path="donor" element={<Donor />} />
 						<Route path="application/*" element={<AdminApplication />} >
 							<Route path="view" element={<AdminViewAppln />} />
 						</Route>
