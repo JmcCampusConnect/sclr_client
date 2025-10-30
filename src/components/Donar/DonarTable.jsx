@@ -1,6 +1,6 @@
 import React from "react";
 
-function DonorTable({ donors, onEdit }) {
+function DonorTable({ donors, onEdit, onDelete }) {
 
     return (
         <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
@@ -45,6 +45,7 @@ function DonorTable({ donors, onEdit }) {
                                             Edit
                                         </button>
                                         <button
+                                            onClick={() => onDelete(donor)}
                                             className="w-20 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
                                         >
                                             Delete

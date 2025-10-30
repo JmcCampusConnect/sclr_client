@@ -5,6 +5,7 @@ import AddDonorModal from "../components/Donar/AddDonorModal";
 import EditDonorModal from "../components/Donar/EditDonorModal";
 import ActionBar from "../components/Donar/ActionBar";
 import FilterSection from "../components/Donar/FilterSection";
+import DeleteDonorModal from "../components/Donar/DeleteDonarModal.jsx";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -13,6 +14,7 @@ function Donor() {
 	const [donors, setDonors] = useState([]);
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [editDonor, setEditDonor] = useState(null);
+	const [deleteDonor, setDeleteDonor] = useState(null);
 
 	const fetchDonors = async () => {
 		try {
@@ -35,6 +37,10 @@ function Donor() {
 		)
 	}
 
+	const handleDeleteDonor = (deletedId) => {
+        setDonors((prev) => prev.filter((donor) => donor.donorId !== deletedId));
+    }
+
 	return (
 		<div className="relative">
 			<header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
@@ -42,9 +48,9 @@ function Donor() {
 					Donor Management
 				</h1>
 			</header>
-			<FilterSection />
-			<ActionBar donors={donors} onAdd={() => setShowAddModal(true)} />
-			<DonorTable donors={donors} onEdit={(donor) => setEditDonor(donor)} />
+			<FilterSection onAdd={() => setShowAddModal(true)} />
+			<ActionBar donors={donors} />
+			<DonorTable donors={donors} onEdit={(donor) => setEditDonor(donor)} onDelete={(donor) => setDeleteDonor(donor)} />
 			{showAddModal && (
 				<AddDonorModal
 					onClose={() => setShowAddModal(false)}
@@ -58,6 +64,13 @@ function Donor() {
 					onEditDonor={handleEditDonor}
 				/>
 			)}
+			{deleteDonor && (
+                <DeleteDonorModal
+                    donor={deleteDonor}
+                    onClose={() => setDeleteDonor(null)}
+                    onDelete={handleDeleteDonor}
+                />
+            )}
 		</div>
 	)
 }

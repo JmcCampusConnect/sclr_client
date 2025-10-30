@@ -3,7 +3,7 @@ import React from "react";
 const categories = ["All", "Well Wisher", "Alumini"];
 const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
 
-function FilterSection() {
+function FilterSection({ onAdd }) {
 
     return (
         <div className="mb-6 flex justify-between">
@@ -29,7 +29,7 @@ function FilterSection() {
                 </div>
             </div>
             <div className="flex items-center">
-                <button className={primaryButtonClass}>Add Donor</button>
+                <button onClick={onAdd} className={primaryButtonClass}>Add Donor</button>
             </div>
         </div>
     )

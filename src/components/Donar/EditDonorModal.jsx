@@ -1,158 +1,228 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import axios from "axios";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function EditDonorModal({ donor, onClose, onEditDonor }) {
+function EditDonorModal({ donorData, onClose, onUpdateDonor }) {
 
-    const [formData, setFormData] = useState({ ...donor });
-
-    useEffect(() => {
-        setFormData({ ...donor });
-    }, [donor]);
+    const [formData, setFormData] = React.useState({ ...donorData });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`${apiUrl}/api/donor/updateDonor/${formData.did}`, formData);
-            onEditDonor(response.data.donor);
+            const response = await axios.put(`${apiUrl}/api/donor/updateDonor/${formData._id}`, formData);
+            onUpdateDonor(response.data.updatedDonor);
             onClose();
         } catch (error) {
             console.error("Error updating donor:", error);
         }
-    }
+    };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl w-full max-w-6xl overflow-y-auto max-h-[90vh]">
-                <h1 className="text-xl mb-6 font-semibold bg-gray-600 p-3 rounded text-white">
-                    Edit Donor
-                </h1>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full border border-gray-200 dark:border-gray-700 max-w-6xl hide-scrollbar overflow-y-auto max-h-[80vh]">
 
-                <form className="space-y-8 font-semibold" onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 border border-black p-6 rounded-lg bg-gray-50 dark:bg-gray-700">
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Donor ID:</label>
-                            <input type="text" name="did" value={formData.did} readOnly className="w-full p-2 border border-black rounded-md bg-gray-100" />
-                        </div>
+                {/* Header */}
+                <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        ✏️ Edit Donor
+                    </h1>
+                    <button
+                        onClick={onClose}
+                        className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 text-xl font-bold transition"
+                    >
+                        ×
+                    </button>
+                </div>
 
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Scholarship Type: <span className="text-red-500">*</span></label>
-                            <select name="scholtype" value={formData.scholtype} onChange={handleChange} className="w-full p-2 border border-black rounded-md" required>
-                                <option value="">Select</option>
-                                <option value="Alumni">Alumni</option>
-                                <option value="Well Wisher">Well Wisher</option>
-                            </select>
-                        </div>
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="p-6 space-y-10 font-semibold">
+                    {/* Section 1: Basic Info */}
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
+                            🧾 Basic Information
+                        </h2>
 
-                        {formData.scholtype === "Alumni" && (
-                            <>
-                                <div>
-                                    <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Programme:</label>
-                                    <input type="text" name="donordept" value={formData.donordept} onChange={handleChange} className="w-full p-2 border border-black rounded-md" />
-                                </div>
-                                <div>
-                                    <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Studied Year:</label>
-                                    <input type="text" name="donorbatch" value={formData.donorbatch} onChange={handleChange} className="w-full p-2 border border-black rounded-md" />
-                                </div>
-                            </>
-                        )}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <Input label="Donor ID" name="did" value={formData.did} readOnly />
 
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Name: <span className="text-red-500">*</span></label>
-                            <input type="text" name="name" value={formData.name} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value.toUpperCase() }))} className="w-full p-2 border border-black rounded-md" required />
-                        </div>
+                            <Select
+                                label="Scholarship Type"
+                                name="scholtype"
+                                value={formData.scholtype}
+                                onChange={handleChange}
+                                required
+                                options={["Alumni", "Well Wisher"]}
+                            />
 
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Mobile No:</label>
-                            <input type="text" name="mobileNo" value={formData.mobileNo} onChange={handleChange} className="w-full p-2 border border-black rounded-md" />
-                        </div>
+                            {formData.scholtype === "Alumni" && (
+                                <>
+                                    <Input label="Programme" name="donordept" value={formData.donordept} onChange={handleChange} />
+                                    <Input label="Studied Year" name="donorbatch" value={formData.donorbatch} onChange={handleChange} />
+                                </>
+                            )}
 
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">PAN / Aadhar No:</label>
-                            <input type="text" name="pan" value={formData.pan} onChange={(e) => setFormData(prev => ({ ...prev, pan: e.target.value.toUpperCase() }))} className="w-full p-2 border border-black rounded-md" />
-                        </div>
-
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Email ID:</label>
-                            <input type="email" name="emailId" value={formData.emailId} onChange={handleChange} className="w-full p-2 border border-black rounded-md" />
-                        </div>
-
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Permanent Address:</label>
-                            <input type="text" name="address" value={formData.address} onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value.toUpperCase() }))} className="w-full p-2 border border-black rounded-md" />
-                        </div>
-
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">State:</label>
-                            <select name="state" value={formData.state} onChange={handleChange} className="w-full p-2 border border-black rounded-md">
-                                <option value="">Select State</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">District:</label>
-                            <select name="district" value={formData.district} onChange={handleChange} className="w-full p-2 border border-black rounded-md">
-                                <option value="">Select District</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Pincode:</label>
-                            <input type="text" name="pin" value={formData.pin} onChange={handleChange} maxLength={6} className="w-full p-2 border border-black rounded-md" />
+                            <Input
+                                label="Name"
+                                name="name"
+                                value={formData.name}
+                                required
+                                onChange={(e) =>
+                                    setFormData((prev) => ({ ...prev, name: e.target.value.toUpperCase() }))
+                                }
+                            />
+                            <Input label="Mobile No" name="mobileNo" value={formData.mobileNo} onChange={handleChange} />
+                            <Input
+                                label="PAN / Aadhar No"
+                                name="pan"
+                                value={formData.pan}
+                                onChange={(e) =>
+                                    setFormData((prev) => ({ ...prev, pan: e.target.value.toUpperCase() }))
+                                }
+                            />
+                            <Input label="Email ID" name="emailId" type="email" value={formData.emailId} onChange={handleChange} />
+                            <Input
+                                label="Permanent Address"
+                                name="address"
+                                value={formData.address}
+                                onChange={(e) =>
+                                    setFormData((prev) => ({ ...prev, address: e.target.value.toUpperCase() }))
+                                }
+                            />
+                            <Select label="State" name="state" value={formData.state} onChange={handleChange} options={[]} />
+                            <Select label="District" name="district" value={formData.district} onChange={handleChange} options={[]} />
+                            <Input label="Pincode" name="pin" value={formData.pin} maxLength={6} onChange={handleChange} />
                         </div>
                     </div>
 
-                    {/* Payment Details */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border border-black p-6 rounded-lg bg-gray-50 dark:bg-gray-700">
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Date of Payment:</label>
-                            <input type="date" name="scholdate" value={formData.scholdate} onChange={handleChange} className="w-full p-2 border border-black rounded-md" />
-                        </div>
+                    {/* Section 2: Payment Details */}
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
+                            💰 Payment Details
+                        </h2>
 
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Scholarship Type:</label>
-                            <div className="flex gap-4 mt-2 items-center">
-                                <label className="flex items-center gap-2 text-md">
-                                    <input type="radio" name="zakkath" className="scale-125" checked={formData.zakkath === true} onChange={() => setFormData(prev => ({ ...prev, zakkath: true }))} /> Zakkath
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <Input
+                                label="Date of Payment"
+                                name="scholdate"
+                                type="date"
+                                value={formData.scholdate}
+                                onChange={handleChange}
+                            />
+
+                            <div>
+                                <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
+                                    Scholarship Type:
                                 </label>
-                                <label className="flex items-center gap-2 text-md">
-                                    <input type="radio" name="zakkath" className="scale-125" checked={formData.zakkath === false} onChange={() => setFormData(prev => ({ ...prev, zakkath: false }))} /> General
-                                </label>
+                                <div className="flex gap-6 mt-2 items-center">
+                                    <Radio
+                                        label="Zakkath"
+                                        name="zakkath"
+                                        checked={formData.zakkath === true}
+                                        onChange={() => setFormData((prev) => ({ ...prev, zakkath: true }))}
+                                    />
+                                    <Radio
+                                        label="General"
+                                        name="zakkath"
+                                        checked={formData.zakkath === false}
+                                        onChange={() => setFormData((prev) => ({ ...prev, zakkath: false }))}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Cheque / Receipt No:</label>
-                            <input type="text" name="receipt" value={formData.receipt} onChange={handleChange} className="w-full p-2 border border-black rounded-md" />
-                        </div>
+                            <Input label="Cheque / Receipt No" name="receipt" value={formData.receipt} onChange={handleChange} />
 
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700 dark:text-gray-200">Amount: <span className="text-red-500">*</span></label>
-                            <input
-                                type="text"
+                            <Input
+                                label="Amount"
                                 name={formData.zakkath ? "zakkathamt" : "amount"}
-                                value={formData.zakkath ? formData.zakkathamt : formData.amount}
-                                onChange={(e) => formData.zakkath ? setFormData(prev => ({ ...prev, zakkathamt: e.target.value })) : setFormData(prev => ({ ...prev, amount: e.target.value }))}
-                                className="w-full p-2 border border-black rounded-md"
                                 required
+                                value={formData.zakkath ? formData.zakkathamt : formData.amount}
+                                onChange={(e) =>
+                                    formData.zakkath
+                                        ? setFormData((prev) => ({ ...prev, zakkathamt: e.target.value }))
+                                        : setFormData((prev) => ({ ...prev, amount: e.target.value }))
+                                }
                             />
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-4">
-                        <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-semibold">Update</button>
-                        <button type="button" className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md font-semibold" onClick={onClose}>Cancel</button>
+                    {/* Footer Actions */}
+                    <div className="flex justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-6 py-2.5 rounded-lg font-semibold bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100 transition"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-6 py-2.5 rounded-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-md transition"
+                        >
+                            Update
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-    )
+    );
 }
+
+// Reusable form components (same as Add modal)
+const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
+    <div>
+        <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
+            {label} : {props.required && <span className="text-red-500">*</span>}
+        </label>
+        <input
+            type={type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            {...props}
+            className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
+        />
+    </div>
+);
+
+const Select = ({ label, name, value, onChange, options, required }) => (
+    <div>
+        <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
+            {label} : {required && <span className="text-red-500">*</span>}
+        </label>
+        <select
+            name={name}
+            value={value}
+            onChange={onChange}
+            required={required}
+            className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
+        >
+            <option value="">Select</option>
+            {options?.map((opt) => (
+                <option key={opt} value={opt}>
+                    {opt}
+                </option>
+            ))}
+        </select>
+    </div>
+);
+
+const Radio = ({ label, name, checked, onChange }) => (
+    <label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
+        <div className='flex flex-col justify-center'>
+            <div className="flex gap-4 items-center mt-2">
+                <label className="flex items-center gap-2 text-md">
+                    <input type="radio" name={name} checked={checked} onChange={onChange} className="w-4 h-4 accent-blue-600" />
+                    {label}
+                </label>
+            </div>
+        </div>
+    </label>
+)
 
 export default EditDonorModal;

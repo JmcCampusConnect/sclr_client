@@ -4,7 +4,7 @@ import { Outlet, NavLink, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChalkboard, faHandHoldingHeart, faFileAlt, faIdCard, faTools, faSignOutAlt,
-    faChartBar, faSliders, faMapSigns, faClipboard, faChartLine, faCalendarDays
+    faChartBar, faUserGroup, faMapSigns, faClipboard, faChartLine, faSlidersH
 } from '@fortawesome/free-solid-svg-icons';
 import { ChevronUp, ChevronDown } from "lucide-react";
 import '../App.css';
@@ -61,7 +61,6 @@ function AdminLayout() {
 
     const navItems = [
         { icon: faChalkboard, name: 'Dashboard', path: `/admin/dashboard`, show: true },
-        { icon: faHandHoldingHeart, name: 'Donor', path: '/admin/donor', show: true },
         { icon: faClipboard, name: 'Application', path: '/admin/application', show: true },
         { icon: faIdCard, name: 'Status', path: '/admin/status', show: true },
         { icon: faTools, name: 'Settings', path: '/admin/action', show: true },
@@ -70,14 +69,25 @@ function AdminLayout() {
         { icon: faChartBar, name: 'Reports', path: '/admin/report', show: true },
         { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
         {
+            name: "Manage",
+            icon: faUserGroup,
+            show: true,
+            subItems: [
+                { name: "Donar Manage", path: `/admin/donor` },
+                { name: "Staff Manage", path: `/admin/applicationDate` },
+                { name: "Student Manage", path: `/admin/applicationDate` },
+                { name: "Mentor Manage", path: `/admin/applicationDate` },
+            ]
+        },
+        {
             name: "Application Settings",
-            icon: faCalendarDays,
+            icon: faSlidersH,
             show: true,
             subItems: [
                 { name: "Academic Year", path: `/admin/academicYear` },
                 { name: "Application Date", path: `/admin/applicationDate` },
             ]
-        }
+        },
     ]
 
     return (
