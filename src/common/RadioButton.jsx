@@ -3,9 +3,9 @@ import React from "react";
 function RadioButton({ label, name, options = [], required, register, errors }) {
 
     return (
-        <div>
-            <label className="block mb-2 font-medium text-slate-700">
-                {label} {required && <span className="text-red-500">*</span>}
+        <div className="space-y-1.5">
+            <label className="block text-md font-medium text-gray-700">
+                {label} : {required && <span className="text-red-500">*</span>}
             </label>
             <div className="flex mt-4 gap-8">
                 {options.map((option) => (
@@ -15,13 +15,15 @@ function RadioButton({ label, name, options = [], required, register, errors }) 
                             type="radio"
                             value={option}
                             name={name}
-                            className="scale-125"
+                            className="accent-blue-600 scale-110"
                         />
-                        <span className="text-lg">{option}</span>
+                        <span className="text-gray-800">{option}</span>
                     </label>
                 ))}
             </div>
-            {errors?.[name] && <p className="text-red-500 text-sm mt-4">{errors[name].message}</p>}
+            {errors?.[name] && (
+                <p className="text-red-500 text-sm">{errors[name].message}</p>
+            )}
         </div>
     )
 }
