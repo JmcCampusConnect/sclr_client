@@ -65,7 +65,7 @@ function AdminLayout() {
         { icon: faIdCard, name: 'Status', path: '/admin/status', show: true },
         { icon: faTools, name: 'Settings', path: '/admin/action', show: true },
         { icon: faChartLine, name: 'Work Progress Report', path: '/admin/progress_report', show: true },
-        { icon: faFileAlt, name: 'Distribution Statement', path: '/admin/distribution_statement', show: true },
+        { icon: faFileAlt, name: 'Distribution Statement', path: '/admin/distributionStatement', show: true },
         { icon: faChartBar, name: 'Reports', path: '/admin/report', show: true },
         { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
         {

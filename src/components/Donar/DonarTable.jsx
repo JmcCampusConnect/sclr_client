@@ -1,6 +1,6 @@
 import React from "react";
 
-function DonorTable({ donors, onEdit, onDelete }) {
+function DonorTable({ donors, onEdit, onDelete, onAmount }) {
 
     return (
         <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
@@ -33,6 +33,7 @@ function DonorTable({ donors, onEdit, onDelete }) {
                                 <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
                                     <div className="flex justify-center gap-2">
                                         <button
+                                            onClick={() => onAmount(donor)}
                                             className="w-20 px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
                                         >
                                             Amount

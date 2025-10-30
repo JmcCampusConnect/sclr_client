@@ -6,6 +6,7 @@ import EditDonorModal from "../components/Donar/EditDonorModal";
 import ActionBar from "../components/Donar/ActionBar";
 import FilterSection from "../components/Donar/FilterSection";
 import DeleteDonorModal from "../components/Donar/DeleteDonarModal.jsx";
+import AmtDonarModal from "../components/Donar/AmtDonarModal.jsx";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -15,6 +16,7 @@ function Donor() {
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [editDonor, setEditDonor] = useState(null);
 	const [deleteDonor, setDeleteDonor] = useState(null);
+	const [amtDonarModal, setAmtDonarModal] = useState(null);
 
 	const fetchDonors = async () => {
 		try {
@@ -38,8 +40,8 @@ function Donor() {
 	}
 
 	const handleDeleteDonor = (deletedId) => {
-        setDonors((prev) => prev.filter((donor) => donor.donorId !== deletedId));
-    }
+		setDonors((prev) => prev.filter((donor) => donor.donorId !== deletedId));
+	}
 
 	return (
 		<div className="relative">
@@ -50,7 +52,12 @@ function Donor() {
 			</header>
 			<FilterSection onAdd={() => setShowAddModal(true)} />
 			<ActionBar donors={donors} />
-			<DonorTable donors={donors} onEdit={(donor) => setEditDonor(donor)} onDelete={(donor) => setDeleteDonor(donor)} />
+			<DonorTable
+				donors={donors}
+				onEdit={(donor) => setEditDonor(donor)}
+				onDelete={(donor) => setDeleteDonor(donor)}
+				onAmount={(donor) => setAmtDonarModal(donor)}
+			/>
 			{showAddModal && (
 				<AddDonorModal
 					onClose={() => setShowAddModal(false)}
@@ -65,12 +72,17 @@ function Donor() {
 				/>
 			)}
 			{deleteDonor && (
-                <DeleteDonorModal
-                    donor={deleteDonor}
-                    onClose={() => setDeleteDonor(null)}
-                    onDelete={handleDeleteDonor}
-                />
-            )}
+				<DeleteDonorModal
+					donor={deleteDonor}
+					onClose={() => setDeleteDonor(null)}
+					onDelete={handleDeleteDonor}
+				/>
+			)}
+			{amtDonarModal && (
+				<AmtDonarModal
+					onClose={() => setAmtDonarModal(null)}
+				/>
+			)}
 		</div>
 	)
 }

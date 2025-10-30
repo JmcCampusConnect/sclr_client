@@ -31,6 +31,7 @@ import ApplicationDate from './pages/ApplicationDate';
 import AdminApplication from './pages/AdminApplication';
 import AdminViewAppln from './pages/AdminViewAppln';
 import Donor from './pages/Donor';
+import DistributionStmt from './pages/admin/DistributionStmt';
 
 function App() {
 
@@ -84,6 +85,7 @@ function App() {
 						<Route path="academicYear" element={<AcademicYear />} />
 						<Route path="applicationDate" element={<ApplicationDate />} />
 						<Route path="donor" element={<Donor />} />
+						<Route path="distributionStatement" element={<DistributionStmt />} />
 						<Route path="application/*" element={<AdminApplication />} >
 							<Route path="view" element={<AdminViewAppln />} />
 						</Route>
