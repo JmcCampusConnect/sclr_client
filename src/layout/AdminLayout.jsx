@@ -63,20 +63,17 @@ function AdminLayout() {
         { icon: faChalkboard, name: 'Dashboard', path: `/admin/dashboard`, show: true },
         { icon: faClipboard, name: 'Application', path: '/admin/application', show: true },
         { icon: faIdCard, name: 'Status', path: '/admin/status', show: true },
-        { icon: faTools, name: 'Settings', path: '/admin/action', show: true },
         { icon: faChartLine, name: 'Work Progress Report', path: '/admin/progress_report', show: true },
         { icon: faFileAlt, name: 'Distribution Statement', path: '/admin/distributionStatement', show: true },
-        { icon: faChartBar, name: 'Reports', path: '/admin/report', show: true },
-        { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
         {
             name: "Manage",
             icon: faUserGroup,
             show: true,
             subItems: [
                 { name: "Donar Manage", path: `/admin/donor` },
-                { name: "Staff Manage", path: `/admin/applicationDate` },
-                { name: "Student Manage", path: `/admin/applicationDate` },
-                { name: "Mentor Manage", path: `/admin/applicationDate` },
+                { name: "Staff Manage", path: `/admin/staffManage` },
+                { name: "Student Manage", path: `/admin/studentManage` },
+                { name: "Tutor Manage", path: `/admin/tutorManage` },
             ]
         },
         {
@@ -88,6 +85,9 @@ function AdminLayout() {
                 { name: "Application Date", path: `/admin/applicationDate` },
             ]
         },
+        { icon: faChartBar, name: 'Reports', path: '/admin/report', show: true },
+        { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
+        { icon: faTools, name: 'Settings', path: '/admin/action', show: true },
     ]
 
     return (

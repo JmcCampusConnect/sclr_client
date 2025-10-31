@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DonorTable from "../components/Donar/DonarTable.jsx";
-import AddDonorModal from "../components/Donar/AddDonorModal";
-import EditDonorModal from "../components/Donar/EditDonorModal";
-import ActionBar from "../components/Donar/ActionBar";
-import FilterSection from "../components/Donar/FilterSection";
-import DeleteDonorModal from "../components/Donar/DeleteDonarModal.jsx";
-import AmtDonarModal from "../components/Donar/AmtDonarModal.jsx";
+import DonorTable from "../../../components/Donar/DonarTable.jsx";
+import AddDonorModal from "../../../components/Donar/AddDonorModal.jsx";
+import EditDonorModal from "../../../components/Donar/EditDonorModal.jsx";
+import ActionBar from "../../../components/Donar/ActionBar.jsx";
+import FilterSection from "../../../components/Donar/FilterSection.jsx";
+import DeleteDonorModal from "../../../components/Donar/DeleteDonarModal.jsx";
+import AmtDonarModal from "../../../components/Donar/AmtDonarModal.jsx";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 

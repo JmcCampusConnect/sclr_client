@@ -38,7 +38,6 @@ function DonorTable({ donors, onEdit, onDelete, onAmount }) {
                                         >
                                             Amount
                                         </button>
-
                                         <button
                                             className="w-20 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
                                             onClick={() => onEdit(donor)}

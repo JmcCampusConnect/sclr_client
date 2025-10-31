@@ -30,8 +30,11 @@ import AcademicYear from './pages/AcademicYear';
 import ApplicationDate from './pages/ApplicationDate';
 import AdminApplication from './pages/AdminApplication';
 import AdminViewAppln from './pages/AdminViewAppln';
-import Donor from './pages/Donor';
+import Donor from './pages/admin/manage/Donor';
 import DistributionStmt from './pages/admin/DistributionStmt';
+import Staff from './pages/admin/manage/Staff';
+import Student from './pages/admin/manage/Student';
+import Tutor from './pages/admin/manage/Tutor';
 
 function App() {
 
@@ -89,6 +92,9 @@ function App() {
 						<Route path="application/*" element={<AdminApplication />} >
 							<Route path="view" element={<AdminViewAppln />} />
 						</Route>
+						<Route path="staffManage" element={<Staff />} />
+						<Route path="studentManage" element={<Student />} />
+						<Route path="tutorManage" element={<Tutor />} />
 					</Route>
 
 					{/* Staff */}
