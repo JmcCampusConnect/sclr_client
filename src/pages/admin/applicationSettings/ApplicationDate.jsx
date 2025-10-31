@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import HeaderTag from '../common/HeaderTag'
+import HeaderTag from '../../../common/HeaderTag'
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function ApplicationDate() {

@@ -4,8 +4,8 @@ import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./routes/PrivateRoute";
 
 // Public Pages
-import LandingPage from "./pages/LandingPage";
-import LoginPage from "./pages/LoginPage";
+import LandingPage from "./pages/others/LandingPage";
+import LoginPage from "./pages/others/LoginPage";
 import StudentHome from "./pages/StudentHome";
 
 // Student Pages
@@ -18,23 +18,29 @@ import StudentGuidelines from "./pages/StudentGuidelines";
 
 // Staff Pages
 import StaffLayout from "./layout/StaffLayout";
-import ClassAttendance from "./pages/ClassAttendance";
-import DmAttendance from "./pages/DmAttendance";
-import CoeMark from "./pages/CoeMark";
-import StaffSettings from "./pages/StaffSettings";
+import ClassAttendance from "./pages/staff/ClassAttendance";
+import DmAttendance from "./pages/staff/DmAttendance";
+import CoeMark from "./pages/staff/CoeMark";
+import StaffSettings from "./pages/staff/StaffSettings";
 
 // Admin Pages
 import AdminLayout from "./layout/AdminLayout";
-import AdminStaffDashboard from "./pages/AdminStaffDashboard";
-import AcademicYear from './pages/AcademicYear';
-import ApplicationDate from './pages/ApplicationDate';
-import AdminApplication from './pages/AdminApplication';
-import AdminViewAppln from './pages/AdminViewAppln';
+import CommonStaffDashboard from "./pages/CommonStaffDashboard";
+import AcademicYear from './pages/admin/applicationSettings/AcademicYear';
+import ApplicationDate from './pages/admin/applicationSettings/ApplicationDate';
+import SclrAdministration from './pages/admin/SclrAdministration';
+import AdminViewAppln from './pages/admin/AdminViewAppln';
 import Donor from './pages/admin/manage/Donor';
 import DistributionStmt from './pages/admin/DistributionStmt';
 import Staff from './pages/admin/manage/Staff';
 import Student from './pages/admin/manage/Student';
 import Tutor from './pages/admin/manage/Tutor';
+import Application from './pages/admin/manage/Application';
+import CheckStatus from './pages/admin/CheckStatus';
+import ProgressReport from './pages/admin/ProgressReport';
+import FundsAvailable from './pages/admin/report/FundsAvailable';
+import ChangePassword from './pages/admin/ChangePassword';
+import GuideLines from './pages/admin/GuideLines';
 
 function App() {
 
@@ -84,17 +90,23 @@ function App() {
 							</PrivateRoute>
 						}
 					>
-						<Route path="dashboard" element={<AdminStaffDashboard />} />
+						<Route path="dashboard" element={<CommonStaffDashboard />} />
 						<Route path="academicYear" element={<AcademicYear />} />
 						<Route path="applicationDate" element={<ApplicationDate />} />
 						<Route path="donor" element={<Donor />} />
+						<Route path="checkSstatus/*" element={<CheckStatus />} />
 						<Route path="distributionStatement" element={<DistributionStmt />} />
-						<Route path="application/*" element={<AdminApplication />} >
+						<Route path="sclrAdministration/*" element={<SclrAdministration />} >
 							<Route path="view" element={<AdminViewAppln />} />
 						</Route>
 						<Route path="staffManage" element={<Staff />} />
 						<Route path="studentManage" element={<Student />} />
 						<Route path="tutorManage" element={<Tutor />} />
+						<Route path="applicationManage" element={<Application />} />
+						<Route path="progressReport" element={<ProgressReport />} />
+						<Route path="fundsAvailable" element={<FundsAvailable />} />
+						<Route path="changePassword" element={<ChangePassword />} />
+						<Route path="guidelines" element={<GuideLines />} />
 					</Route>
 
 					{/* Staff */}
@@ -109,7 +121,7 @@ function App() {
 						<Route path="classAttendance" element={<ClassAttendance />} />
 						<Route path="dmAttendance" element={<DmAttendance />} />
 						<Route path="markEntry" element={<CoeMark />} />
-						<Route path="dashboard" element={<AdminStaffDashboard />} />
+						<Route path="dashboard" element={<CommonStaffDashboard />} />
 						<Route path="settings" element={<StaffSettings />} />
 					</Route>
 

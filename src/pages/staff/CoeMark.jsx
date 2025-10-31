@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import StaffStatus from '../components//Others/StaffStatus';
-import Button from '../common/Button';
-import HeaderTag from '../common/HeaderTag';
-import { useFetch } from '../hook/useFetch';
-import { useAdd } from '../hook/useAdd'
+import StaffStatus from '../../components/Others/StaffStatus';
+import Button from '../../common/Button';
+import HeaderTag from '../../common/HeaderTag';
+import { useFetch } from '../../hook/useFetch';
+import { useAdd } from '../../hook/useAdd'
 
 function CoeMark() {
 

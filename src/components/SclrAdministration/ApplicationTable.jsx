@@ -30,7 +30,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 						{students.length > 0 ? (
 							students.map((app, index) => (
 								<tr
-									key={app.sno}
+									key={app.registerNo}
 									className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
 								>
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
@@ -53,7 +53,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 									<td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
 										<div className="flex justify-center gap-2">
 											<button
-												onClick={() => navigate('/admin/application/view', { state: { student: app } })}
+												onClick={() => navigate('/admin/sclrAdministration/view', { state: { student: app } })}
 												className="w-16 px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
 											>
 												View

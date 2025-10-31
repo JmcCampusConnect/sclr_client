@@ -1,7 +1,7 @@
 import React from 'react';
-import HeroSection from '../components/LandingPage/HeroSection';
-import UserButtons from '../components/LandingPage/UserButtons';
-import FooterCredit from '../components/LandingPage/FooterCredit';
+import HeroSection from '../../components/LandingPage/HeroSection';
+import UserButtons from '../../components/LandingPage/UserButtons';
+import FooterCredit from '../../components/LandingPage/FooterCredit';
 
 function LandingPage() {
 

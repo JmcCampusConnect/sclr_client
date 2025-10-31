@@ -4,7 +4,7 @@ import { Outlet, NavLink, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChalkboard, faHandHoldingHeart, faFileAlt, faIdCard, faTools, faSignOutAlt,
-    faChartBar, faUserGroup, faMapSigns, faClipboard, faChartLine, faSlidersH
+    faChartBar, faUserGroup, faMapSigns, faHandHoldingUsd, faChartLine, faSlidersH
 } from '@fortawesome/free-solid-svg-icons';
 import { ChevronUp, ChevronDown } from "lucide-react";
 import '../App.css';
@@ -61,19 +61,20 @@ function AdminLayout() {
 
     const navItems = [
         { icon: faChalkboard, name: 'Dashboard', path: `/admin/dashboard`, show: true },
-        { icon: faClipboard, name: 'Application', path: '/admin/application', show: true },
-        { icon: faIdCard, name: 'Status', path: '/admin/status', show: true },
-        { icon: faChartLine, name: 'Work Progress Report', path: '/admin/progress_report', show: true },
+        { icon: faHandHoldingUsd, name: 'Scholarship Administration', path: '/admin/sclrAdministration', show: true },
+        { icon: faIdCard, name: 'Check Status', path: '/admin/checkSstatus', show: true },
+        { icon: faChartLine, name: 'Work Progress Report', path: '/admin/progressReport', show: true },
         { icon: faFileAlt, name: 'Distribution Statement', path: '/admin/distributionStatement', show: true },
         {
             name: "Manage",
             icon: faUserGroup,
             show: true,
             subItems: [
-                { name: "Donar Manage", path: `/admin/donor` },
-                { name: "Staff Manage", path: `/admin/staffManage` },
+                { name: "Donor Manage", path: `/admin/donor` },
+                { name: "Application Manage", path: `/admin/applicationManage` },
                 { name: "Student Manage", path: `/admin/studentManage` },
                 { name: "Tutor Manage", path: `/admin/tutorManage` },
+                { name: "Staff Manage", path: `/admin/staffManage` },
             ]
         },
         {
@@ -85,9 +86,16 @@ function AdminLayout() {
                 { name: "Application Date", path: `/admin/applicationDate` },
             ]
         },
-        { icon: faChartBar, name: 'Reports', path: '/admin/report', show: true },
+        {
+            name: "Reports",
+            icon: faChartBar,
+            show: true,
+            subItems: [
+                { name: "Funds Available", path: `/admin/fundsAvailable` },
+            ]
+        },
+        { icon: faTools, name: 'Change Password', path: '/admin/changePassword', show: true },
         { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
-        { icon: faTools, name: 'Settings', path: '/admin/action', show: true },
     ]
 
     return (

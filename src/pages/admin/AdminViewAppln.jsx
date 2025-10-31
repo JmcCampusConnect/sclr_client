@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import ApplicationStatus from "../components/StudentDashboard/ApplicationStatus";
-import PersonalDetails from "../components/StudentDashboard/PersonalDetails";
-import EducationalDetails from "../components/StudentDashboard/EducationalDetails";
-import DocumentsSection from "../components/StudentDashboard/DocumentsSection";
-import { InfoCard } from "../components/StudentDashboard/UI";
-import AcceptModal from "../components/Others/AcceptModal";
-import RejectModal from "../components/Others/RejectModal";
-import PrintApplication from "../components/Others/PrintApplication";
+import ApplicationStatus from "../../components/StudentDashboard/ApplicationStatus";
+import PersonalDetails from "../../components/StudentDashboard/PersonalDetails";
+import EducationalDetails from "../../components/StudentDashboard/EducationalDetails";
+import DocumentsSection from "../../components/StudentDashboard/DocumentsSection";
+import { InfoCard } from "../../components/StudentDashboard/UI";
+import AcceptModal from "../../components/Others/AcceptModal";
+import RejectModal from "../../components/Others/RejectModal";
+import PrintApplication from "../../components/Others/PrintApplication";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 

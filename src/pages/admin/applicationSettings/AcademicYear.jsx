@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
 const apiUrl = import.meta.env.VITE_API_URL;
-import HeaderTag from '../common/HeaderTag'
+import HeaderTag from '../../../common/HeaderTag'
 
 function AcademicYear() {
 

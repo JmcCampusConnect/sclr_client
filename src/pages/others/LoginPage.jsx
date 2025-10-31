@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import LoginHeader from '../components/LoginPage/LoginHeader';
-import LoginIllustration from '../components/LoginPage/LoginIllustration';
-import LoginForm from '../components/LoginPage/LoginForm';
-import { AuthContext } from '../context/AuthContext'
+import LoginHeader from '../../components/LoginPage/LoginHeader';
+import LoginIllustration from '../../components/LoginPage/LoginIllustration';
+import LoginForm from '../../components/LoginPage/LoginForm';
+import { AuthContext } from '../../context/AuthContext'
 
 const schema = Yup.object().shape({
     userId: Yup.string().required('Username is required'),
@@ -30,9 +30,9 @@ function LoginPage({ setIsAuthenticated }) {
                 if (response.data.user.role === 0)
                     navigate(`/student/${userId}/dashboard`);
                 else if (response.data.user.role === 1)
-                    navigate(`/admin`);
+                    navigate(`/admin/dashboard`);
                 else if (response.data.user.role === 2)
-                    navigate(`/staff/${userId}/attendance`);
+                    navigate(`/staff/${userId}/dashboard`);
                 else
                     navigate('/');
             }
