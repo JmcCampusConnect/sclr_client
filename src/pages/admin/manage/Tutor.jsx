@@ -2,13 +2,19 @@ import React, { useState } from 'react'
 import FilterSection from '../../../components/Tutor/FilterSection'
 import ActionBar from '../../../components/Tutor/ActionBar'
 import TutorTable from '../../../components/Tutor/TutorTable'
+import AddTutorModal from '../../../components/Tutor/AddTutorModal'
 import EditTutorModal from '../../../components/Tutor/EditTutorModal'
 import DeleteTutorModal from '../../../components/Tutor/DeleteTutorModal'
 
 function Tutor() {
 
+    const [addTutor, setAddTutor] = useState(null);
     const [editTutor, setEditTutor] = useState(null);
     const [deleteTutor, setDeleteTutor] = useState(null);
+
+    const handleAddTutor = (newTutor) => {
+        console.log("New tutor added : ", newTutor);
+    }
 
     const handleEditTutor = (updatedTutor) => {
         console.log("Tutor updated : ", updatedTutor);
@@ -27,11 +33,21 @@ function Tutor() {
                 </h1>
             </header>
             <FilterSection />
-            <ActionBar />
+            <ActionBar
+                onClose={() => setAddTutor(null)}
+                onAddTutor={() => setAddTutor({})}
+            />
             <TutorTable
                 onEditTutor={setEditTutor}
                 onDeleteTutor={setDeleteTutor}
             />
+            {addTutor && (
+                <AddTutorModal
+                    tutor={addTutor}
+                    onAddTutor={handleAddTutor}
+                    onClose={() => setAddTutor(nulll)}
+                />
+            )}
             {editTutor && (
                 <EditTutorModal
                     tutor={editTutor}

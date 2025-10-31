@@ -27,52 +27,62 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 
 					{/* Table Body */}
 					<tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-						{students.map((app, index) => (
-							<tr
-								key={app.sno}
-								className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
-							>
-								<td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
-									{index + 1}
-								</td>
-								<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
-									{app.registerNo}
-								</td>
-								<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white whitespace-nowrap">
-									{app.name}
-								</td>
-								<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
-									{app.department}
-								</td>
-								<td className="px-4 py-4 text-sm lg:text-base font-semibold text-indigo-600 dark:text-indigo-400">
-									{typeof app.amount === 'number'
-										? `₹ ${app.amount.toLocaleString("en-IN")}`
-										: "N/A"}
-								</td>
-								<td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
-									<div className="flex justify-center gap-2">
-										<button
-											onClick={() => navigate('/admin/application/view', { state: { student: app } })}
-											className="w-16 px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
-										>
-											View
-										</button>
-										<button
-											onClick={openAcceptModal}
-											className="w-16 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
-										>
-											Accept
-										</button>
-										<button
-											onClick={openRejectModal}
-											className="w-16 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
-										>
-											Reject
-										</button>
-									</div>
+						{students.length > 0 ? (
+							students.map((app, index) => (
+								<tr
+									key={app.sno}
+									className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
+								>
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
+										{index + 1}
+									</td>
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
+										{app.registerNo}
+									</td>
+									<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white whitespace-nowrap">
+										{app.name}
+									</td>
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
+										{app.department}
+									</td>
+									<td className="px-4 py-4 text-sm lg:text-base font-semibold text-indigo-600 dark:text-indigo-400">
+										{typeof app.amount === 'number'
+											? `₹ ${app.amount.toLocaleString("en-IN")}`
+											: "N/A"}
+									</td>
+									<td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
+										<div className="flex justify-center gap-2">
+											<button
+												onClick={() => navigate('/admin/application/view', { state: { student: app } })}
+												className="w-16 px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+											>
+												View
+											</button>
+											<button
+												onClick={openAcceptModal}
+												className="w-16 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+											>
+												Accept
+											</button>
+											<button
+												onClick={openRejectModal}
+												className="w-16 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+											>
+												Reject
+											</button>
+										</div>
+									</td>
+								</tr>
+							))) : (
+							<tr>
+								<td
+									colSpan="6"
+									className="px-4 py-6 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base"
+								>
+									No records found
 								</td>
 							</tr>
-						))}
+						)}
 					</tbody>
 				</table>
 			</div>

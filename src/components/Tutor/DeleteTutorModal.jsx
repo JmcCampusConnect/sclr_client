@@ -39,10 +39,10 @@ function DeleteTutorModal({ tutor, onClose, onDelete }) {
                 <div className="px-8 py-5">
                     <div className="rounded-xl bg-gray-50 dark:bg-gray-800/70 p-4 border border-gray-200 dark:border-gray-700 shadow-sm text-center">
                         <p className="text-md text-gray-500 dark:text-gray-400 font-mono">
-                            Donar ID : {tutor.tutorId}
+                            Staff ID : {tutor.staffId}
                         </p>
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                            {tutor.tutorName}
+                            {tutor.staffName}
                         </h3>
                     </div>
                 </div>

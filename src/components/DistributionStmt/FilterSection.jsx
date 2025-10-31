@@ -1,6 +1,6 @@
 import React from "react";
 
-function FilterSection({}) {
+function FilterSection({ }) {
 
     const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
 
@@ -55,6 +55,36 @@ function FilterSection({}) {
                         <option value="sfm">SFM</option>
                         <option value="sfw">SFW</option>
                     </select>
+                </div>
+
+                {/* From Date */}
+                <div className="space-y-2.5">
+                    <label
+                        htmlFor="from-date"
+                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
+                    >
+                        From Date :
+                    </label>
+                    <input
+                        type="date"
+                        id="from-date"
+                        className={formControlClass}
+                    />
+                </div>
+
+                {/* To Date */}
+                <div className="space-y-2.5">
+                    <label
+                        htmlFor="to-date"
+                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
+                    >
+                        To Date :
+                    </label>
+                    <input
+                        type="date"
+                        id="to-date"
+                        className={formControlClass}
+                    />
                 </div>
             </div>
         </div>

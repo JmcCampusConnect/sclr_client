@@ -30,7 +30,7 @@ function EditTutorModal({ tutorData, onClose, onUpdateTutor }) {
                 {/* Header */}
                 <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        ✏️ Edit Donor
+                        ✏️ Edit Tutor
                     </h1>
                     <button
                         onClick={onClose}
@@ -41,7 +41,8 @@ function EditTutorModal({ tutorData, onClose, onUpdateTutor }) {
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-10 font-semibold">
+                <form onSubmit={handleSubmit} className="p-6 space-y-7 font-semibold">
+
                     {/* Section 1: Basic Info */}
                     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
@@ -49,104 +50,44 @@ function EditTutorModal({ tutorData, onClose, onUpdateTutor }) {
                         </h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <Input label="Donor ID" name="did" value={formData.did} readOnly />
+
+                            <Input label="Staff ID" name="staffId" value={formData.staffId} />
+                            <Input label="Staff Name" name="staffName" value={formData.staffName} />
 
                             <Select
-                                label="Scholarship Type"
-                                name="scholtype"
-                                value={formData.scholtype}
+                                label="Department ID"
+                                name="departmentId"
+                                value={formData.departmentId}
                                 onChange={handleChange}
                                 required
-                                options={["Alumni", "Well Wisher"]}
+                                options={["CSE", "ECE", "ME", "CE", "EE"]}
                             />
 
-                            {formData.scholtype === "Alumni" && (
-                                <>
-                                    <Input label="Programme" name="donordept" value={formData.donordept} onChange={handleChange} />
-                                    <Input label="Studied Year" name="donorbatch" value={formData.donorbatch} onChange={handleChange} />
-                                </>
-                            )}
-
-                            <Input
-                                label="Name"
-                                name="name"
-                                value={formData.name}
-                                required
-                                onChange={(e) =>
-                                    setFormData((prev) => ({ ...prev, name: e.target.value.toUpperCase() }))
-                                }
-                            />
-                            <Input label="Mobile No" name="mobileNo" value={formData.mobileNo} onChange={handleChange} />
-                            <Input
-                                label="PAN / Aadhar No"
-                                name="pan"
-                                value={formData.pan}
-                                onChange={(e) =>
-                                    setFormData((prev) => ({ ...prev, pan: e.target.value.toUpperCase() }))
-                                }
-                            />
-                            <Input label="Email ID" name="emailId" type="email" value={formData.emailId} onChange={handleChange} />
-                            <Input
-                                label="Permanent Address"
-                                name="address"
-                                value={formData.address}
-                                onChange={(e) =>
-                                    setFormData((prev) => ({ ...prev, address: e.target.value.toUpperCase() }))
-                                }
-                            />
-                            <Select label="State" name="state" value={formData.state} onChange={handleChange} options={[]} />
-                            <Select label="District" name="district" value={formData.district} onChange={handleChange} options={[]} />
-                            <Input label="Pincode" name="pin" value={formData.pin} maxLength={6} onChange={handleChange} />
-                        </div>
-                    </div>
-
-                    {/* Section 2: Payment Details */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
-                        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
-                            💰 Payment Details
-                        </h2>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Input
-                                label="Date of Payment"
-                                name="scholdate"
-                                type="date"
-                                value={formData.scholdate}
+                            <Select
+                                label="Catergory"
+                                name="category"
+                                value={formData.category}
                                 onChange={handleChange}
+                                required
+                                options={["AIDED", 'SFM', 'SFW']}
                             />
 
-                            <div>
-                                <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
-                                    Scholarship Type:
-                                </label>
-                                <div className="flex gap-6 mt-2 items-center">
-                                    <Radio
-                                        label="Zakkath"
-                                        name="zakkath"
-                                        checked={formData.zakkath === true}
-                                        onChange={() => setFormData((prev) => ({ ...prev, zakkath: true }))}
-                                    />
-                                    <Radio
-                                        label="General"
-                                        name="zakkath"
-                                        checked={formData.zakkath === false}
-                                        onChange={() => setFormData((prev) => ({ ...prev, zakkath: false }))}
-                                    />
-                                </div>
-                            </div>
-
-                            <Input label="Cheque / Receipt No" name="receipt" value={formData.receipt} onChange={handleChange} />
-
-                            <Input
-                                label="Amount"
-                                name={formData.zakkath ? "zakkathamt" : "amount"}
+                            <Select
+                                label="Batch"
+                                name="batch"
+                                value={formData.batch}
+                                onChange={handleChange}
                                 required
-                                value={formData.zakkath ? formData.zakkathamt : formData.amount}
-                                onChange={(e) =>
-                                    formData.zakkath
-                                        ? setFormData((prev) => ({ ...prev, zakkathamt: e.target.value }))
-                                        : setFormData((prev) => ({ ...prev, amount: e.target.value }))
-                                }
+                                options={["2020", "2021", "2022", "2023", "2024"]}
+                            />
+
+                            <Select
+                                label="Section"
+                                name="section"
+                                value={formData.section}
+                                onChange={handleChange}
+                                required
+                                options={["AIDED", 'SFM', 'SFW']}
                             />
                         </div>
                     </div>
@@ -162,18 +103,17 @@ function EditTutorModal({ tutorData, onClose, onUpdateTutor }) {
                         </button>
                         <button
                             type="submit"
-                            className="px-6 py-2.5 rounded-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-md transition"
+                            className="px-6 py-2.5 rounded-lg font-semibold bg-green-600 hover:bg-green-700 text-white shadow-md transition"
                         >
-                            Update
+                            Submit
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-    );
+    )
 }
 
-// Reusable form components (same as Add modal)
 const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
     <div>
         <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
@@ -210,19 +150,6 @@ const Select = ({ label, name, value, onChange, options, required }) => (
             ))}
         </select>
     </div>
-);
-
-const Radio = ({ label, name, checked, onChange }) => (
-    <label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
-        <div className='flex flex-col justify-center'>
-            <div className="flex gap-4 items-center mt-2">
-                <label className="flex items-center gap-2 text-md">
-                    <input type="radio" name={name} checked={checked} onChange={onChange} className="w-4 h-4 accent-blue-600" />
-                    {label}
-                </label>
-            </div>
-        </div>
-    </label>
 )
 
 export default EditTutorModal;
