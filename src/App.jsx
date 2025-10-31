@@ -41,6 +41,8 @@ import ProgressReport from './pages/admin/ProgressReport';
 import FundsAvailable from './pages/admin/report/FundsAvailable';
 import ChangePassword from './pages/admin/ChangePassword';
 import GuideLines from './pages/admin/GuideLines';
+import UploadCenter from './pages/admin/UploadCenter';
+import DataDeletion from './pages/admin/DataDeletion';
 
 function App() {
 
@@ -107,6 +109,8 @@ function App() {
 						<Route path="fundsAvailable" element={<FundsAvailable />} />
 						<Route path="changePassword" element={<ChangePassword />} />
 						<Route path="guidelines" element={<GuideLines />} />
+						<Route path="dataDeletion" element={<DataDeletion />} />
+						<Route path="uploadCenter" element={<UploadCenter />} />
 					</Route>
 
 					{/* Staff */}

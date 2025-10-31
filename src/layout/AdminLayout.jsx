@@ -3,8 +3,8 @@ import JmcLogo from "../assets/logos/JmcLogo.png";
 import { Outlet, NavLink, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faChalkboard, faHandHoldingHeart, faFileAlt, faIdCard, faTools, faSignOutAlt,
-    faChartBar, faUserGroup, faMapSigns, faHandHoldingUsd, faChartLine, faSlidersH
+    faChalkboard, faExclamationTriangle, faFileAlt, faIdCard, faTools, faSignOutAlt,
+    faChartBar, faUserGroup, faMapSigns, faHandHoldingUsd, faChartLine, faSlidersH , faUpload
 } from '@fortawesome/free-solid-svg-icons';
 import { ChevronUp, ChevronDown } from "lucide-react";
 import '../App.css';
@@ -94,8 +94,10 @@ function AdminLayout() {
                 { name: "Funds Available", path: `/admin/fundsAvailable` },
             ]
         },
+        { icon: faUpload, name: 'Upload Center', path: '/admin/uploadCenter', show: true },
         { icon: faTools, name: 'Change Password', path: '/admin/changePassword', show: true },
         { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
+        { icon: faExclamationTriangle, name: 'Data Deletion', path: '/admin/dataDeletion', show: true },
     ]
 
     return (
