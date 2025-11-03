@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../../App.css";
+import axios from "axios";
 import SearchDropdown from "../../common/SearchDropdown";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
 
@@ -17,14 +19,15 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
     const donorTypeOptions = [
         { value: "Alumini", label: "Alumini" },
         { value: "Well Wishers", label: "Well Wishers" },
-    ];
+    ]
 
     const sclrTypeOptions = [
         { value: "generalBal", label: "General" },
         { value: "zakkathBal", label: "Zakkath" },
-    ];
+    ]
 
     useEffect(() => {
+
         if (!numericAmount || !donorType || !sclrType) {
             setFilteredDonors([]);
             setSelectedDonor("");
@@ -53,17 +56,17 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
 
     const donorOptions = (filteredDonors || []).map((d) => ({
         value: d.donorId,
-        label: `${d.donorId} - ${d.donorName}
-            })`,
-    }));
+        label: `${d.donorId} - ${d.donorName}`,
+    }))
 
     const handleDropdownChange = (name, option) => {
         if (name === "donorType") setDonorType(option?.value || "");
         if (name === "sclrType") setSclrType(option?.value || "");
         if (name === "donor") setSelectedDonor(option?.value || "");
-    };
+    }
 
     const handleAddScholarship = () => {
+
         if (!amount || !donorType || !sclrType || !selectedDonor) {
             alert("Please fill all fields before adding scholarship.");
             return;
@@ -83,16 +86,41 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
         setAmount("");
         setSelectedDonor("");
         setFilteredDonors([]);
-    };
+    }
 
-    const handleSaveAll = () => {
+    const handleSaveAll = async () => {
+
         if (scholarships.length === 0) {
             alert("Please add at least one scholarship before submitting.");
             return;
         }
-        console.log("Submitting scholarships : ", scholarships);
-        // TODO: Replace with API call
-    };
+
+        const payload = {
+            academicYear: new Date().getFullYear(),
+            scholarships: scholarships.map((s) => ({
+                ...s,
+                registerNo: selectedStudent?.registerNo,
+                name: selectedStudent?.name,
+                department: selectedStudent?.department,
+            })),
+        };
+
+        try {
+
+            const response = await axios.post(`${apiUrl}/api/admin/application/sclrDistributions`, payload);
+            if (response.status === 201) {
+                alert("Scholarships submitted successfully!");
+                setScholarships([]);
+                closeModal();
+            } else {
+                alert(`Failed: ${response.data.message}`);
+            }
+        } catch (err) {
+            console.error("Error submitting scholarships:", err);
+            const message = err.response?.data?.message || "Something went wrong while submitting scholarships.";
+            alert(message);
+        }
+    }
 
     if (!showAcceptModal) return null;
 
@@ -103,6 +131,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-80">
             <div className="bg-white w-[80%] max-w-6xl max-h-[80vh] rounded-2xl overflow-y-auto shadow-2xl p-8 relative hide-scrollbar">
                 <form className="space-y-10">
+                    
                     {/* Student Details */}
                     <div className="bg-gray-100 rounded-xl p-6 shadow-inner">
                         <h3 className="text-xl font-bold text-gray-800 mb-4">Student Details</h3>
@@ -137,8 +166,8 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
                     {/* Scholarship Input Fields */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <label className="block font-semibold text-gray-700 mb-3">
-                                Scholarship Amount <span className="text-red-500">*</span>
+                            <label className="block font-semibold text-gray-700 mb-1.5">
+                                Scholarship Amount : <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="number"
@@ -180,7 +209,6 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
                             </div>
                         ) : (
                             <SearchDropdown
-                                label="Select Donor"
                                 name="donor"
                                 value={selectedDonor}
                                 options={donorOptions}
@@ -211,7 +239,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
                                 {scholarships.map((s, i) => (
                                     <div
                                         key={s.id}
-                                        className="grid grid-cols-[60px_150px_1fr_150px_120px] gap-4 items-center bg-white rounded-md px-4 py-2 border text-md text-gray-700"
+                                        className="grid grid-cols-[40px_90px_1fr_100px_100px] gap-4 items-center bg-white rounded-md px-4 py-2 border text-md text-gray-700"
                                     >
                                         <div>{i + 1}.</div>
                                         <div className="font-semibold">
@@ -258,10 +286,11 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
                             </button>
                         </div>
                     </div>
+
                 </form>
             </div>
         </div>
-    );
+    )
 }
 
 export default AcceptModal;
