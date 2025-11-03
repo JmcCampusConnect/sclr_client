@@ -45,7 +45,7 @@ function Tutor() {
                 <AddTutorModal
                     tutor={addTutor}
                     onAddTutor={handleAddTutor}
-                    onClose={() => setAddTutor(nulll)}
+                    onClose={() => setAddTutor(null)}
                 />
             )}
             {editTutor && (

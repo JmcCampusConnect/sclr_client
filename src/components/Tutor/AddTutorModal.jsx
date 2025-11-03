@@ -1,18 +1,26 @@
 import React, { useState } from "react";
 import axios from "axios";
 import '../../App.css';
+import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function AddTutorModal({ onClose, onAddTutor }) {
 
 	const [formData, setFormData] = useState({
-		staffId: "T" + Math.floor(Math.random() * 10000), staffName: "", departmentId: "", category: "", section: "", batch: ""
+		staffId: "", staffName: "", departmentId: "", category: "", section: "", batch: ""
 	});
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
+	}
+
+	const handleSelectChange = (name, option) => {
+		setFormData((prev) => ({
+			...prev,
+			[name]: option ? option.value : "",
+		}))
 	}
 
 	const handleSubmit = async (e) => {
@@ -26,9 +34,27 @@ function AddTutorModal({ onClose, onAddTutor }) {
 		}
 	}
 
+	const departmentOptions = ["CSE", "ECE", "ME", "CE", "EE"].map((v) => ({
+		value: v, label: v,
+	}));
+
+	const categoryOptions = ["AIDED", "SFM", "SFW"].map((v) => ({
+		value: v, label: v,
+	}));
+
+	const batchOptions = ["2020", "2021", "2022", "2023", "2024"].map((v) => ({
+		value: v, label: v,
+	}));
+
+	const sectionOptions = ["A", "B", "C", "D"].map((v) => ({
+		value: v, label: v,
+	}));
+
+
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
 			<div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full border border-gray-200 dark:border-gray-700 max-w-6xl hide-scrollbar overflow-y-auto max-h-[80vh]">
+
 				{/* Header */}
 				<div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
 					<h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -53,43 +79,55 @@ function AddTutorModal({ onClose, onAddTutor }) {
 
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-							<Input label="Staff ID" name="staffId" value={formData.staffId} />
-							<Input label="Staff Name" name="staffName" value={formData.staffName} />
+							<Input
+								label="Staff ID"
+								name="staffId"
+								value={formData.staffId}
+								onChange={handleChange}
+								required
+							/>
+							<Input
+								label="Staff Name"
+								name="staffName"
+								value={formData.staffName}
+								onChange={handleChange}
+								required
+							/>
 
-							<Select
-								label="Department ID"
+							<SearchDropdown
+								label="Department"
 								name="departmentId"
 								value={formData.departmentId}
-								onChange={handleChange}
+								options={departmentOptions}
+								onChange={handleSelectChange}
 								required
-								options={["CSE", "ECE", "ME", "CE", "EE"]}
 							/>
 
-							<Select
-								label="Catergory"
+							<SearchDropdown
+								label="Category"
 								name="category"
 								value={formData.category}
-								onChange={handleChange}
+								options={categoryOptions}
+								onChange={handleSelectChange}
 								required
-								options={["AIDED", 'SFM', 'SFW']}
 							/>
 
-							<Select
+							<SearchDropdown
 								label="Batch"
 								name="batch"
 								value={formData.batch}
-								onChange={handleChange}
+								options={batchOptions}
+								onChange={handleSelectChange}
 								required
-								options={["2020", "2021", "2022", "2023", "2024"]}
 							/>
 
-							<Select
+							<SearchDropdown
 								label="Section"
 								name="section"
 								value={formData.section}
-								onChange={handleChange}
+								options={sectionOptions}
+								onChange={handleSelectChange}
 								required
-								options={["AIDED", 'SFM', 'SFW']}
 							/>
 						</div>
 					</div>
@@ -129,28 +167,6 @@ const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
 			{...props}
 			className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
 		/>
-	</div>
-)
-
-const Select = ({ label, name, value, onChange, options, required }) => (
-	<div>
-		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
-			{label} : {required && <span className="text-red-500">*</span>}
-		</label>
-		<select
-			name={name}
-			value={value}
-			onChange={onChange}
-			required={required}
-			className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
-		>
-			<option value="">Select</option>
-			{options?.map((opt) => (
-				<option key={opt} value={opt}>
-					{opt}
-				</option>
-			))}
-		</select>
 	</div>
 )
 
