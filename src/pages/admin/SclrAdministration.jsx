@@ -13,25 +13,39 @@ function SclrAdministration() {
 
 	const [searchMode, setSearchMode] = useState("all");
 	const [students, setStudents] = useState([]);
+	const [donors, setDonors] = useState([]);
 	const [showAcceptModal, setShowAcceptModal] = useState(false);
 	const [showRejectModal, setShowRejectModal] = useState(false);
+	const [selectedStudent, setSelectedStudent] = useState(null);
 	const location = useLocation();
 
+	const fetchStudents = async () => {
+		try {
+			const response = await axios.get(`${apiUrl}/api/admin/application/fetchStudents`);
+			setStudents(response.data.data);
+		} catch (error) {
+			console.error("Error fetching students for admin application : ", error);
+		}
+	}
+
+	const fetchDonors = async () => {
+		try {
+			const response = await axios.get(`${apiUrl}/api/admin/application/fetchDonars`);
+			setDonors(response.data.donors);
+		} catch (error) {
+			console.error("Error fetching students for admin application : ", error);
+		}
+	};
+
 	useEffect(() => {
-		const fetchStudents = async () => {
-			try {
-				const response = await axios.get(`${apiUrl}/api/admin/application/fetchStudents`);
-				setStudents(response.data.data);
-			} catch (error) {
-				console.error("Error fetching students for admin application : ", error);
-			}
-		};
 		fetchStudents();
+		fetchDonors();
 	}, []);
 
 	const isViewPage = location.pathname.endsWith("/view");
 
-	const openAcceptModal = () => {
+	const openAcceptModal = (student) => {
+		setSelectedStudent(student);
 		setShowAcceptModal(true);
 		setShowRejectModal(false);
 	}
@@ -39,6 +53,8 @@ function SclrAdministration() {
 	const openRejectModal = () => {
 		setShowRejectModal(true);
 		setShowAcceptModal(false);
+		setSelectedStudent(student);
+
 	}
 
 	const closeModal = () => {
@@ -61,7 +77,12 @@ function SclrAdministration() {
 					<FilterSection searchMode={searchMode} setSearchMode={setSearchMode} />
 					<ActionBar totalStudents={students.length} />
 					<ApplicationTable students={students} openAcceptModal={openAcceptModal} openRejectModal={openRejectModal} />
-					<AcceptModal showAcceptModal={showAcceptModal} closeModal={closeModal} />
+					<AcceptModal
+						donors={donors}
+						selectedStudent={selectedStudent}
+						showAcceptModal={showAcceptModal}
+						closeModal={closeModal}
+					/>
 					<RejectModal showRejectModal={showRejectModal} closeModal={closeModal} />
 				</>
 			)}

@@ -43,6 +43,7 @@ import ChangePassword from './pages/admin/ChangePassword';
 import GuideLines from './pages/admin/GuideLines';
 import UploadCenter from './pages/admin/UploadCenter';
 import DataDeletion from './pages/admin/DataDeletion';
+import Department from './pages/admin/manage/Department';
 
 function App() {
 
@@ -102,6 +103,7 @@ function App() {
 							<Route path="view" element={<AdminViewAppln />} />
 						</Route>
 						<Route path="staffManage" element={<Staff />} />
+						<Route path="deptManage" element={<Department />} />
 						<Route path="studentManage" element={<Student />} />
 						<Route path="tutorManage" element={<Tutor />} />
 						<Route path="applicationManage" element={<Application />} />

@@ -59,7 +59,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 												View
 											</button>
 											<button
-												onClick={openAcceptModal}
+												onClick={() => openAcceptModal(app)} 
 												className="w-16 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
 											>
 												Accept

@@ -75,6 +75,7 @@ function AdminLayout() {
                 { name: "Student Manage", path: `/admin/studentManage` },
                 { name: "Tutor Manage", path: `/admin/tutorManage` },
                 { name: "Staff Manage", path: `/admin/staffManage` },
+                { name: "Department Manage", path: `/admin/deptManage` },
             ]
         },
         {
