@@ -1,4 +1,5 @@
 import React from "react";
+import SearchDropdown from "../../common/SearchDropdown";
 
 function FilterSection({ searchMode, setSearchMode }) {
 
@@ -14,57 +15,67 @@ function FilterSection({ searchMode, setSearchMode }) {
         "General",
     ]
 
+    const statusOptions = [
+        { value: "all", label: "All" },
+        { value: "accepted", label: "Accepted" },
+        { value: "inProgress", label: "In Progress" },
+        { value: "rejected", label: "Rejected" },
+    ]
+
+    const typeOptions = [
+        { value: "all", label: "All" },
+        { value: "fresher", label: "Fresher" },
+        { value: "renewal", label: "Renewal" },
+    ]
+
+    const verificationOptions = [
+        { value: "all", label: "All" },
+        { value: "verified", label: "Verified" },
+        { value: "pending", label: "Pending" },
+    ]
+
+    const handleDropdownChange = (name, option) => {
+        setFilters((prev) => ({ ...prev, [name]: option?.value || "" }));
+    };
+
+    const handleCheckboxChange = (label) => {
+        setFilters((prev) => {
+            const updated = prev.specialCategories || [];
+            return updated.includes(label)
+                ? { ...prev, specialCategories: updated.filter((i) => i !== label) }
+                : { ...prev, specialCategories: [...updated, label] };
+        });
+    };
+
     return (
         <div className="w-full space-y-6">
-            {/* === DROPDOWN SECTION === */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Search Mode */}
-                <div className="space-y-2.5">
-                    <label
-                        htmlFor="search-mode"
-                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Application Status :
-                    </label>
-                    <select
-                        className={formControlClass}
-                    >
-                        <option value="all">All</option>
-                        <option value="accepted">Accepted</option>
-                        <option value="inProgress">In Progress</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
-                </div>
 
-                {/* Conditional Dropdown */}
-                <div className="space-y-2.5">
-                    <label
-                        htmlFor="progress-type"
-                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Application Type :
-                    </label>
-                    <select id="progress-type" className={formControlClass}>
-                        <option value="all">All</option>
-                        <option value="fresher">Fresher</option>
-                        <option value="renewal">Renewal</option>
-                    </select>
-                </div>
+                {/* === DROPDOWN SECTION === */}
+
+                {/* Application Status */}
+                <SearchDropdown
+                    label="Application Status"
+                    name="applicationStatus"
+                    options={statusOptions}
+                    onChange={handleDropdownChange}
+                />
+
+                {/* Application Type */}
+                <SearchDropdown
+                    label="Application Type"
+                    name="applicationType"
+                    options={typeOptions}
+                    onChange={handleDropdownChange}
+                />
 
                 {/* Verification Status */}
-                <div className="space-y-2.5">
-                    <label
-                        htmlFor="verification-status"
-                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Verification Status :
-                    </label>
-                    <select id="verification-status" className={formControlClass}>
-                        <option value="all">All</option>
-                        <option value="verified">Verified</option>
-                        <option value="pending">Pending</option>
-                    </select>
-                </div>
+                <SearchDropdown
+                    label="Verification Status"
+                    name="verificationStatus"
+                    options={verificationOptions}
+                    onChange={handleDropdownChange}
+                />
             </div>
 
             {/* === CHECKBOX SECTION === */}

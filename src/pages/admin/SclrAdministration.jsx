@@ -22,7 +22,10 @@ function SclrAdministration() {
 	const fetchStudents = async () => {
 		try {
 			const response = await axios.get(`${apiUrl}/api/admin/application/fetchStudents`);
-			setStudents(response.data.data);
+			const sortedStudents = response.data.data.sort(
+				(a, b) => a.applicationStatus - b.applicationStatus
+			)
+			setStudents(sortedStudents);
 		} catch (error) {
 			console.error("Error fetching students for admin application : ", error);
 		}
@@ -50,11 +53,10 @@ function SclrAdministration() {
 		setShowRejectModal(false);
 	}
 
-	const openRejectModal = () => {
+	const openRejectModal = (student) => {
 		setShowRejectModal(true);
 		setShowAcceptModal(false);
 		setSelectedStudent(student);
-
 	}
 
 	const closeModal = () => {

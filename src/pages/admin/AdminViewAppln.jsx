@@ -15,20 +15,23 @@ function AdminViewAppln() {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const [selectedStudent, setSelectedStudent] = useState(null);
     const [showAcceptModal, setShowAcceptModal] = useState(false);
     const [showRejectModal, setShowRejectModal] = useState(false);
 
     const { student } = location.state || {};
 
-    const openAcceptModal = () => {
-        setShowAcceptModal(true);
-        setShowRejectModal(false);
-    }
+    const openAcceptModal = (student) => {
+		setSelectedStudent(student);
+		setShowAcceptModal(true);
+		setShowRejectModal(false);
+	}
 
-    const openRejectModal = () => {
-        setShowRejectModal(true);
-        setShowAcceptModal(false);
-    }
+	const openRejectModal = (student) => {
+		setShowRejectModal(true);
+		setShowAcceptModal(false);
+		setSelectedStudent(student);
+	}
 
     const closeModal = () => {
         setShowAcceptModal(false);
@@ -75,13 +78,13 @@ function AdminViewAppln() {
                         <DocumentsSection student={student} apiUrl={apiUrl} />
                         <div className="flex justify-end gap-2">
                             <button
-                                onClick={openAcceptModal}
+                                onClick={() => openAcceptModal(student)}
                                 className="w-20 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md"
                             >
                                 Accept
                             </button>
                             <button
-                                onClick={openRejectModal}
+                                onClick={() => openRejectModal(student)}
                                 className="w-20 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md"
                             >
                                 Reject
@@ -94,8 +97,8 @@ function AdminViewAppln() {
                             </button>
                         </div>
                         <PrintApplication student={student} />
-                        <AcceptModal showAcceptModal={showAcceptModal} closeModal={closeModal} />
-                        <RejectModal showRejectModal={showRejectModal} closeModal={closeModal} />
+                        <AcceptModal showAcceptModal={showAcceptModal} closeModal={closeModal} selectedStudent={selectedStudent} />
+                        <RejectModal showRejectModal={showRejectModal} closeModal={closeModal} selectedStudent={selectedStudent} />
                     </div>
                 </div>
             </div>

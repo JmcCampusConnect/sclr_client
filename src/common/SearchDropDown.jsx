@@ -17,7 +17,7 @@ export default function SearchDropdown({ label, name, value, options = [], onCha
                 onChange={(option) => onChange(name, option)}
                 options={options}
                 isSearchable
-                placeholder="Select..."
+                placeholder=""
                 styles={{
                     control: (base) => ({
                         ...base,

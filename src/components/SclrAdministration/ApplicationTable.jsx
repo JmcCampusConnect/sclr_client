@@ -12,7 +12,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 					{/* Table Head */}
 					<thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
 						<tr>
-							{["S.No", "Register No", "Name", "Department", "Amount Credited (₹)", "Actions"].map(
+							{["S.No", "Register No", "Name", "Department", "Last Year (₹)", "Current Year (₹)", "Actions"].map(
 								(header) => (
 									<th
 										key={header}
@@ -46,9 +46,16 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 										{app.department}
 									</td>
 									<td className="px-4 py-4 text-sm lg:text-base font-semibold text-indigo-600 dark:text-indigo-400">
-										{typeof app.amount === 'number'
-											? `₹ ${app.amount.toLocaleString("en-IN")}`
-											: "N/A"}
+										{typeof app.lastYearCreditedAmount === 'number'
+											? app.lastYearCreditedAmount === 0 ? "N/A" 
+											: `₹ ${app.lastYearCreditedAmount.toLocaleString("en-IN")}` : "N/A"
+										}
+									</td>
+									<td className="px-4 py-4 text-sm lg:text-base font-semibold text-indigo-600 dark:text-indigo-400">
+										{typeof app.currentYearCreditedAmount === 'number'
+											? app.currentYearCreditedAmount === 0 ? "N/A" 
+											: `₹ ${app.currentYearCreditedAmount.toLocaleString("en-IN")}` : "N/A"
+										}
 									</td>
 									<td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
 										<div className="flex justify-center gap-2">
@@ -59,14 +66,26 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 												View
 											</button>
 											<button
-												onClick={() => openAcceptModal(app)} 
-												className="w-16 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+												onClick={() => openAcceptModal(app)}
+												className={
+													`w-16 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm
+													${app.applicationStatus === 1 ? 'bg-green-400 text-white' : app.applicationStatus === 0
+														? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-300 text-gray-500'
+													}`
+												}
+												disabled={app.applicationStatus !== 0}
+
 											>
 												Accept
 											</button>
 											<button
-												onClick={openRejectModal}
-												className="w-16 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+												onClick={() => openRejectModal(app)}
+												className={
+													`w-16 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm
+													${app.applicationStatus === 2 ? 'bg-red-400 text-white' : app.applicationStatus === 0
+														? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-gray-300 text-gray-500'
+													}`
+												}
 											>
 												Reject
 											</button>
