@@ -131,34 +131,26 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-80">
             <div className="bg-white w-[80%] max-w-6xl max-h-[80vh] rounded-2xl overflow-y-auto shadow-2xl p-8 relative hide-scrollbar">
                 <form className="space-y-10">
-                    
+
                     {/* Student Details */}
                     <div className="bg-gray-100 rounded-xl p-6 shadow-inner">
-                        <h3 className="text-xl font-bold text-gray-800 mb-4">Student Details</h3>
+                        <h3 className="text-xl font-bold text-gray-800 mb-4 border-b border-gray-200 pb-3">Student Details</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                    Register No. :
-                                </label>
-                                <div className="font-medium text-gray-900">{student.registerNo || "—"}</div>
+                            <div className="flex gap-1">
+                                <label className="block text-md font-semibold text-gray-700 mb-1"> Register No. : </label>
+                                <div className="font-medium text-md text-gray-900">{student.registerNo || "—"}</div>
                             </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                    Name :
-                                </label>
-                                <div className="font-medium text-gray-900">{student.name || "—"}</div>
+                            <div className="flex gap-1">
+                                <label className="block text-md font-semibold text-gray-700 mb-1"> Name : </label>
+                                <div className="font-medium text-md text-gray-900">{student.name || "—"}</div>
                             </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                    Department :
-                                </label>
-                                <div className="font-medium text-gray-900">{student.department || "—"}</div>
+                             <div className="flex gap-1">
+                                <label className="block text-md font-semibold text-gray-700 mb-1"> Department : </label>
+                                <div className="font-medium text-md text-gray-900">{student.department || "—"}</div>
                             </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                    Special Category :
-                                </label>
-                                <div className="font-medium text-gray-900">{student.specialCategory || "—"}</div>
+                            <div className="flex gap-1">
+                                <label className="block text-md font-semibold text-gray-700 mb-1"> Special Category : </label>
+                                <div className="font-medium text-md text-gray-900 uppercase">{student.specialCategory || "—"}</div>
                             </div>
                         </div>
                     </div>

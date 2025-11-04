@@ -85,7 +85,11 @@ function SclrAdministration() {
 						showAcceptModal={showAcceptModal}
 						closeModal={closeModal}
 					/>
-					<RejectModal showRejectModal={showRejectModal} closeModal={closeModal} />
+					<RejectModal
+						showRejectModal={showRejectModal}
+						closeModal={closeModal}
+						selectedStudent={selectedStudent}
+					/>
 				</>
 			)}
 		</div>
