@@ -7,7 +7,7 @@ function ParentSection({ register, errors, watch }) {
     const siblingsStatus = watch("siblingsStatus")
 
     return (
-        <div className="border border-black p-6 rounded-lg bg-gray-50 shadow-md space-y-6">
+        <div className="border border-gray-200 p-6 rounded-xl bg-white shadow-md space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <InputBox
                     name='parentName'
@@ -31,7 +31,6 @@ function ParentSection({ register, errors, watch }) {
                     name='parentOccupation'
                     label='Parent Occupation'
                     type='text'
-                    placeholder='e.g. : Daily Wages'
                     required
                     register={register}
                     errors={errors}
@@ -40,7 +39,6 @@ function ParentSection({ register, errors, watch }) {
                     name='parentAnnualIncome'
                     label='Parent Annual Income'
                     type='text'
-                    placeholder='e.g. : 10000'
                     required
                     register={register}
                     errors={errors}
@@ -59,7 +57,6 @@ function ParentSection({ register, errors, watch }) {
                             name='siblingsCount'
                             label='No. of Siblings'
                             type='text'
-                            placeholder='e.g. : 2'
                             required
                             register={register}
                             errors={errors}
@@ -68,7 +65,6 @@ function ParentSection({ register, errors, watch }) {
                             name='siblingsOccupation'
                             label={`Siblings Occupation`}
                             type='text'
-                            placeholder='e.g. : Student Employee'
                             required
                             register={register}
                             errors={errors}

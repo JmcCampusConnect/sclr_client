@@ -59,10 +59,7 @@ function App() {
 					<Route path="/student" element={<StudentHome />} />
 
 					{/* Student Register */}
-					<Route
-						path="/student/register/*"
-						element={<RegisterLayout />}
-					>
+					<Route path="/student/register/*" element={<RegisterLayout />}>
 						<Route path="application" element={<RegisterApplication />} />
 					</Route>
 

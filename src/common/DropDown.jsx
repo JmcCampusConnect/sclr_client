@@ -1,67 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Select from "react-select";
 
-function DropDown({ label, required = false, name, options = [], register, errors = {}, setValue, watch }) {
+function DropDown({ label, name, options, errors, setValue, watch, required }) {
 
-	const formattedOptions = options.map((opt) => typeof opt === "object" ? opt : { value: opt, label: opt })
+	const formattedOptions = options.map((opt) => typeof opt === "string" ? { value: opt, label: opt } : opt)
 
-	const [localValue, setLocalValue] = useState(null);
-
-	const formValue = watch ? watch(name) : localValue;
-	const selectedValue =
-		formattedOptions.find((opt) => opt.value === formValue) || null;
+	const selectedValue = formattedOptions.find((opt) => opt.value === watch(name))
 
 	const handleChange = (selectedOption) => {
-		if (setValue) { setValue(name, selectedOption ? selectedOption.value : "") }
-		else { setLocalValue(selectedOption ? selectedOption.value : "") }
-	}
-
-	useEffect(() => {
-		if (watch && formValue !== localValue) {setLocalValue(formValue)}
-	}, [formValue]);
+		setValue(name, selectedOption ? selectedOption.value : "", {
+			shouldValidate: true, shouldDirty: true,
+		});
+	};
 
 	return (
-		
-		<div className="space-y-1.5">
+		<div className="space-y-2">
 
 			{label && (
-				<label className="block text-md font-medium text-gray-700">
-					{label} : {required && <span className="text-red-500">*</span>}
+				<label
+					htmlFor={name} className="block text-md font-medium text-gray-700"
+				>
+					{label} : {required && <span className="text-red-500 ml-1">*</span>}
 				</label>
 			)}
 
 			<Select
+				id={name}
 				value={selectedValue}
 				onChange={handleChange}
 				options={formattedOptions}
-				isSearchable
-				placeholder="Select..."
-				className="text-gray-900"
+				isClearable={false}
+				placeholder=""
+				className="text-sm"
 				styles={{
 					control: (base, state) => ({
-						...base,
-						borderColor: errors?.[name] ? "#ef4444" : "#d1d5db",
-						boxShadow: state.isFocused
-							? errors?.[name]
-								? "0 0 0 1px #ef4444"
-								: "0 0 0 1px #3b82f6"
-							: "none",
+						...base, minHeight: "38px", borderWidth: "1px", borderRadius: "6px", backgroundColor: "white",
+						padding: "2.2px", boxShadow: "none",
+						borderColor: errors?.[name] ? "#ef4444" : state.isFocused ? "#3b82f6" : "#d1d5db",
 						"&:hover": {
-							borderColor: errors?.[name] ? "#ef4444" : "#3b82f6",
+							borderColor: errors?.[name] ? "#ef4444" : state.isFocused ? "#3b82f6" : "#9ca3af",
 						},
-						borderRadius: "8px",
-						minHeight: "38px",
-						backgroundColor: "white",
 					}),
-					singleValue: (base) => ({ ...base, color: "#111827" }),
-					menu: (base) => ({ ...base, zIndex: 9999 }),
+					singleValue: (base) => ({ ...base, color: "#111827", fontSize: "1rem" }),
+					placeholder: (base) => ({ ...base, color: "#9ca3af", }),
+					dropdownIndicator: (base, state) => ({
+						...base, color: state.isFocused ? "#3b82f6" :
+							"#6b7280", "&:hover": { color: "#3b82f6" }
+					}),
+					menu: (base) => ({ ...base, zIndex: 9999, }),
+					menuList: (base) => ({
+						...base,
+						fontSize: "1rem", 
+					}),
 				}}
 			/>
 
-			{register && <input type="hidden" {...register(name)} />}
-
 			{errors?.[name] && (
-				<p className="text-red-500 text-sm">{errors[name].message}</p>
+				<p className="text-red-500 text-sm">
+					{errors[name].message || `${label || name} is required`}
+				</p>
 			)}
 		</div>
 	)

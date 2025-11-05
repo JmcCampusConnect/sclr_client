@@ -98,6 +98,9 @@ function RegisterApplication() {
     const [registerNo, setRegisterNo] = useState('');
 
     const checkRegisterNumber = async () => {
+
+        if (registerNo === '') { return alert('Please enter Register Number') }
+
         try {
             const response = await axios.get(
                 `${apiUrl}/api/register/checkRegisterNo?registerNo=${registerNo}`
@@ -117,7 +120,6 @@ function RegisterApplication() {
     }
 
     const registerFormSubmit = async (formData) => {
-        // console.log('Data to send : ', formData);
         const dataToSend = new FormData();
         Object.keys(formData).forEach((key) => {
             if (key === "jamathLetter" && formData[key] instanceof FileList) {
@@ -142,27 +144,26 @@ function RegisterApplication() {
             {instructionModal && <InstructionModal instructionModal={instructionModal} onClose={() => setInstructionModal(false)} />}
             {/* Register Number Check */}
             {!newStudent ? (
-                <div className="border border-black p-6 rounded-lg bg-gray-50 shadow-md mb-6">
-                    <label className="block mb-2 text-center font-semibold text-slate-700">
+                <div className="border mb-6 border-gray-200 p-6 rounded-xl bg-white shadow-md">
+                    <label className="block text-md font-medium text-gray-700 text-center mb-3">
                         Before applying for scholarship, check whether you are registered or not
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block mb-2 font-semibold text-slate-700">
+                        <div className=''>
+                            <label className="block text-md font-medium text-gray-700">
                                 Register Number : <span className="text-red-500">*</span>
                             </label>
                             <div className="flex items-center gap-4">
                                 <input
-                                    type="text"
-                                    placeholder="Ex: 24MCAXXX"
-                                    className="w-full p-2 border border-black rounded-md text-slate-950"
+                                    type="text"  placeholder="Ex : 24MCAXXX"
+                                    className="w-full border text-gray-900 transition border-gray-200 p-2 rounded-md bg-white shadow-xs mt-2.5"
                                     value={registerNo}
                                     onChange={(e) => setRegisterNo(e.target.value.toUpperCase())}
                                     required
                                 />
                                 <button
                                     type="button"
-                                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                                    className="bg-blue-600 text-white px-4 py-2.5 mt-2 rounded-md hover:bg-blue-700"
                                     onClick={checkRegisterNumber}
                                 >
                                     Check
@@ -173,12 +174,48 @@ function RegisterApplication() {
                 </div>
             ) : (
                 <>
-                    <SpecialCategory register={register} errors={errors} />
-                    <AcademicDetails register={register} errors={errors} watch={watch} />
-                    <StudentSection register={register} errors={errors} />
-                    <ParentSection register={register} errors={errors} watch={watch} />
-                    <AddressSection register={register} errors={errors} />
-                    <LastInstitution register={register} errors={errors} watch={watch} setValue={setValue} />
+                    <SpecialCategory
+                        register={register}
+                        errors={errors}
+                        watch={watch}
+                        setValue={setValue}
+                    />
+
+                    <AcademicDetails
+                        register={register}
+                        errors={errors}
+                        watch={watch}
+                        setValue={setValue}
+                    />
+
+                    <StudentSection
+                        register={register}
+                        errors={errors}
+                        watch={watch}
+                        setValue={setValue}
+                    />
+
+                    <ParentSection
+                        register={register}
+                        errors={errors}
+                        watch={watch}
+                        setValue={setValue}
+                    />
+
+                    <AddressSection
+                        register={register}
+                        errors={errors}
+                        watch={watch}
+                        setValue={setValue}
+                    />
+
+                    <LastInstitution
+                        register={register}
+                        errors={errors}
+                        watch={watch}
+                        setValue={setValue}
+                    />
+
                     <div className='flex justify-end'>
                         <Button
                             type="submit" label={isSubmitting ? "Submitting..." : "Submit"}

@@ -3,7 +3,7 @@ import React from 'react';
 function FileInput({ label, required = false, type, name, register, errors }) {
 
     return (
-        <div className="space-y-1.5">
+        <div className="space-y-2">
             <label className="block text-md font-medium text-gray-700">
                 {label} : {required && <span className="text-red-500">*</span>}
             </label>
