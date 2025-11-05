@@ -6,7 +6,7 @@ const DocumentsSection = ({ student, apiUrl }) => (
     <Card title="Uploaded Documents">
         <div className="grid md:grid-cols-2 gap-6">
             <div>
-                <p className="font-semibold mb-2">Jamath / Declaration Letter</p>
+                <p className="font-semibold mb-2">Jamath / Declaration Letter : </p>
                 <img
                     src={`${apiUrl}/${student.jamathLetter}`}
                     alt="Jamath Letter"

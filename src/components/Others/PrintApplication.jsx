@@ -70,17 +70,61 @@ function PrintApplication({ student }) {
                             <h3 className="text-base text-md font-semibold text-gray-700 mt-2 mb-2">Education Details</h3>
                             <div className="border border-gray-300 rounded-md bg-white p-3 space-y-3 text-md">
                                 <div className="grid md:grid-cols-2 gap-2">
-                                    {student.semester === 'I' ? (
-                                        <LabeledBox label="Percentage of Mark %" value={student.percentageOfMarkSchool === -1 ? '-' : student.percentageOfMarkSchool} />
+
+
+
+                                    {/* Percentage of Mark */}
+                                    {student.semester === "I" ? (
+                                        <LabeledBox
+                                            label="Percentage of Mark %"
+                                            value={`${student.lastStudiedInstitutionPercentage}% ( I SEM )` || "N/A"}
+                                        />
                                     ) : (
-                                        <LabeledBox label="Percentage of Mark %" value={student.semPercentage === -1 ? '-' : student.semPercentage} />
+                                        <LabeledBox
+                                            label="Percentage of Mark %"
+                                            value={
+                                                student.semesterMarkPercentage === -1 ? "Pending" : `${student.semesterMarkPercentage}% ( ${student.semester} SEM )`
+                                            }
+                                        />
                                     )}
-                                    <LabeledBox label="Class Attendance %" value={student.classAttendancePer === -1 ? '-' : student.classAttendancePer} />
-                                    <LabeledBox label="Deeniyath / Moral %" value={student.deeniyathPer === -1 ? '-' : student.deeniyathPer} />
-                                    {student.arrear !== 0 && (<LabeledBox label="No. of Arrears" value={student.arrear} />)}
-                                    {student.fresherOrRenewal === 'Renewal' && (
-                                        <LabeledBox label="Last Time Credited Amount" value={student.lastCreditedAmt || '-'} />
+
+                                    {/* No. of Arrears (only if not first semester) */}
+                                    {student.semester !== "I" && (
+                                        <LabeledBox
+                                            label="No. of Arrears"
+                                            value={student.semesterMarkPercentage === -1 ? "Pending" : `${student.semesterArrear} Arrear`}
+                                        />
                                     )}
+
+                                    {/* Grade (only if not first semester) */}
+                                    {student.semester !== "I" && (
+                                        <LabeledBox
+                                            label="Grade"
+                                            value={student.semesterMarkPercentage === -1 ? "Pending" : `${student.semesterGrade} Grade`}
+                                        />
+                                    )}
+
+                                    {/* Class Attendance */}
+                                    <LabeledBox
+                                        label="Class Attendance %"
+                                        value={student.classAttendancePercentage === -1 ? "Pending" : `${student.classAttendancePercentage}%`}
+                                    />
+
+                                    {/* Deeniyath / Moral Attendance */}
+                                    <LabeledBox
+                                        label="Deeniyath / Moral %"
+                                        value={
+                                            student.deeniyathMoralAttendancePercentage === -1 ? "Pending" : `${student.deeniyathMoralAttendancePercentage}%`}
+                                    />
+
+                                    {/* 💰 Last Year Credited Amount (only for Renewal) */}
+                                    {student.semester === "Renewal" && (
+                                        <LabeledBox
+                                            label="LasLast Year Credited Amount"
+                                            value={student.lastYearCreditedAmount}
+                                        />
+                                    )}
+
                                 </div>
                             </div>
                         </div>
@@ -106,8 +150,8 @@ const Detail = ({ label, value }) => (
 )
 
 const LabeledBox = ({ label, value }) => (
-    <div className="flex justify-between border border-gray-300 rounded p-1 text-md bg-white">
-        <span className="font-medium text-gray-700 px-2 py-0.5">{label}</span>
+    <div className="flex justify-between border border-gray-300 rounded p-2 text-md bg-white">
+        <span className="font-medium text-gray-700 ">{label}</span>
         <span className="font-semibold text-gray-800">{value}</span>
     </div>
 )

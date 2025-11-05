@@ -13,7 +13,7 @@ function LastInstitution({ register, errors, watch, setValue }) {
         if (marksSecured && maxMarks && !isNaN(marksSecured) && !isNaN(maxMarks)) {
             const percentage = ((Number(marksSecured) / Number(maxMarks)) * 100).toFixed(2);
             setValue("lastStudiedInstitutionPercentage", percentage);
-        } else { setValue("lastStudiedInstitutionPercentage", "") }
+        } else { setValue("lastStudiedInstitutionPercentage", -1) }
     }, [marksSecured, maxMarks, setValue]);
  
     return (

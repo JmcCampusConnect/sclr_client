@@ -10,7 +10,7 @@ const PersonalDetails = ({ student }) => (
 			<Detail label="Department" value={student.department} />
 			<Detail label="Section" value={student.section} />
 			<Detail label="Graduate" value={student.graduate} />
-			<Detail label="Programme Category" value={student.programCategory} />
+			<Detail label="Programme Category" value={student.category} />
 			<Detail label="Semester" value={student.semester} />
 			<Detail label="Mobile No." value={student.mobileNo} />
 			<Detail label="Aadhar Number" value={student.aadharNo} />

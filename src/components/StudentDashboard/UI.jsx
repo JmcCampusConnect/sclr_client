@@ -9,8 +9,8 @@ export const Card = ({ title, children }) => (
 
 export const Detail = ({ label, value }) => (
     <div className="flex flex-col gap-1.5">
-        <p className="text-gray-500 text-md">{label} :</p>
-        <p className="font-semibold text-gray-800">{value || "-"}</p>
+        <p className="text-gray-500 text-md ">{label} :</p>
+        <p className="font-semibold text-gray-800 uppercase">{value || "-"}</p>
     </div>
 )
 
@@ -35,8 +35,8 @@ export const StatusMessage = ({ type, message }) => {
 }
 
 export const TableRow = ({ label, children }) => (
-    <tr className="border-b border-gray-200">
-        <td className="px-4 py-3 font-semibold text-gray-700 bg-gray-50">{label}</td>
-        <td className="px-4 py-3 text-center">{children}</td>
+    <tr className="">
+        <td className="px-4 border border-gray-200 py-3 font-semibold text-gray-700 bg-gray-50">{label}</td>
+        <td className="px-4 border border-gray-200 py-3 text-center">{children}</td>
     </tr>
 )
