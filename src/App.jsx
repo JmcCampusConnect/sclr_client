@@ -10,7 +10,7 @@ import StudentHome from "./pages/StudentHome";
 
 // Student Pages
 import RegisterLayout from "./layout/RegisterLayout";
-import RegisterApplication from "./pages/RegisterApplication";
+import RegisterApplication from "./pages/student/RegisterApplication";
 import StudentLayout from "./layout/StudentLayout";
 import StudentDashboard from "./pages/StudentDashboard";
 import LoginApplication from "./pages/LoginApplication";
@@ -61,11 +61,7 @@ function App() {
 					{/* Student Register */}
 					<Route
 						path="/student/register/*"
-						element={
-							<PrivateRoute role={ROLES.student}>
-								<RegisterLayout />
-							</PrivateRoute>
-						}
+						element={<RegisterLayout />}
 					>
 						<Route path="application" element={<RegisterApplication />} />
 					</Route>

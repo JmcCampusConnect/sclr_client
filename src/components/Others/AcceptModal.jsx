@@ -9,7 +9,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
     const [selectedDonor, setSelectedDonor] = useState("");
     const [amount, setAmount] = useState("");
     const [donorType, setDonorType] = useState("");
-    const [sclrType, setSclrType] = useState("");
+    const [amtType, setSclrType] = useState("");
     const [filteredDonors, setFilteredDonors] = useState([]);
     const [allowNegative, setAllowNegative] = useState(false);
     const [scholarships, setScholarships] = useState([]);
@@ -21,14 +21,14 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
         { value: "Well Wishers", label: "Well Wishers" },
     ]
 
-    const sclrTypeOptions = [
+    const amtTypeOptions = [
         { value: "generalBal", label: "General" },
         { value: "zakkathBal", label: "Zakkath" },
     ]
 
     useEffect(() => {
 
-        if (!numericAmount || !donorType || !sclrType) {
+        if (!numericAmount || !donorType || !amtType) {
             setFilteredDonors([]);
             setSelectedDonor("");
             return;
@@ -38,7 +38,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
         if (!allowNegative) {
             filtered = filtered.filter((d) => {
                 const donorBalance =
-                    sclrType === "generalBal" ? d.generalBal : d.zakkathBal;
+                    amtType === "generalBal" ? d.generalBal : d.zakkathBal;
                 return (
                     d.donorType === donorType &&
                     parseFloat(donorBalance) >= numericAmount
@@ -52,7 +52,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
         if (selectedDonor && !filtered.some((d) => d.donorId === selectedDonor)) {
             setSelectedDonor("");
         }
-    }, [numericAmount, donorType, sclrType, donors, selectedDonor, allowNegative]);
+    }, [numericAmount, donorType, amtType, donors, selectedDonor, allowNegative]);
 
     const donorOptions = (filteredDonors || []).map((d) => ({
         value: d.donorId,
@@ -61,13 +61,13 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
 
     const handleDropdownChange = (name, option) => {
         if (name === "donorType") setDonorType(option?.value || "");
-        if (name === "sclrType") setSclrType(option?.value || "");
+        if (name === "amtType") setSclrType(option?.value || "");
         if (name === "donor") setSelectedDonor(option?.value || "");
     }
 
     const handleAddScholarship = () => {
 
-        if (!amount || !donorType || !sclrType || !selectedDonor) {
+        if (!amount || !donorType || !amtType || !selectedDonor) {
             alert("Please fill all fields before adding scholarship.");
             return;
         }
@@ -78,7 +78,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
             studentId: selectedStudent?._id,
             donorId: selectedDonor,
             donorName: donorData?.donorName || "",
-            donorType, sclrType,
+            donorType, amtType,
             amount: numericAmount,
         };
 
@@ -98,10 +98,8 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
         const payload = {
             academicYear: new Date().getFullYear(),
             scholarships: scholarships.map((s) => ({
-                ...s,
-                registerNo: selectedStudent?.registerNo,
-                name: selectedStudent?.name,
-                department: selectedStudent?.department,
+                ...s, category: selectedStudent?.category, registerNo: selectedStudent?.registerNo,
+                name: selectedStudent?.name, sclrType: selectedStudent?.sclrType, department: selectedStudent?.department,
             })),
         };
 
@@ -125,7 +123,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
     if (!showAcceptModal) return null;
 
     const student = selectedStudent || {};
-    const areFiltersSet = numericAmount > 0 && donorType && sclrType;
+    const areFiltersSet = numericAmount > 0 && donorType && amtType;
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-80">
@@ -179,10 +177,10 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
                             required
                         />
                         <SearchDropdown
-                            label="Scholarship Type"
-                            name="sclrType"
-                            value={sclrType}
-                            options={sclrTypeOptions}
+                            label="Amount Type"
+                            name="amtType"
+                            value={amtType}
+                            options={amtTypeOptions}
                             onChange={handleDropdownChange}
                             required
                         />
@@ -235,7 +233,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
                                     >
                                         <div>{i + 1}.</div>
                                         <div className="font-semibold">
-                                            {s.sclrType === "generalBal" ? "General" : "Zakkath"}
+                                            {s.amtType === "generalBal" ? "General" : "Zakkath"}
                                         </div>
                                         <div className="truncate">{s.donorName}</div>
                                         <div>{s.donorType}</div>

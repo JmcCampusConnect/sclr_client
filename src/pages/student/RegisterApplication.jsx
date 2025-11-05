@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import InstructionModal from '../components/RegisterApplication/InstructionModal';
-import SpecialCategory from '../components/RegisterApplication/SpecialCategory';
-import AcademicDetails from '../components/RegisterApplication/AcademicDetails';
-import StudentSection from '../components/RegisterApplication/StudentSection';
-import ParentSection from '../components/RegisterApplication/ParentSection';
-import AddressSection from '../components/RegisterApplication/AddressSection';
-import LastInstitution from '../components/RegisterApplication/LastInstitution';
-import Button from '../common/Button';
-import { useAdd } from '../hook/useAdd';
+import InstructionModal from '../../components/RegisterApplication/InstructionModal';
+import SpecialCategory from '../../components/RegisterApplication/SpecialCategory';
+import AcademicDetails from '../../components/RegisterApplication/AcademicDetails';
+import StudentSection from '../../components/RegisterApplication/StudentSection';
+import ParentSection from '../../components/RegisterApplication/ParentSection';
+import AddressSection from '../../components/RegisterApplication/AddressSection';
+import LastInstitution from '../../components/RegisterApplication/LastInstitution';
+import Button from '../../common/Button';
+import { useAdd } from '../../hook/useAdd';
 import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -19,7 +19,7 @@ const schema = Yup.object().shape({
     specialCategory: Yup.string().required('Special Category is required'),
     hasAppliedOtherScholarships: Yup.string().required('Applied Scholarship is required'),
     graduate: Yup.string().required('Graduate is required'),
-    programCategory: Yup.string().required('Program Category is required'),
+    category: Yup.string().required('Category is required'),
     semester: Yup.string().required('Semester is required'),
     hostelStatus: Yup.string().required('Hostel Status is required'),
     registerNo: Yup.string().required('Register Number is required'),

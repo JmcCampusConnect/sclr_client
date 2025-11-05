@@ -17,7 +17,7 @@ function AcademicDetails({ register, errors, watch }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border border-gray-200 p-6 rounded-xl bg-white shadow-md">
                 <RadioButton name="graduate" label="UG or PG" options={['UG', 'PG']} required register={register} errors={errors} />
-                <RadioButton name="programCategory" label="Programme Category" options={['Aided', 'SFM', 'SFW']} required register={register} errors={errors} />
+                <RadioButton name="category" label="Category" options={['Aided', 'SFM', 'SFW']} required register={register} errors={errors} />
                 <RadioButton name="semester" label="Semester" options={semesterOptions} required register={register} errors={errors} />
                 <RadioButton name="hostelStatus" label="Hostel" options={['Yes', 'No']} required register={register} errors={errors} />
             </div>
