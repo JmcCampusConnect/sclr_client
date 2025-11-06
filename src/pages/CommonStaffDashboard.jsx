@@ -1,10 +1,63 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import DashboardCards from '../components/Dashboard/DashboardCards';
+import DashboardPie from '../components/Dashboard/DashboardPie';
+import DashboardError from '../components/Dashboard/DashboardError';
+import { Bar } from 'react-chartjs-2';
+import DashboardBar from '../components/Dashboard/DashboardBar';
 
-function CommmonStaffDashboard() {
-    
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement, ChartDataLabels);
+
+const CommonStaffDashboard = () => {
+
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const [cardData, setCardData] = useState(null);
+    const [pieData, setPieData] = useState(null);
+    const [barData, setBarData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [cardRes, pieRes, barRes] = await Promise.all([
+                    axios.get(`${apiUrl}/api/dashboard/fetchCardData`),
+                    axios.get(`${apiUrl}/api/dashboard/fetchPieData`),
+                    axios.get(`${apiUrl}/api/dashboard/fetchBarData`)
+                ]);
+                const c = cardRes.data;
+                setCardData({
+                    totalApplicants: (c?.totalFreshers ?? 0) + (c?.totalRenewals ?? 0),
+                    totalFreshers: c?.totalFreshers ?? 0,
+                    totalRenewals: c?.totalRenewals ?? 0,
+                    totalBenefitedStudents: c?.totalBenefitedStudents ?? 0,
+                    totalScholarshipAwarded: c?.totalScholarshipAwarded ?? 0,
+                    totalDonors: c?.totalDonors ?? 0,
+                });
+                setPieData(pieRes.data);
+                setBarData(barRes.data);
+            } catch (err) {
+                console.error('Error fetching dashboard data : ', err);
+                setError('Unable to load dashboard data.');
+            } finally { setLoading(false) }
+        };
+        fetchData();
+    }, [apiUrl]);
+
+
+    if (loading) return <DashboardError type="loading" />;
+    if (error) return <DashboardError type="error" message={error} />;
+    if (!pieData || !cardData || !barData) return null;
+
     return (
-        <div>CommmonStaffDashboard</div>
+        <section className="transition-colors">
+            <DashboardCards cardData={cardData} />
+            <DashboardPie cardData={cardData} pieData={pieData} />
+            <DashboardBar barData={barData} />
+        </section>
     )
 }
 
-export default CommmonStaffDashboard
+export default CommonStaffDashboard;

@@ -33,7 +33,7 @@ function SclrAdministration() {
 
 	const fetchDonors = async () => {
 		try {
-			const response = await axios.get(`${apiUrl}/api/admin/application/fetchDonars`);
+			const response = await axios.get(`${apiUrl}/api/admin/application/fetchDonors`);
 			setDonors(response.data.donors);
 		} catch (error) {
 			console.error("Error fetching students for admin application : ", error);

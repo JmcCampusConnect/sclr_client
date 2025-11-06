@@ -13,6 +13,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
     const [filteredDonors, setFilteredDonors] = useState([]);
     const [allowNegative, setAllowNegative] = useState(false);
     const [scholarships, setScholarships] = useState([]);
+    const [localDonors, setLocalDonors] = useState(donors);
 
     const numericAmount = parseFloat(amount) || 0;
 
@@ -27,6 +28,11 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
     ]
 
     useEffect(() => {
+        setLocalDonors(donors);
+    }, [donors, showAcceptModal]);
+
+
+    useEffect(() => {
 
         if (!numericAmount || !donorType || !amtType) {
             setFilteredDonors([]);
@@ -34,7 +40,8 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
             return;
         }
 
-        let filtered = donors || [];
+        let filtered = localDonors || [];
+
         if (!allowNegative) {
             filtered = filtered.filter((d) => {
                 const donorBalance =
@@ -52,7 +59,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
         if (selectedDonor && !filtered.some((d) => d.donorId === selectedDonor)) {
             setSelectedDonor("");
         }
-    }, [numericAmount, donorType, amtType, donors, selectedDonor, allowNegative]);
+    }, [numericAmount, donorType, amtType, localDonors, selectedDonor, allowNegative]);
 
     const donorOptions = (filteredDonors || []).map((d) => ({
         value: d.donorId,
@@ -72,21 +79,53 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
             return;
         }
 
-        const donorData = donors.find((d) => d.donorId === selectedDonor);
+        const donorData = localDonors.find((d) => d.donorId === selectedDonor);
+        if (!donorData) {
+            alert("Invalid donor selected.");
+            return;
+        }
+
+        const donorBalance = amtType === "generalBal" ? donorData.generalBal : donorData.zakkathBal;
+
+        if (!allowNegative && numericAmount > parseFloat(donorBalance)) {
+            alert("Insufficient donor balance."); return;
+        }
+
         const newScholarship = {
             id: Date.now(),
             studentId: selectedStudent?._id,
             donorId: selectedDonor,
-            donorName: donorData?.donorName || "",
+            donorName: donorData.donorName || "",
             donorType, amtType,
             amount: numericAmount,
         };
 
+        const updatedLocalDonors = localDonors.map((d) => {
+            if (d.donorId === selectedDonor) {
+                const updated = { ...d };
+                if (amtType === "generalBal") {
+                    updated.generalBal =
+                        parseFloat(updated.generalBal || 0) - numericAmount;
+                } else {
+                    updated.zakkathBal =
+                        parseFloat(updated.zakkathBal || 0) - numericAmount;
+                }
+                return updated;
+            }
+            return d;
+        });
+
+        setLocalDonors(updatedLocalDonors);
         setScholarships((prev) => [...prev, newScholarship]);
+
+        // reset input fields
         setAmount("");
         setSelectedDonor("");
+        setDonorType("");
+        setSclrType("");
         setFilteredDonors([]);
-    }
+    };
+
 
     const handleSaveAll = async () => {
 
@@ -110,6 +149,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
                 alert("Scholarships submitted successfully!");
                 setScholarships([]);
                 closeModal();
+                window.location.reload();
             } else {
                 alert(`Failed: ${response.data.message}`);
             }
@@ -142,7 +182,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
                                 <label className="block text-md font-semibold text-gray-700 mb-1"> Name : </label>
                                 <div className="font-medium text-md text-gray-900">{student.name || "—"}</div>
                             </div>
-                             <div className="flex gap-1">
+                            <div className="flex gap-1">
                                 <label className="block text-md font-semibold text-gray-700 mb-1"> Department : </label>
                                 <div className="font-medium text-md text-gray-900">{student.department || "—"}</div>
                             </div>
@@ -166,6 +206,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
                                 className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Enter Amount"
                                 min="0"
+                                onWheel={(e) => e.target.blur()}
                             />
                         </div>
                         <SearchDropdown
@@ -248,17 +289,15 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
 
                     {/* Actions */}
                     <div className="flex justify-between gap-4 pt-8 border-t border-gray-200">
-                        <div className="flex items-center">
+                        <label className="flex items-center cursor-pointer">
                             <input
                                 type="checkbox"
                                 checked={allowNegative}
                                 onChange={(e) => setAllowNegative(e.target.checked)}
                                 className="w-5 h-5 accent-green-600"
                             />
-                            <label className="ml-3 font-medium text-gray-700">
-                                Allow Negative Values
-                            </label>
-                        </div>
+                            <span className="ml-3 font-medium text-gray-700">Allow Negative Values</span>
+                        </label>
                         <div className="space-x-4">
                             <button
                                 type="button"
