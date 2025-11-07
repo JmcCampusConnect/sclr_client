@@ -1,8 +1,42 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AmtDonarModal({ onClose }) {
+function AmtDonarModal({onClose, donorData}) {
+	// console.log("add amt", donorData)
+
+	const [amountData, setAmountData] = useState({
+		donorId: donorData?.donorId || "",
+		donorName: donorData?.donorName || "",
+		donorType: donorData?.donorType || "",
+		generalAmt: "",
+		zakkathAmt: "",
+	});
+
+	// Handle input change for both amount fields
+	const handleChange = (e) => {
+		const {name, value} = e.target;
+		setAmountData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
+
+	// Submit handler (you can later replace with actual axios post)
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		console.log("Sending to backend:", amountData);
+
+		try {
+			const res = await axios.post(`${apiUrl}/api/donor/addAmount`, amountData);
+			console.log("Transaction Saved:", res.data);
+			onClose();
+		} catch (err) {
+			console.error("Error saving transaction:", err);
+		}
+	};
+
 
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
@@ -21,7 +55,7 @@ function AmtDonarModal({ onClose }) {
 				</div>
 
 				{/* Form */}
-				<form className="p-6 space-y-7 font-semibold">
+				<form className="p-6 space-y-7 font-semibold" onSubmit={handleSubmit}>
 
 					{/* Section 1: Payment Details */}
 					<div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
@@ -31,11 +65,16 @@ function AmtDonarModal({ onClose }) {
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							<Input
 								label="General Amount"
-								name={"zakkathamt"}
+								name={"generalAmt"}
+								value={amountData.generalAmt}
+								onChange={handleChange}
 							/>
 							<Input
 								label="Zakkath Amount"
-								name={"zakkathamt"}
+								name={"zakkathAmt"}
+								value={amountData.zakkathAmt}
+								onChange={handleChange}
+
 							/>
 						</div>
 					</div>
@@ -62,7 +101,7 @@ function AmtDonarModal({ onClose }) {
 	)
 }
 
-const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
+const Input = ({label, name, type = "text", value, onChange, ...props}) => (
 	<div>
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {props.required && <span className="text-red-500">*</span>}
@@ -78,7 +117,7 @@ const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
 	</div>
 )
 
-const Select = ({ label, name, value, onChange, options, required }) => (
+const Select = ({label, name, value, onChange, options, required}) => (
 	<div>
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {required && <span className="text-red-500">*</span>}
@@ -100,7 +139,7 @@ const Select = ({ label, name, value, onChange, options, required }) => (
 	</div>
 )
 
-const Radio = ({ label, name, checked, onChange }) => (
+const Radio = ({label, name, checked, onChange}) => (
 	<label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
 		<div className='flex flex-col justify-center'>
 			<div className="flex gap-4 items-center mt-2">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import DonorTable from "../../../components/Donar/DonarTable.jsx";
 import AddDonorModal from "../../../components/Donar/AddDonorModal.jsx";
@@ -18,6 +18,7 @@ function Donor() {
 	const [deleteDonor, setDeleteDonor] = useState(null);
 	const [amtDonarModal, setAmtDonarModal] = useState(null);
 
+
 	const fetchDonors = async () => {
 		try {
 			const response = await axios.get(`${apiUrl}/api/donor/fetchDonors`);
@@ -27,7 +28,7 @@ function Donor() {
 		}
 	}
 
-	useEffect(() => { fetchDonors() }, []);
+	useEffect(() => {fetchDonors()}, []);
 
 	const handleAddDonor = (newDonor) => {
 		setDonors((prev) => [...prev, newDonor]);
@@ -81,6 +82,7 @@ function Donor() {
 			{amtDonarModal && (
 				<AmtDonarModal
 					onClose={() => setAmtDonarModal(null)}
+					donorData={amtDonarModal}
 				/>
 			)}
 		</div>

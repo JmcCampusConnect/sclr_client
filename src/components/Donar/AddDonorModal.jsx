@@ -25,6 +25,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
 	}
 
 	const handleSubmit = async (e) => {
+		console.log("da",formData)
 		e.preventDefault();
 		try {
 			const response = await axios.post(`${apiUrl}/api/donor/addDonor`, formData);
