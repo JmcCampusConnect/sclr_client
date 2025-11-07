@@ -48,7 +48,7 @@ function StudentLayout() {
                     </div>
                 </div>
 
-                {/* Menu Section */}
+                {/* Menu Section */} 
                 <nav className="flex-1 space-y-2 overflow-y-auto scrollbar-hide">
                     {menus.map((item, index) => (
                         <NavLink

@@ -64,6 +64,7 @@ function LoginApplication() {
     const [studentData, setStudentData] = useState(null);
     const [canApply, setCanApply] = useState(true);
     const [sclrType, setSclrType] = useState(null);
+    const [lastYearCreditedAmount, setLastYearCreditedAmount] = useState(0);
 
     const {
         register,
@@ -85,11 +86,12 @@ function LoginApplication() {
 
             try {
                 const response = await axios.get(`${apiUrl}/api/student/fetchStudentData`, { params: { registerNo: userId.toUpperCase() } });
-                const { student, canApply, totalAmtGiven } = response.data;
+                const { student, canApply, lastYearCreditedAmount } = response.data;
                 setStudentData(student);
                 setCanApply(canApply);
-                setSclrType(totalAmtGiven === 0 ? "Fresher" : "Renewal");
-                console.log(totalAmtGiven)
+                setSclrType(lastYearCreditedAmount === 0 ? "Fresher" : "Renewal");
+                setLastYearCreditedAmount(lastYearCreditedAmount);
+                setValue('lastYearCreditedAmount', lastYearCreditedAmount);
                 Object.keys(student).forEach((key) => { if (key in student) setValue(key, student[key]) });
             } catch (error) {
                 console.error('Error in fetching student data : ', error.response ? error.response.data : error);
@@ -98,6 +100,14 @@ function LoginApplication() {
         };
         fetchData();
     }, [userId, apiUrl, setValue]);
+
+    useEffect(() => {
+        if (studentData) {
+            Object.keys(studentData).forEach((key) => setValue(key, studentData[key]));
+            setValue('lastYearCreditedAmount', lastYearCreditedAmount);
+        }
+    }, [studentData, lastYearCreditedAmount, setValue]);
+
 
     const registerFormSubmit = async (formData) => {
 
@@ -154,6 +164,7 @@ function LoginApplication() {
                 addtionalInfo={true}
                 readOnly={!canApply}
                 sclrType={sclrType}
+                lastYearCreditedAmount={lastYearCreditedAmount}
             />
 
             <ParentSection
