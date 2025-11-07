@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import DashboardCards from '../components/Dashboard/DashboardCards';
-import DashboardPie from '../components/Dashboard/DashboardPie';
-import DashboardError from '../components/Dashboard/DashboardError';
+import DashboardCards from '../../components/CommonStaffDashboard/DashboardCards';
+import DashboardPie from '../../components/CommonStaffDashboard/DashboardPie';
+import DashboardError from '../../components/CommonStaffDashboard/DashboardError';
 import { Bar } from 'react-chartjs-2';
-import DashboardBar from '../components/Dashboard/DashboardBar';
+import DashboardBar from '../../components/CommonStaffDashboard/DashboardBar';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement, ChartDataLabels);
 

@@ -1,15 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function StudentButtons() {
+function StudentButtons({ applnEndDate }) {
 
     const navigate = useNavigate();
+    const isApplicationClosed = applnEndDate ? new Date().setHours(0, 0, 0, 0) > new Date(applnEndDate).setHours(0, 0, 0, 0) : false;
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 justify-items-center w-full max-w-2xl">
             <button
                 onClick={() => navigate('/student/register/application')}
-                className="uppercase bg-amber-50 text-black font-bold text-xl shadow-2xl w-40 h-14 md:w-40 md:h-14 lg:w-48 lg:h-16 px-4 py-4 hover:shadow-yellow-400 hover:bg-amber-200 rounded-lg"
+                disabled={isApplicationClosed}
+                className={`uppercase font-bold text-xl shadow-2xl w-40 h-14 md:w-40 md:h-14 lg:w-48 lg:h-16 px-4 py-4 rounded-lg transition 
+                    ${isApplicationClosed
+                        ? 'bg-gray-300 text-gray-700 cursor-not-allowed shadow-none'
+                        : 'bg-amber-50 text-black hover:shadow-yellow-400 hover:bg-amber-200'}`}
             >
                 Register
             </button>

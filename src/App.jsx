@@ -6,15 +6,15 @@ import PrivateRoute from "./routes/PrivateRoute";
 // Public Pages
 import LandingPage from "./pages/others/LandingPage";
 import LoginPage from "./pages/others/LoginPage";
-import StudentHome from "./pages/StudentHome";
+import StudentHome from "./pages/student/StudentHome";
 
 // Student Pages
 import RegisterLayout from "./layout/RegisterLayout";
 import RegisterApplication from "./pages/student/RegisterApplication";
 import StudentLayout from "./layout/StudentLayout";
-import StudentDashboard from "./pages/StudentDashboard";
-import LoginApplication from "./pages/LoginApplication";
-import StudentGuidelines from "./pages/StudentGuidelines";
+import StudentDashboard from "./pages/student/StudentDashboard";
+import LoginApplication from "./pages/student/LoginApplication";
+import StudentGuidelines from "./pages/student/StudentGuidelines";
 
 // Staff Pages
 import StaffLayout from "./layout/StaffLayout";
@@ -25,7 +25,7 @@ import StaffSettings from "./pages/staff/StaffSettings";
 
 // Admin Pages
 import AdminLayout from "./layout/AdminLayout";
-import CommonStaffDashboard from "./pages/CommonStaffDashboard";
+import CommonStaffDashboard from "./pages/others/CommonStaffDashboard";
 import AcademicYear from './pages/admin/applicationSettings/AcademicYear';
 import ApplicationDate from './pages/admin/applicationSettings/ApplicationDate';
 import SclrAdministration from './pages/admin/SclrAdministration';

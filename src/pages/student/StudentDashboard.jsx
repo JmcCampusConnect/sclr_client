@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import Loading from "../assets/svg/Pulse.svg";
-import ApplicationStatus from "../components/StudentDashboard/ApplicationStatus";
-import PersonalDetails from "../components/StudentDashboard/PersonalDetails";
-import EducationalDetails from "../components/StudentDashboard/EducationalDetails";
-import DocumentsSection from "../components/StudentDashboard/DocumentsSection";
-import { InfoCard } from "../components/StudentDashboard/UI";
+import Loading from "../../assets/svg/Pulse.svg";
+import ApplicationStatus from "../../components/StudentDashboard/ApplicationStatus";
+import PersonalDetails from "../../components/StudentDashboard/PersonalDetails";
+import EducationalDetails from "../../components/StudentDashboard/EducationalDetails";
+import DocumentsSection from "../../components/StudentDashboard/DocumentsSection";
+import { InfoCard } from "../../components/StudentDashboard/UI";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
