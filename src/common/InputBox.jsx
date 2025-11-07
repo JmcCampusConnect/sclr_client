@@ -2,7 +2,7 @@ import React from 'react';
 
 function InputBox({ name, label = false, required = false, type, placeholder, register, errors, readOnly = false }) {
 
-	const handleUppercase = (e) => { e.target.value = e.target.value.toUpperCase()}
+	const handleUppercase = (e) => { e.target.value = e.target.value.toUpperCase() }
 
 	return (
 		<div className="space-y-2">
@@ -18,11 +18,12 @@ function InputBox({ name, label = false, required = false, type, placeholder, re
 				placeholder={placeholder}
 				readOnly={readOnly}
 				onInput={handleUppercase}
-				className={`w-full p-2 border rounded-md bg-white text-gray-900 transition
-          			${errors?.[name]
+				className={`w-full p-2 border rounded-md text-gray-900 transition
+					${readOnly ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
+					${errors?.[name]
 						? 'border-red-500 focus:border-red-500 focus:ring-red-300'
 						: 'border-gray-300 focus:border-blue-500 focus:ring-blue-300'}
-          				focus:outline-none focus:ring-1`
+					focus:outline-none focus:ring-1`
 				}
 			/>
 			{errors?.[name] && (

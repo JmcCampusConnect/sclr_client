@@ -1,14 +1,11 @@
 import React from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function AmtDonarModal({ onClose }) {
 
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
+	return (
+		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
 			<div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full border border-gray-200 dark:border-gray-700 max-w-6xl hide-scrollbar overflow-y-auto max-h-[80vh]">
 				{/* Header */}
 				<div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -31,38 +28,14 @@ function AmtDonarModal({ onClose }) {
 						<h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
 							💰 Payment Details
 						</h2>
-
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							<Input
-								label="Date of Payment"
-								name="scholdate"
-								type="date"
+								label="General Amount"
+								name={"zakkathamt"}
 							/>
-
-							<div>
-								<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
-									Scholarship Type :
-								</label>
-								<div className="flex gap-6 mt-2 items-center">
-									<Radio
-										label="Zakkath"
-										name="zakkath"
-										checked={true}
-									/>
-									<Radio
-										label="General"
-										name="zakkath"
-                                        checked={false}
-									/>
-								</div>
-							</div>
-
-							<Input label="Cheque / Receipt No" name="receipt" />
-
 							<Input
-								label="Amount"
-								name={ "zakkathamt" }
-								required
+								label="Zakkath Amount"
+								name={"zakkathamt"}
 							/>
 						</div>
 					</div>
@@ -86,64 +59,64 @@ function AmtDonarModal({ onClose }) {
 				</form>
 			</div>
 		</div>
-    )
+	)
 }
 
 const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
-    <div>
-        <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
-            {label} : {props.required && <span className="text-red-500">*</span>}
-        </label>
-        <input
-            type={type}
-            name={name}
-            value={value}
-            onChange={onChange}
-            {...props}
-            className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
-        />
-    </div>
+	<div>
+		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
+			{label} : {props.required && <span className="text-red-500">*</span>}
+		</label>
+		<input
+			type={type}
+			name={name}
+			value={value}
+			onChange={onChange}
+			{...props}
+			className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
+		/>
+	</div>
 )
 
 const Select = ({ label, name, value, onChange, options, required }) => (
-    <div>
-        <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
-            {label} : {required && <span className="text-red-500">*</span>}
-        </label>
-        <select
-            name={name}
-            value={value}
-            onChange={onChange}
-            required={required}
-            className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
-        >
-            <option value="">Select</option>
-            {options?.map((opt) => (
-                <option key={opt} value={opt}>
-                    {opt}
-                </option>
-            ))}
-        </select>
-    </div>
+	<div>
+		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
+			{label} : {required && <span className="text-red-500">*</span>}
+		</label>
+		<select
+			name={name}
+			value={value}
+			onChange={onChange}
+			required={required}
+			className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
+		>
+			<option value="">Select</option>
+			{options?.map((opt) => (
+				<option key={opt} value={opt}>
+					{opt}
+				</option>
+			))}
+		</select>
+	</div>
 )
 
 const Radio = ({ label, name, checked, onChange }) => (
-    <label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
-        <div className='flex flex-col justify-center'>
-            <div className="flex gap-4 items-center mt-2">
-                <label className="flex items-center gap-2 text-md">
-                    <input
-                        type="radio"
-                        name={name}
-                        checked={checked}
-                        onChange={onChange}
-                        className="w-4 h-4 accent-blue-500"
-                    />
-                    {label}
-                </label>
-            </div>
-        </div>
-    </label>
+	<label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
+		<div className='flex flex-col justify-center'>
+			<div className="flex gap-4 items-center mt-2">
+				<label className="flex items-center gap-2 text-md">
+					<input
+						type="radio"
+						name={name}
+						checked={checked}
+						onChange={onChange}
+						className="w-4 h-4 accent-blue-500"
+					/>
+					{label}
+				</label>
+			</div>
+		</div>
+	</label>
 )
 
 export default AmtDonarModal;

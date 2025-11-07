@@ -1,13 +1,13 @@
 import React from "react";
 
-function RadioButton({ label, name, options = [], required, register, errors }) {
+function RadioButton({ label, name, options = [], required, register, errors, readOnly }) {
 
     return (
         <div className="space-y-2">
             <label className="block text-md font-medium text-gray-700">
                 {label} : {required && <span className="text-red-500">*</span>}
             </label>
-            <div className="flex mt-4 gap-8">
+            <div className={`flex mt-4 gap-8 ${readOnly ? 'opacity-60 cursor-not-allowed' : ''}`}>
                 {options.map((option) => (
                     <label key={option} className="flex items-center space-x-2">
                         <input
@@ -15,6 +15,7 @@ function RadioButton({ label, name, options = [], required, register, errors }) 
                             type="radio"
                             value={option}
                             name={name}
+                            disabled={readOnly}
                             className="accent-blue-600 scale-110"
                         />
                         <span className="text-gray-800">{option}</span>

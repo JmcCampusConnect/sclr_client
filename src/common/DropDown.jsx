@@ -1,7 +1,7 @@
 import React from "react";
 import Select from "react-select";
 
-function DropDown({ label, name, options, errors, setValue, watch, required }) {
+function DropDown({ label, name, options, errors, setValue, watch, required, readOnly }) {
 
 	const formattedOptions = options.map((opt) => typeof opt === "string" ? { value: opt, label: opt } : opt)
 
@@ -31,10 +31,12 @@ function DropDown({ label, name, options, errors, setValue, watch, required }) {
 				options={formattedOptions}
 				isClearable={false}
 				placeholder=""
+				isDisabled={readOnly}
 				className="text-sm"
 				styles={{
 					control: (base, state) => ({
-						...base, minHeight: "38px", borderWidth: "1px", borderRadius: "6px", backgroundColor: "white",
+						...base, minHeight: "38px", borderWidth: "1px", borderRadius: "6px", 
+						backgroundColor: readOnly ? "#f3f4f6" : "white",
 						padding: "2.2px", boxShadow: "none",
 						borderColor: errors?.[name] ? "#ef4444" : state.isFocused ? "#3b82f6" : "#d1d5db",
 						"&:hover": {
@@ -50,7 +52,7 @@ function DropDown({ label, name, options, errors, setValue, watch, required }) {
 					menu: (base) => ({ ...base, zIndex: 9999, }),
 					menuList: (base) => ({
 						...base,
-						fontSize: "1rem", 
+						fontSize: "1rem",
 					}),
 				}}
 			/>

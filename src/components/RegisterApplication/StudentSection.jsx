@@ -3,20 +3,21 @@ import DropDown from '../../common/DropDown';
 import HeaderTag from '../../common/HeaderTag';
 import InputBox from '../../common/InputBox';
 
-function StudentSection({ register, errors, setValue, watch }) {
+function StudentSection({ register, errors, setValue, watch, addtionalInfo, readOnly = false, slclrType }) {
 
     return (
         <>
             <HeaderTag label="Student Details" />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 border border-gray-200 p-6 rounded-xl bg-white shadow-md">
-                
+            <div className={`grid grid-cols-1 gap-6 border border-gray-200 p-6 rounded-xl bg-white shadow-md ${addtionalInfo && slclrType === 'Renewal' ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
+
                 <DropDown
                     name="religion"
                     label="Religion"
                     options={['Islam', 'Hindu', 'Christian', 'Others']}
                     required
                     errors={errors}
+                    readOnly={readOnly}
                     setValue={setValue}
                     watch={watch}
                 />
@@ -28,6 +29,7 @@ function StudentSection({ register, errors, setValue, watch }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
 
                 <InputBox
@@ -37,7 +39,21 @@ function StudentSection({ register, errors, setValue, watch }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
+
+                {addtionalInfo && slclrType === 'Renewal'  && (
+                    <InputBox
+                        name="lastYearCreditedAmount"
+                        label="Last Year Credited Amount"
+                        type="text"
+                        required
+                        register={register}
+                        errors={errors}
+                        readOnly={readOnly}
+                    />
+                )}
+
             </div>
         </>
     )

@@ -4,13 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import InstructionModal from '../../components/RegisterApplication/InstructionModal';
 import SpecialCategory from '../../components/RegisterApplication/SpecialCategory';
 import AcademicDetails from '../../components/RegisterApplication/AcademicDetails';
 import StudentSection from '../../components/RegisterApplication/StudentSection';
 import ParentSection from '../../components/RegisterApplication/ParentSection';
 import AddressSection from '../../components/RegisterApplication/AddressSection';
-import LastInstitution from '../../components/RegisterApplication/LastInstitution';
+import HeaderTag from '../../common/HeaderTag';
 import Button from '../../common/Button';
 import { useAdd } from '../../hook/useAdd';
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -57,38 +56,27 @@ const schema = Yup.object().shape({
         "required", "Jamath / Self Declaration Letter is required",
         (value) => { return value && value.length > 0 }
     ),
-    password: Yup.string().required("Password is required"),
-    confirmPassword: Yup.string().required("Confirm Password is required").oneOf([Yup.ref('password')], 'Password must match'),
-    lastStudiedInstitution: Yup.string().when("semester", {
-        is: "I",
-        then: (schema) => schema.required("Last Institution Name is required"),
-        otherwise: (schema) => schema.notRequired(),
-    }),
-    yearOfPassing: Yup.number().when("semester", {
-        is: "I",
-        then: (schema) => schema.required("Year of Passing is required").typeError("Must be a number"),
-        otherwise: (schema) => schema.notRequired(),
-    }),
-    marksSecured: Yup.number().when("semester", {
-        is: "I",
-        then: (schema) => schema.required("Marks Secured is required").typeError("Must be a number"),
-        otherwise: (schema) => schema.notRequired(),
-    }),
-    maxMarks: Yup.number().when("semester", {
-        is: "I",
-        then: (schema) => schema.required("Maximum Marks is required").typeError("Must be a number"),
-        otherwise: (schema) => schema.notRequired(),
-    }),
-    lastStudiedInstitutionPercentage: Yup.string().when("semester", {
-        is: "I",
-        then: (schema) => schema.required("Percentage is required"),
-        otherwise: (schema) => schema.notRequired(),
-    }),
 })
 
 function LoginApplication() {
 
     const { userId } = useParams();
+    const [studentData, setStudentData] = useState(null);
+    const [canApply, setCanApply] = useState(true);
+    const [sclrType, setSclrType] = useState(null);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        watch,
+        setValue,
+    } = useForm({
+        resolver: yupResolver(schema)
+    });
+
+    const navigate = useNavigate();
+    const { addData } = useAdd();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -96,50 +84,58 @@ function LoginApplication() {
             if (!userId) return;
 
             try {
-                const response = await axios.get(`${apiUrl}/api/student/fetchStudentData`, { params: { registerNo: userId?.toUpperCase() } });
-
-
+                const response = await axios.get(`${apiUrl}/api/student/fetchStudentData`, { params: { registerNo: userId.toUpperCase() } });
+                const { student, canApply, totalAmtGiven } = response.data;
+                setStudentData(student);
+                setCanApply(canApply);
+                setSclrType(totalAmtGiven === 0 ? "Fresher" : "Renewal");
+                console.log(totalAmtGiven)
+                Object.keys(student).forEach((key) => { if (key in student) setValue(key, student[key]) });
             } catch (error) {
-                console.error('Error:', error.response ? error.response.data : error);
+                console.error('Error in fetching student data : ', error.response ? error.response.data : error);
                 alert('Failed to load data.');
             }
-        }
+        };
         fetchData();
-    }, [userId, apiUrl]);
-
-    const { register, handleSubmit, formState: { errors, isSubmitting }, watch, setValue } = useForm({
-        resolver: yupResolver(schema)
-    });
-    const navigate = useNavigate();
-    const { addData, addError } = useAdd();
+    }, [userId, apiUrl, setValue]);
 
     const registerFormSubmit = async (formData) => {
+
+        if (!canApply) return;
         const dataToSend = new FormData();
+
         Object.keys(formData).forEach((key) => {
             if (key === "jamathLetter" && formData[key] instanceof FileList) {
                 dataToSend.append(key, formData[key][0]);
-            } else { dataToSend.append(key, formData[key]) }
+            } else {
+                dataToSend.append(key, formData[key]);
+            }
         })
+
         try {
             const response = await addData(`${apiUrl}/api/register/application`, dataToSend);
             if (response.data.status === 201) {
-                alert(response.data?.message || 'Application submitted successfully')
-                window.location.reload();
-                navigate('/student')
+                alert(response.data?.message || 'Application submitted successfully');
+                navigate('/student');
+            } else {
+                alert('Error in saving Application');
             }
-            else { alert('Error in saving Application') }
         } catch (error) {
             console.log('Error in saving Register Application : ', error);
         }
     }
 
     return (
-        <form className='space-y-7' onSubmit={handleSubmit(registerFormSubmit)}>
+        <form className="space-y-7" onSubmit={handleSubmit(registerFormSubmit)}>
+
+            <HeaderTag label={`${sclrType} Application`} />
             <SpecialCategory
                 register={register}
                 errors={errors}
                 watch={watch}
                 setValue={setValue}
+                readOnly={!canApply}
+                sclrType={sclrType}
             />
 
             <AcademicDetails
@@ -147,6 +143,7 @@ function LoginApplication() {
                 errors={errors}
                 watch={watch}
                 setValue={setValue}
+                readOnly={!canApply}
             />
 
             <StudentSection
@@ -154,6 +151,9 @@ function LoginApplication() {
                 errors={errors}
                 watch={watch}
                 setValue={setValue}
+                addtionalInfo={true}
+                readOnly={!canApply}
+                sclrType={sclrType}
             />
 
             <ParentSection
@@ -161,6 +161,7 @@ function LoginApplication() {
                 errors={errors}
                 watch={watch}
                 setValue={setValue}
+                readOnly={!canApply}
             />
 
             <AddressSection
@@ -168,15 +169,21 @@ function LoginApplication() {
                 errors={errors}
                 watch={watch}
                 setValue={setValue}
+                notRequiredInfo={false}
+                readOnly={!canApply}
             />
 
-            <div className='flex justify-end'>
-                <Button
-                    type="submit" label={isSubmitting ? "Submitting..." : "Submit"}
-                    customBtnStyle={`bg-blue-500 hover:bg-blue-700 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
-                />
-            </div>
-        </form >
+            {canApply &&
+                <div className="flex justify-end">
+                    <Button
+                        type="submit"
+                        label={isSubmitting ? "Submitting..." : canApply ? "Submit" : "Application Closed"}
+                        customBtnStyle={`bg-blue-500 hover:bg-blue-700 ${isSubmitting || !canApply ? "opacity-50 cursor-not-allowed" : ""}`}
+                        disabled={!canApply}
+                    />
+                </div>
+            }
+        </form>
     )
 }
 

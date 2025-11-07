@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import HeaderTag from '../../common/HeaderTag';
 import InstructionModal from '../../components/RegisterApplication/InstructionModal';
 import SpecialCategory from '../../components/RegisterApplication/SpecialCategory';
 import AcademicDetails from '../../components/RegisterApplication/AcademicDetails';
@@ -130,7 +131,6 @@ function RegisterApplication() {
             const response = await addData(`${apiUrl}/api/student/application`, dataToSend);
             if (response.data.status === 201) {
                 alert(response.data?.message || 'Application submitted successfully')
-                window.location.reload();
                 navigate('/student')
             }
             else { alert('Error in saving Application') }
@@ -156,7 +156,7 @@ function RegisterApplication() {
                             </label>
                             <div className="flex items-center gap-4">
                                 <input
-                                    type="text"  placeholder="Ex : 24MCAXXX"
+                                    type="text" placeholder="Ex : 24MCAXXX"
                                     className="w-full border text-gray-900 transition border-gray-200 p-2 rounded-md bg-white shadow-xs mt-2.5"
                                     value={registerNo}
                                     onChange={(e) => setRegisterNo(e.target.value.toUpperCase())}
@@ -175,6 +175,7 @@ function RegisterApplication() {
                 </div>
             ) : (
                 <>
+                    <HeaderTag label="New Application" />
                     <SpecialCategory
                         register={register}
                         errors={errors}

@@ -38,7 +38,7 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
             setLoading(true);
             const response = await axios.post(`${apiUrl}/api/admin/application/rejectApplications`, payload);
             if (response.data.success) {
-                alert("Student application rejected successfully!");
+                alert("Student application has been rejected successfully!");
                 closeModal();
                 window.location.reload();
             } else { alert(response.data.message || "Failed to reject application.") }

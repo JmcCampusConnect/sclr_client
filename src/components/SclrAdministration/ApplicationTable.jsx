@@ -94,7 +94,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 								</tr>
 							))) : (
 							<tr>
-								<td colSpan="6" className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+								<td colSpan="7" className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
 									No applications found.
 								</td>
 							</tr>

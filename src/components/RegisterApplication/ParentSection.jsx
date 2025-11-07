@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import InputBox from '../../common/InputBox';
 import RadioButton from '../../common/RadioButton';
 
-function ParentSection({ register, errors, watch }) {
+function ParentSection({ register, errors, watch, readOnly = false }) {
 
     const siblingsStatus = watch("siblingsStatus")
 
@@ -16,6 +16,7 @@ function ParentSection({ register, errors, watch }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
                 <InputBox
                     name='parentNo'
@@ -24,6 +25,7 @@ function ParentSection({ register, errors, watch }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -34,6 +36,7 @@ function ParentSection({ register, errors, watch }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
                 <InputBox
                     name='parentAnnualIncome'
@@ -42,6 +45,7 @@ function ParentSection({ register, errors, watch }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
                 <RadioButton
                     name='siblingsStatus'
@@ -50,6 +54,7 @@ function ParentSection({ register, errors, watch }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
                 {siblingsStatus === 'Yes' && (
                     <>
@@ -60,6 +65,7 @@ function ParentSection({ register, errors, watch }) {
                             required
                             register={register}
                             errors={errors}
+                            readOnly={readOnly}
                         />
                         <InputBox
                             name='siblingsOccupation'
@@ -68,6 +74,7 @@ function ParentSection({ register, errors, watch }) {
                             required
                             register={register}
                             errors={errors}
+                            readOnly={readOnly}
                         />
                         <InputBox
                             name='siblingsIncome'
@@ -76,6 +83,7 @@ function ParentSection({ register, errors, watch }) {
                             required
                             register={register}
                             errors={errors}
+                            readOnly={readOnly}
                         />
                     </>
                 )}

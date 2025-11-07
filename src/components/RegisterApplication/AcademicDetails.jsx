@@ -4,7 +4,7 @@ import InputBox from '../../common/InputBox';
 import DropDown from '../../common/DropDown';
 import HeaderTag from '../../common/HeaderTag';
 
-function AcademicDetails({ register, errors, watch, setValue }) {
+function AcademicDetails({ register, errors, watch, setValue, readOnly = false }) {
 
     const graduate = watch('graduate');
     const semesterOptions = graduate === 'PG'
@@ -24,6 +24,7 @@ function AcademicDetails({ register, errors, watch, setValue }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
                 <RadioButton
                     name="category"
@@ -32,6 +33,7 @@ function AcademicDetails({ register, errors, watch, setValue }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
                 <RadioButton
                     name="semester"
@@ -40,6 +42,7 @@ function AcademicDetails({ register, errors, watch, setValue }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
                 <RadioButton
                     name="hostelStatus"
@@ -48,6 +51,7 @@ function AcademicDetails({ register, errors, watch, setValue }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
             </div>
 
@@ -62,7 +66,7 @@ function AcademicDetails({ register, errors, watch, setValue }) {
                         required
                         register={register}
                         errors={errors}
-                        readOnly
+                        readOnly={true}
                     />
                     <InputBox
                         label="Name"
@@ -71,6 +75,7 @@ function AcademicDetails({ register, errors, watch, setValue }) {
                         required
                         register={register}
                         errors={errors}
+                        readOnly={readOnly}
                     />
                 </div>
 
@@ -83,6 +88,7 @@ function AcademicDetails({ register, errors, watch, setValue }) {
                         required
                         register={register}
                         errors={errors}
+                        readOnly={readOnly}
                     />
 
                     {/* ✅ Department Dropdown */}
@@ -96,6 +102,7 @@ function AcademicDetails({ register, errors, watch, setValue }) {
                         ]}
                         required
                         errors={errors}
+                        readOnly={readOnly}
                         setValue={setValue}
                         watch={watch}
                     />
@@ -107,6 +114,7 @@ function AcademicDetails({ register, errors, watch, setValue }) {
                         options={['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']}
                         required
                         errors={errors}
+                        readOnly={readOnly}
                         setValue={setValue}
                         watch={watch}
                     />

@@ -3,7 +3,7 @@ import InputBox from '../../common/InputBox';
 import DropDown from '../../common/DropDown';
 import FileInput from '../../common/FileInput';
 
-function AddressSection({ register, errors, setValue, watch }) {
+function AddressSection({ register, errors, setValue, watch, notRequiredInfo = true, readOnly = false }) {
 
     return (
         <div className="border border-gray-200 p-6 rounded-xl bg-white shadow-md space-y-6">
@@ -17,11 +17,12 @@ function AddressSection({ register, errors, setValue, watch }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
             </div>
 
             {/* ✅ State, District, Pincode */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className={`grid grid-cols-1 gap-6 ${notRequiredInfo ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
                 <DropDown
                     name="state"
                     label="State"
@@ -31,10 +32,11 @@ function AddressSection({ register, errors, setValue, watch }) {
                         'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka', 'Kerala', 'Ladakh',
                         'Lakshadweep', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
                         'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim',
-                        'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Other'
+                        'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Others'
                     ]}
                     required
                     errors={errors}
+                    readOnly={readOnly}
                     setValue={setValue}
                     watch={watch}
                 />
@@ -49,10 +51,11 @@ function AddressSection({ register, errors, setValue, watch }) {
                         'Pudukkottai', 'Ramanathapuram', 'Ranipet', 'Salem', 'Sivaganga', 'Tenkasi',
                         'Thanjavur', 'Theni', 'Thoothukudi', 'Tiruchirappalli', 'Tirunelveli', 'Tirupathur',
                         'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore', 'Viluppuram',
-                        'Virudhunagar', 'Other'
+                        'Virudhunagar', 'Others'
                     ]}
                     required
                     errors={errors}
+                    readOnly={readOnly}
                     setValue={setValue}
                     watch={watch}
                 />
@@ -64,10 +67,9 @@ function AddressSection({ register, errors, setValue, watch }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <FileInput
                     name="jamathLetter"
                     label="Jamath / Self Declaration Letter"
@@ -75,25 +77,32 @@ function AddressSection({ register, errors, setValue, watch }) {
                     required
                     register={register}
                     errors={errors}
+                    readOnly={readOnly}
                 />
 
-                <InputBox
-                    name="password"
-                    label="Password"
-                    type="password"
-                    required
-                    register={register}
-                    errors={errors}
-                />
-                
-                <InputBox
-                    name="confirmPassword"
-                    label="Confirm Password"
-                    type="password"
-                    required
-                    register={register}
-                    errors={errors}
-                />
+                {notRequiredInfo &&
+                    <>
+                        <InputBox
+                            name="password"
+                            label="Password"
+                            type="password"
+                            required
+                            register={register}
+                            errors={errors}
+                            readOnly={readOnly}
+                        />
+
+                        <InputBox
+                            name="confirmPassword"
+                            label="Confirm Password"
+                            type="password"
+                            required
+                            register={register}
+                            errors={errors}
+                            readOnly={readOnly}
+                        />
+                    </>
+                }
             </div>
         </div>
     )
