@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DonorTable from "../../../components/Donar/DonarTable.jsx";
-import AddDonorModal from "../../../components/Donar/AddDonorModal.jsx";
-import EditDonorModal from "../../../components/Donar/EditDonorModal.jsx";
-import ActionBar from "../../../components/Donar/ActionBar.jsx";
-import FilterSection from "../../../components/Donar/FilterSection.jsx";
-import DeleteDonorModal from "../../../components/Donar/DeleteDonarModal.jsx";
-import AmtDonarModal from "../../../components/Donar/AmtDonarModal.jsx";
+import DonorTable from "../../../components/Donor/DonorTable";
+import AddDonorModal from "../../../components/Donor/AddDonorModal";
+import EditDonorModal from "../../../components/Donor/EditDonorModal";
+import DonorActionBar from "../../../components/Donor/DonorActionBar";
+import DonorFilters from "../../../components/Donor/DonorFilters";
+import DeleteDonorModal from "../../../components/Donor/DeleteDonorModal";
+import AmtDonarModal from "../../../components/Donor/AmtDonorModal";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -28,21 +28,17 @@ function Donor() {
 		}
 	}
 
-	useEffect(() => {fetchDonors()}, []);
+	useEffect(() => { fetchDonors() }, []);
 
-	const handleAddDonor = (newDonor) => {
-		setDonors((prev) => [...prev, newDonor]);
-	}
+	const handleAddDonor = (newDonor) => { setDonors((prev) => [...prev, newDonor]) }
 
 	const handleEditDonor = (updatedDonor) => {
-		setDonors((prev) =>
-			prev.map((donor) => (donor.donorId === updatedDonor.donorId ? updatedDonor : donor))
+		setDonors((prev) => prev.map((donor) =>
+			(donor.donorId === updatedDonor.donorId ? updatedDonor : donor))
 		)
 	}
 
-	const handleDeleteDonor = (deletedId) => {
-		setDonors((prev) => prev.filter((donor) => donor.donorId !== deletedId));
-	}
+	const handleDeleteDonor = (deletedId) => { setDonors((prev) => prev.filter((donor) => donor.donorId !== deletedId)); }
 
 	return (
 		<div className="relative">
@@ -51,8 +47,8 @@ function Donor() {
 					Donor Management
 				</h1>
 			</header>
-			<FilterSection onAdd={() => setShowAddModal(true)} />
-			<ActionBar donors={donors} />
+			<DonorFilters onAdd={() => setShowAddModal(true)} />
+			<DonorActionBar donors={donors} />
 			<DonorTable
 				donors={donors}
 				onEdit={(donor) => setEditDonor(donor)}

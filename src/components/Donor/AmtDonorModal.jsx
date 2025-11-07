@@ -3,7 +3,7 @@ import axios from "axios";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AmtDonarModal({onClose, donorData}) {
+function AmtDonorModal({onClose, donorData}) {
 	// console.log("add amt", donorData)
 
 	const [amountData, setAmountData] = useState({
@@ -158,4 +158,4 @@ const Radio = ({label, name, checked, onChange}) => (
 	</label>
 )
 
-export default AmtDonarModal;
+export default AmtDonorModal;

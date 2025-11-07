@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import FilterSection from '../../../components/Tutor/FilterSection'
-import ActionBar from '../../../components/Tutor/ActionBar'
+import TutorFilterSection from '../../../components/Tutor/TutorFilterSection'
+import TutorActionBar from '../../../components/Tutor/TutorActionBar'
 import TutorTable from '../../../components/Tutor/TutorTable'
 import AddTutorModal from '../../../components/Tutor/AddTutorModal'
 import EditTutorModal from '../../../components/Tutor/EditTutorModal'
@@ -32,8 +32,8 @@ function Tutor() {
                     Tutor Management
                 </h1>
             </header>
-            <FilterSection />
-            <ActionBar
+            <TutorFilterSection />
+            <TutorActionBar
                 onClose={() => setAddTutor(null)}
                 onAddTutor={() => setAddTutor({})}
             />

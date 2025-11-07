@@ -89,7 +89,7 @@ function TutorTable({ onEditTutor, onDeleteTutor }) {
 									colSpan="8"
 									className="px-4 py-6 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base"
 								>
-									No records found
+									No tutors found.
 								</td>
 							</tr>
 						)}

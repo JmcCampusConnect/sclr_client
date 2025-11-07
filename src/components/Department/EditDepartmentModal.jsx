@@ -1,64 +1,46 @@
 import React, { useState } from "react";
 import axios from "axios";
-import '../../App.css';
+import "../../App.css";
 import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AddTutorModal({ onClose, onAddTutor }) {
+function EditDepartmentModal({ deptData, onClose, onUpdateDonor }) {
 
-	const [formData, setFormData] = useState({
-		staffId: "", staffName: "", departmentId: "", category: "", section: "", batch: ""
-	});
+	const [formData, setFormData] = useState({ ...deptData });
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
-	}
+	};
 
 	const handleSelectChange = (name, option) => {
 		setFormData((prev) => ({
 			...prev,
 			[name]: option ? option.value : "",
-		}))
-	}
+		}));
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await axios.post(`${apiUrl}/api/donor/addDonor`, formData);
-			onAddDonor(response.data.donor);
+			const response = await axios.put(`${apiUrl}/api/donor/updateDonor/${formData._id}`, formData);
+			onUpdateDonor(response.data.updatedDonor);
 			onClose();
 		} catch (error) {
-			console.error("Error adding donor:", error);
+			console.error("Error updating donor:", error);
 		}
-	}
+	};
 
-	const departmentOptions = ["CSE", "ECE", "ME", "CE", "EE"].map((v) => ({
-		value: v, label: v,
-	}));
-
-	const categoryOptions = ["AIDED", "SFM", "SFW"].map((v) => ({
-		value: v, label: v,
-	}));
-
-	const batchOptions = ["2020", "2021", "2022", "2023", "2024"].map((v) => ({
-		value: v, label: v,
-	}));
-
-	const sectionOptions = ["A", "B", "C", "D"].map((v) => ({
-		value: v, label: v,
-	}));
 
 
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
 			<div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full border border-gray-200 dark:border-gray-700 max-w-6xl hide-scrollbar overflow-y-auto max-h-[80vh]">
-
 				{/* Header */}
 				<div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
 					<h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-						👨‍💼 Add Tutor
+						✏️ Edit Department
 					</h1>
 					<button
 						onClick={onClose}
@@ -69,70 +51,20 @@ function AddTutorModal({ onClose, onAddTutor }) {
 				</div>
 
 				{/* Form */}
-				<form onSubmit={handleSubmit} className="p-6 space-y-7 font-semibold">
-
-					{/* Section 1: Basic Info */}
+				<form onSubmit={handleSubmit} className="p-6 space-y-6 font-semibold">
+					{/* Basic Information */}
 					<div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
 						<h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
 							🧾 Basic Information
 						</h2>
 
-						<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-							<Input
-								label="Staff ID"
-								name="staffId"
-								value={formData.staffId}
-								onChange={handleChange}
-								required
-							/>
-							<Input
-								label="Staff Name"
-								name="staffName"
-								value={formData.staffName}
-								onChange={handleChange}
-								required
-							/>
-
-							<SearchDropdown
-								label="Department"
-								name="departmentId"
-								value={formData.departmentId}
-								options={departmentOptions}
-								onChange={handleSelectChange}
-								required
-							/>
-
-							<SearchDropdown
-								label="Category"
-								name="category"
-								value={formData.category}
-								options={categoryOptions}
-								onChange={handleSelectChange}
-								required
-							/>
-
-							<SearchDropdown
-								label="Batch"
-								name="batch"
-								value={formData.batch}
-								options={batchOptions}
-								onChange={handleSelectChange}
-								required
-							/>
-
-							<SearchDropdown
-								label="Section"
-								name="section"
-								value={formData.section}
-								options={sectionOptions}
-								onChange={handleSelectChange}
-								required
-							/>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<Input label="Department Id" name="donorId" value={formData.donorId} readOnly />
+							<Input label="Department Name" name="mobileNo" value={formData.mobileNo} onChange={handleChange} />
 						</div>
 					</div>
 
-					{/* Footer Actions */}
+					{/* Footer */}
 					<div className="flex justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
 						<button
 							type="button"
@@ -143,15 +75,15 @@ function AddTutorModal({ onClose, onAddTutor }) {
 						</button>
 						<button
 							type="submit"
-							className="px-6 py-2.5 rounded-lg font-semibold bg-green-600 hover:bg-green-700 text-white shadow-md transition"
+							className="px-6 py-2.5 rounded-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-md transition"
 						>
-							Submit
+							Update
 						</button>
 					</div>
 				</form>
 			</div>
 		</div>
-	)
+	);
 }
 
 const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
@@ -168,6 +100,6 @@ const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
 			className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
 		/>
 	</div>
-)
+);
 
-export default AddTutorModal;
+export default EditDepartmentModal;
