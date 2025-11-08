@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import '../../App.css';
 import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AddDonorModal({ onClose, onAddDonor }) {
+function AddDonorModal({onClose, onAddDonor}) {
 
 	const [formData, setFormData] = useState({
 		donorId: "", donorName: "", mobileNo: "", emailId: "", academicYear: "", panOrAadhaar: "", address: "",
@@ -14,8 +14,8 @@ function AddDonorModal({ onClose, onAddDonor }) {
 	});
 
 	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setFormData((prev) => ({ ...prev, [name]: value }));
+		const {name, value} = e.target;
+		setFormData((prev) => ({...prev, [name]: value}));
 	}
 
 	const handleSelectChange = (name, option) => {
@@ -25,7 +25,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
 	}
 
 	const handleSubmit = async (e) => {
-		console.log("da",formData)
+		console.log("da", formData)
 		e.preventDefault();
 		try {
 			const response = await axios.post(`${apiUrl}/api/donor/addDonor`, formData);
@@ -42,7 +42,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
 		"Krishnagiri", "Ramanathapuram", "Nagapattinam", "Pudukkottai", "Perambalur", "Ariyalur", "Theni",
 		"Tenkasi", "Kanchipuram", "Tiruvannamalai", "Villupuram", "Kallakurichi", "Nilgiris", "Chengalpattu",
 		"Tiruvarur", "Mayiladuthurai"
-	].map((d) => ({ value: d, label: d }));
+	].map((d) => ({value: d, label: d}));
 
 	const stateOptions = [
 		"Tamil Nadu", "Kerala", "Karnataka", "Andhra Pradesh", "Telangana", "Maharashtra", "Gujarat",
@@ -50,11 +50,11 @@ function AddDonorModal({ onClose, onAddDonor }) {
 		"Jharkhand", "Chhattisgarh", "Goa", "Punjab", "Haryana", "Himachal Pradesh", "Uttarakhand",
 		"Manipur", "Meghalaya", "Mizoram", "Nagaland", "Sikkim", "Tripura", "Arunachal Pradesh",
 		"Delhi", "Puducherry", "Andaman & Nicobar", "Ladakh", "Jammu & Kashmir"
-	].map((s) => ({ value: s, label: s }));
+	].map((s) => ({value: s, label: s}));
 
 	const donorTypeOptions = [
-		{ value: "Alumini", label: "Alumini" },
-		{ value: "Well Wisher", label: "Well Wisher" },
+		{value: "Alumini", label: "Alumini"},
+		{value: "Well Wisher", label: "Well Wisher"},
 	]
 
 	return (
@@ -85,13 +85,13 @@ function AddDonorModal({ onClose, onAddDonor }) {
 						</h2>
 
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-							<Input label="Donor ID" name="donorId" value={formData.donorId} readOnly />
+							{/* <Input label="Donor ID" name="donorId" value={formData.donorId} readOnly /> */}
 							<Input
 								label="Donor Name"
 								name="donorName"
 								value={formData.donorName}
 								required
-								onChange={(e) => setFormData((prev) => ({ ...prev, donorName: e.target.value.toUpperCase() }))}
+								onChange={(e) => setFormData((prev) => ({...prev, donorName: e.target.value.toUpperCase()}))}
 							/>
 							<Input label="Mobile No" name="mobileNo" value={formData.mobileNo} onChange={handleChange} />
 							<Input label="Email ID" name="emailId" type="email" value={formData.emailId} onChange={handleChange} />
@@ -99,13 +99,13 @@ function AddDonorModal({ onClose, onAddDonor }) {
 								label="PAN / Aadhaar No"
 								name="panNo"
 								value={formData.panNo}
-								onChange={(e) => setFormData((prev) => ({ ...prev, panNo: e.target.value.toUpperCase() }))}
+								onChange={(e) => setFormData((prev) => ({...prev, panNo: e.target.value.toUpperCase()}))}
 							/>
 							<Input
 								label="Address"
 								name="address"
 								value={formData.address}
-								onChange={(e) => setFormData((prev) => ({ ...prev, address: e.target.value.toUpperCase() }))}
+								onChange={(e) => setFormData((prev) => ({...prev, address: e.target.value.toUpperCase()}))}
 							/>
 							<SearchDropdown
 								label="District"
@@ -130,7 +130,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
 								onChange={handleSelectChange}
 								required
 							/>
-							<Input label="Donor Date" name="donorDate" type="date" value={formData.donorDate} onChange={handleChange} />
+							{/* <Input label="Donor Date" name="donorDate" type="date" value={formData.donorDate} onChange={handleChange} /> */}
 						</div>
 					</div>
 
@@ -148,6 +148,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
 								type="number"
 								value={formData.generalAmt}
 								onChange={handleChange}
+								onWheel={(e) => e.target.blur()}
 							/>
 							<Input
 								label="Zakkath Amount"
@@ -155,6 +156,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
 								type="number"
 								value={formData.zakkathAmt}
 								onChange={handleChange}
+								onWheel={(e) => e.target.blur()}
 							/>
 						</div>
 					</div>
@@ -181,7 +183,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
 	)
 }
 
-const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
+const Input = ({label, name, type = "text", value, onChange, ...props}) => (
 	<div>
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {props.required && <span className="text-red-500">*</span>}
@@ -197,7 +199,7 @@ const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
 	</div>
 )
 
-const Select = ({ label, name, value, onChange, options, required }) => (
+const Select = ({label, name, value, onChange, options, required}) => (
 	<div>
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {required && <span className="text-red-500">*</span>}
@@ -219,7 +221,7 @@ const Select = ({ label, name, value, onChange, options, required }) => (
 	</div>
 )
 
-const Radio = ({ label, name, checked, onChange }) => (
+const Radio = ({label, name, checked, onChange}) => (
 	<label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
 		<div className='flex flex-col justify-center'>
 			<div className="flex gap-4 items-center mt-2">

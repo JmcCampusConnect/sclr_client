@@ -1,33 +1,52 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import "../../App.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AddDepartmentModal({ onClose, onAddDepartment }) {
+function AddDepartmentModal({onClose, onAddDepartment}) {
 
-    const [formData, setFormData] = useState({ department: "", departmentName: "" });
+    const [formData, setFormData] = useState({department: "", departmentName: ""});
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const response = await axios.post(`${apiUrl}/api/dept/addDepartment`, formData);
-            onAddDepartment(response.data.department);
-            onClose();
+
+            if (response.data.success) {
+                alert(response.data.message);
+                onClose();
+                window.location.reload();
+            } else {
+                alert(response.data.message || "Something went wrong.");
+            }
+
         } catch (error) {
-            console.error("Error adding department : ", error);
+            console.error("Error adding department:", error);
+
+            if (error.response) {
+                alert(error.response.data.message || "Server error occurred.");
+            } else if (error.request) {
+                alert("No response from server. Please check your network.");
+            } else {
+                alert("Unexpected error. Please try again later.");
+            }
         }
     };
+
+
+
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full border border-gray-200 dark:border-gray-700 max-w-6xl hide-scrollbar overflow-y-auto max-h-[80vh]">
-                
+
                 {/* Header */}
                 <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -96,7 +115,7 @@ function AddDepartmentModal({ onClose, onAddDepartment }) {
     );
 }
 
-const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
+const Input = ({label, name, type = "text", value, onChange, ...props}) => (
     <div>
         <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
             {label} : {props.required && <span className="text-red-500">*</span>}
