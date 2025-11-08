@@ -149,6 +149,7 @@ function LoginApplication() {
                 watch={watch}
                 setValue={setValue}
                 readOnly={!canApply}
+                loginConstraint={true}
             />
 
             <StudentSection
