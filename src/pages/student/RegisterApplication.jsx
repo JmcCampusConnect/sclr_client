@@ -128,7 +128,7 @@ function RegisterApplication() {
             } else { dataToSend.append(key, formData[key]) }
         })
         try {
-            const response = await addData(`${apiUrl}/api/student/application`, dataToSend);
+            const response = await addData(`${apiUrl}/api/student/registerApplication`, dataToSend);
             if (response.data.status === 201) {
                 alert(response.data?.message || 'Application submitted successfully')
                 navigate('/student')

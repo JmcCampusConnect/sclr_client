@@ -50,7 +50,7 @@ function StudentSection({ register, errors, setValue, watch, addtionalInfo, read
                         required
                         register={register}
                         errors={errors}
-                        readOnly={readOnly}
+                        readOnly={true}
                     />
                 )}
 

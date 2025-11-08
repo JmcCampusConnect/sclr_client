@@ -66,20 +66,14 @@ function LoginApplication() {
     const [sclrType, setSclrType] = useState(null);
     const [lastYearCreditedAmount, setLastYearCreditedAmount] = useState(0);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-        watch,
-        setValue,
-    } = useForm({
-        resolver: yupResolver(schema)
-    });
+    const { register, handleSubmit, formState: { errors, isSubmitting }, watch, setValue,
+    } = useForm({ resolver: yupResolver(schema) })
 
     const navigate = useNavigate();
     const { addData } = useAdd();
 
     useEffect(() => {
+
         const fetchData = async () => {
 
             if (!userId) return;
@@ -92,6 +86,7 @@ function LoginApplication() {
                 setSclrType(lastYearCreditedAmount === 0 ? "Fresher" : "Renewal");
                 setLastYearCreditedAmount(lastYearCreditedAmount);
                 setValue('lastYearCreditedAmount', lastYearCreditedAmount);
+                setValue('sclrType', sclrType)
                 Object.keys(student).forEach((key) => { if (key in student) setValue(key, student[key]) });
             } catch (error) {
                 console.error('Error in fetching student data : ', error.response ? error.response.data : error);
@@ -105,38 +100,38 @@ function LoginApplication() {
         if (studentData) {
             Object.keys(studentData).forEach((key) => setValue(key, studentData[key]));
             setValue('lastYearCreditedAmount', lastYearCreditedAmount);
+            setValue('sclrType', sclrType)
         }
-    }, [studentData, lastYearCreditedAmount, setValue]);
+    }, [studentData, lastYearCreditedAmount, setValue, sclrType]);
 
 
-    const registerFormSubmit = async (formData) => {
+    const loginFormSubmit = async (formData) => {
 
         if (!canApply) return;
         const dataToSend = new FormData();
 
         Object.keys(formData).forEach((key) => {
-            if (key === "jamathLetter" && formData[key] instanceof FileList) {
-                dataToSend.append(key, formData[key][0]);
-            } else {
-                dataToSend.append(key, formData[key]);
+            if (key !== "tutorVerificationDetails") {
+                if (key === "jamathLetter" && formData[key] instanceof FileList) {
+                    dataToSend.append(key, formData[key][0])
+                }
+                else { dataToSend.append(key, formData[key]) }
             }
         })
 
         try {
-            const response = await addData(`${apiUrl}/api/register/application`, dataToSend);
+            const response = await addData(`${apiUrl}/api/student/loginApplication`, dataToSend);
             if (response.data.status === 201) {
                 alert(response.data?.message || 'Application submitted successfully');
-                navigate('/student');
-            } else {
-                alert('Error in saving Application');
-            }
+                navigate(`/student/${userId}/dashboard`);
+            } else { alert('Error in saving Application') }
         } catch (error) {
-            console.log('Error in saving Register Application : ', error);
+            console.log('Error in saving Login Application : ', error);
         }
     }
 
     return (
-        <form className="space-y-7" onSubmit={handleSubmit(registerFormSubmit)}>
+        <form className="space-y-7" onSubmit={handleSubmit(loginFormSubmit)}>
 
             <HeaderTag label={`${sclrType} Application`} />
             <SpecialCategory
@@ -198,4 +193,4 @@ function LoginApplication() {
     )
 }
 
-export default LoginApplication
+export default LoginApplication;
