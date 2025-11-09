@@ -42,7 +42,11 @@ function ChangePassword() {
 
     return (
         <div>
-            <HeaderTag label='Change Password' />
+            <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
+				<h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
+					Change Password
+				</h1>
+			</header>
             <div className="bg-white border border-gray-300 rounded-lg shadow p-6 w-full grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="">
                     <label className="block mb-2 font-semibold text-gray-700">
