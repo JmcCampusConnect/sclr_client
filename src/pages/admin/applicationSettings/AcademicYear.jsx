@@ -32,7 +32,11 @@ function AcademicYear() {
 
     return (
         <div>
-            <HeaderTag label={'Academic Year Selection'} />
+            <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
+                    Academic Year Settings
+                </h1>
+            </header>
             <form onSubmit={academicSave} className="bg-white border border-gray-300 rounded-lg shadow p-6">
                 <label htmlFor="acyear" className="block text-lg font-semibold mb-4 text-gray-700 w-[50%]">
                     Select Academic Year :

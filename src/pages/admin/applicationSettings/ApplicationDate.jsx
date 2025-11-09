@@ -39,7 +39,11 @@ function ApplicationDate() {
 
     return (
         <div>
-            <HeaderTag label={'Application Date Settings'} />
+            <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
+                   Application Date Settings
+                </h1>
+            </header>
             <div className="bg-white border border-gray-300 rounded-lg shadow p-6 flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-start">
                 {/* Start Date */}
                 <div className="w-full md:w-auto">
