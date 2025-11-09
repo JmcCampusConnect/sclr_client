@@ -45,13 +45,11 @@ const UploadCard = ({ title, name, uploadUrl, downloadUrl, sampleUrl }) => {
 
     return (
         <div className="group bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 flex flex-col items-center">
-
             {/* Header */}
             <div className="flex items-center justify-between w-full mb-4">
                 <h2 className="text-lg font-semibold text-gray-800">{title} : </h2>
                 <div className="w-2 h-2 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100 transition" />
             </div>
-
             {/* File input */}
             <label className="w-full cursor-pointer border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center text-gray-500 hover:border-blue-400 hover:text-blue-500 transition">
                 <input type="file" onChange={handleFileChange} className="hidden" />
@@ -64,7 +62,6 @@ const UploadCard = ({ title, name, uploadUrl, downloadUrl, sampleUrl }) => {
                     <p className="text-sm">Click to select a file</p>
                 )}
             </label>
-
             {/* Buttons */}
             <div className="flex flex-col w-full mt-6 gap-2">
                 <button
@@ -108,6 +105,11 @@ const UploadCenter = () => {
 
     return (
         <div>
+            <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
+                    Upload Center
+                </h1>
+            </header>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-8">
                 <UploadCard
                     title="Tutor File"
