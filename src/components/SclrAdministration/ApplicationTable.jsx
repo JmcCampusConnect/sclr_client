@@ -30,7 +30,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 						{students.length > 0 ? (
 							students.map((app, index) => (
 								<tr
-									key={app.registerNo}
+									key={app.applicationId}
 									className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
 								>
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
@@ -86,6 +86,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 														? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-gray-300 text-gray-500'
 													}`
 												}
+												disabled={app.applicationStatus !== 0}
 											>
 												Reject
 											</button>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DonorTable from "../../../components/Donor/DonorTable";
 import AddDonorModal from "../../../components/Donor/AddDonorModal";
@@ -11,6 +11,7 @@ import AmtDonarModal from "../../../components/Donor/AmtDonorModal";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function Donor() {
+
 	const [allDonors, setAllDonors] = useState([]);
 	const [donors, setDonors] = useState([]);
 	const [showAddModal, setShowAddModal] = useState(false);
@@ -26,7 +27,7 @@ function Donor() {
 			setAllDonors(response.data.donors);
 			setDonors(response.data.donors);
 		} catch (error) {
-			console.error("Error fetching donor data:", error);
+			console.error("Error fetching donor data : ", error);
 		}
 	};
 
@@ -34,33 +35,25 @@ function Donor() {
 		fetchDonors();
 	}, []);
 
-	// Add new donor
+	// ADD DONOR
 	const handleAddDonor = (newDonor) => {
 		setAllDonors((prev) => [...prev, newDonor]);
 		setDonors((prev) => [...prev, newDonor]);
 	};
 
-	// Edit donor
+	// EDIT DONOR
 	const handleEditDonor = (updatedDonor) => {
-		setAllDonors((prev) =>
-			prev.map((donor) =>
-				donor.donorId === updatedDonor.donorId ? updatedDonor : donor
-			)
-		);
-		setDonors((prev) =>
-			prev.map((donor) =>
-				donor.donorId === updatedDonor.donorId ? updatedDonor : donor
-			)
-		);
+		setAllDonors((prev) => prev.map((donor) => donor.donorId === updatedDonor.donorId ? updatedDonor : donor))
+		setDonors((prev) => prev.map((donor) => donor.donorId === updatedDonor.donorId ? updatedDonor : donor))
 	};
 
-	// Delete donor
+	// DELETE DONOR
 	const handleDeleteDonor = (deletedId) => {
 		setAllDonors((prev) => prev.filter((donor) => donor.donorId !== deletedId));
 		setDonors((prev) => prev.filter((donor) => donor.donorId !== deletedId));
 	};
 
-	// Handle category checkbox change
+	// HANDLE CATEROGIES CHANGE
 	const handleCategoryChange = (category) => {
 		setSelectedCategories((prevSelected) => {
 			if (prevSelected.includes(category)) {
@@ -73,31 +66,21 @@ function Donor() {
 
 	useEffect(() => {
 		let filtered = [...allDonors];
-
-		if (
-			selectedCategories.length > 0 &&
-			!selectedCategories.includes("All")
-		) {
-			filtered = filtered.filter((donor) =>
-				selectedCategories.includes(donor.donorType)
-			);
+		if (selectedCategories.length > 0 && !selectedCategories.includes("All")) {
+			filtered = filtered.filter((donor) => selectedCategories.includes(donor.donorType))
 		}
-
 		if (searchTerm.trim() !== "") {
 			filtered = filtered.filter(
 				(donor) =>
 					donor.donorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
 					donor.donorId.toLowerCase().includes(searchTerm.toLowerCase()) ||
 					donor.donorType.toLowerCase().includes(searchTerm.toLowerCase())
-			);
+			)
 		}
-
 		setDonors(filtered);
 	}, [selectedCategories, allDonors, searchTerm]);
 
-	const handleSearch = (term) => {
-		setSearchTerm(term);
-	};
+	const handleSearch = (term) => { setSearchTerm(term) }
 
 	return (
 		<div className="relative">
@@ -106,26 +89,18 @@ function Donor() {
 					Donor Management
 				</h1>
 			</header>
-
-			{/* Filter and Add button section */}
 			<DonorFilters
 				onAdd={() => setShowAddModal(true)}
 				filterOptions={handleCategoryChange}
 				selectedCategories={selectedCategories}
 			/>
-
-			{/* Search bar and action buttons */}
 			<DonorActionBar donors={donors} handleSearch={handleSearch} />
-
-			{/* Table section */}
 			<DonorTable
 				donors={donors}
 				onEdit={(donor) => setEditDonor(donor)}
 				onDelete={(donor) => setDeleteDonor(donor)}
 				onAmount={(donor) => setAmtDonarModal(donor)}
 			/>
-
-			{/* Modals */}
 			{showAddModal && (
 				<AddDonorModal
 					onClose={() => setShowAddModal(false)}
@@ -153,7 +128,7 @@ function Donor() {
 				/>
 			)}
 		</div>
-	);
+	)
 }
 
 export default Donor;

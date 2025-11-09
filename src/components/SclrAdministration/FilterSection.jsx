@@ -1,5 +1,5 @@
 import React from "react";
-import SearchDropdown from "../../common/SearchDropdown";
+import SearchDropdown from "../../common/SearchDropDown";
 
 function FilterSection({ searchMode, setSearchMode }) {
 

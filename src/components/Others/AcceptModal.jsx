@@ -93,7 +93,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
 
         const newScholarship = {
             id: Date.now(),
-            studentId: selectedStudent?._id,
+            applicationId: selectedStudent?.applicationId,
             donorId: selectedDonor,
             donorName: donorData.donorName || "",
             donorType, amtType,

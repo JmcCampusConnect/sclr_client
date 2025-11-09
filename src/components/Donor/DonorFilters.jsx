@@ -1,10 +1,10 @@
 import React from "react";
 
-const categories = ["All", "Well Wisher", "Alumini"];
-const primaryButtonClass =
-    "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
+const categories = ["All", "Well Wishers", "Alumini"];
+const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
 
-function DonorFilters({onAdd, filterOptions, selectedCategories}) {
+function DonorFilters({ onAdd, filterOptions, selectedCategories }) {
+
     return (
         <div className="mb-6 flex justify-between">
             <div>
@@ -36,7 +36,7 @@ function DonorFilters({onAdd, filterOptions, selectedCategories}) {
                 </button>
             </div>
         </div>
-    );
+    )
 }
 
 export default DonorFilters;

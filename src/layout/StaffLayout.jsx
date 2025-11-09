@@ -2,15 +2,15 @@ import React, { useContext } from 'react'
 import JmcLogo from '../assets/logos/JmcLogo.png'
 import { Outlet, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faChalkboard, faTools, faBuilding, faBook, faClipboardList, faSignOutAlt
-} from '@fortawesome/free-solid-svg-icons';
+import { faChalkboard, faTools, faBuilding, faBook, faClipboardList, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import '../App.css';
+import { AuthContext } from '../context/AuthContext';
 
 function StaffLayout() {
 
     const navigate = useNavigate();
     const { userId } = useParams();
+    const { handleLogout } = useContext(AuthContext);
 
     const attendanceMap = {
         JMCRAA: 'Attendance Aided',
@@ -74,13 +74,16 @@ function StaffLayout() {
                                 icon={item.icon}
                                 className="text-base w-4"
                             />
-                           <span className="text-sm">{item.name}</span>
+                            <span className="text-sm">{item.name}</span>
                         </NavLink>
                     ))}
 
                     {/* Back Button */}
                     <button
-                        onClick={() => navigate("/student")}
+                        onClick={() => {
+                            handleLogout();
+                            navigate("/");
+                        }}
                         className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-300 hover:bg-emerald-900 hover:bg-opacity-30"
                     >
                         <FontAwesomeIcon

@@ -1,13 +1,15 @@
-import React, { useId } from 'react'
+import React, { useContext } from 'react'
 import JmcLogo from '../assets/logos/JmcLogo.png'
 import { Outlet, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AuthContext } from '../context/AuthContext';
 import { faClipboard, faSignOutAlt, faChalkboard, faMapSigns } from '@fortawesome/free-solid-svg-icons';
 
 function StudentLayout() {
 
     const navigate = useNavigate();
     const { userId } = useParams();
+    const { handleLogout } = useContext(AuthContext);
 
     let menus = [
         {
@@ -48,7 +50,7 @@ function StudentLayout() {
                     </div>
                 </div>
 
-                {/* Menu Section */} 
+                {/* Menu Section */}
                 <nav className="flex-1 space-y-2 overflow-y-auto scrollbar-hide">
                     {menus.map((item, index) => (
                         <NavLink
@@ -71,14 +73,21 @@ function StudentLayout() {
 
                     {/* Back Button */}
                     <button
-                        onClick={() => navigate("/student")}
+                        onClick={() => {
+                            handleLogout();
+                            navigate("/");
+                        }}
                         className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-300 hover:bg-emerald-900 hover:bg-opacity-30"
                     >
                         <FontAwesomeIcon
                             icon={faSignOutAlt}
                             className="text-base w-4 transition-transform hover:scale-110"
                         />
-                        <span className="text-sm">Logout</span>
+                        <span className="text-sm"
+
+                        >
+                            Logout
+                        </span>
                     </button>
                 </nav>
             </aside>

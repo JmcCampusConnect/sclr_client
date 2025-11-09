@@ -1,18 +1,18 @@
 import React from "react";
 import axios from "axios";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function DeleteDonorModal({donor, onClose, onDelete}) {
+function DeleteDonorModal({ donor, onClose, onDelete }) {
 
     const handleDelete = async () => {
         try {
             const respose = await axios.delete(`${apiUrl}/api/donor/deleteDonor/${donor.donorId}`);
             onDelete(donor.donorId);
             if (respose.status == 200) {
-                alert("Donor Deleted Successfully")
+                alert("Donor deleted successfully")
             }
             onClose();
         } catch (error) {

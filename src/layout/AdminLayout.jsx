@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import JmcLogo from "../assets/logos/JmcLogo.png";
 import { Outlet, NavLink, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChalkboard, faExclamationTriangle, faFileAlt, faIdCard, faTools, faSignOutAlt,
-    faChartBar, faUserGroup, faMapSigns, faHandHoldingUsd, faChartLine, faSlidersH , faUpload
+    faChartBar, faUserGroup, faMapSigns, faHandHoldingUsd, faChartLine, faSlidersH, faUpload
 } from '@fortawesome/free-solid-svg-icons';
 import { ChevronUp, ChevronDown } from "lucide-react";
 import '../App.css';
+import { AuthContext } from '../context/AuthContext';
 
 function RecursiveMenu({ items }) {
 
@@ -58,6 +59,7 @@ function AdminLayout() {
 
     const navigate = useNavigate();
     const { userId } = useParams();
+    const { handleLogout } = useContext(AuthContext);
 
     const navItems = [
         { icon: faChalkboard, name: 'Dashboard', path: `/admin/dashboard`, show: true },
@@ -123,7 +125,10 @@ function AdminLayout() {
                     <RecursiveMenu items={navItems.filter(item => item.show)} />
                     {/* Logout Button */}
                     <button
-                        onClick={() => navigate("/")}
+                        onClick={() => {
+                            handleLogout();
+                            navigate("/");
+                        }}
                         className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium hover:bg-emerald-900 hover:bg-opacity-30"
                     >
                         <FontAwesomeIcon icon={faSignOutAlt} className="text-base w-4 transition-transform hover:scale-110" />
