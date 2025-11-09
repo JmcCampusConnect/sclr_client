@@ -1,19 +1,34 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import '../../App.css';
 import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AddTutorModal({ onClose, onAddTutor }) {
+function AddTutorModal({onClose, onAddTutor}) {
 
+	const [departments, setDepartments] = useState([]);
 	const [formData, setFormData] = useState({
-		staffId: "", staffName: "", departmentId: "", category: "", section: "", batch: ""
+		staffId: "", staffName: "", department: "", category: "", section: "", batch: ""
 	});
 
+	useEffect(() => {
+		const fetchDepartments = async () => {
+			try {
+				const response = await axios.get(`${apiUrl}/api/tutor/departments`);
+				setDepartments(response.data.departments);
+			} catch (error) {
+				console.error("Error fetching departments:", error);
+			}
+		};
+
+		fetchDepartments();
+	}, []);
+
+
 	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setFormData((prev) => ({ ...prev, [name]: value }));
+		const {name, value} = e.target;
+		setFormData((prev) => ({...prev, [name]: value}));
 	}
 
 	const handleSelectChange = (name, option) => {
@@ -26,17 +41,27 @@ function AddTutorModal({ onClose, onAddTutor }) {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await axios.post(`${apiUrl}/api/donor/addDonor`, formData);
-			onAddDonor(response.data.donor);
-			onClose();
+			const response = await axios.post(`${apiUrl}/api/tutor/addTutor`, formData);
+			if (response.status === 201) {
+				alert("Tutor added successfully!");
+				onClose();
+				window.location.reload();
+			}
+			else {
+				console.error("Failed to add tutor:", response.data.message);
+			}
 		} catch (error) {
+			if (error.status == 400) {
+				alert("Tutor with this Staff ID already exists.");
+			}
+			else if(error.status == 401){
+				alert("All fields are required to add a tutor.");
+			}
+
 			console.error("Error adding donor:", error);
 		}
 	}
 
-	const departmentOptions = ["CSE", "ECE", "ME", "CE", "EE"].map((v) => ({
-		value: v, label: v,
-	}));
 
 	const categoryOptions = ["AIDED", "SFM", "SFW"].map((v) => ({
 		value: v, label: v,
@@ -46,8 +71,14 @@ function AddTutorModal({ onClose, onAddTutor }) {
 		value: v, label: v,
 	}));
 
-	const sectionOptions = ["A", "B", "C", "D"].map((v) => ({
+	const sectionOptions = ["A", "B", "C", "D", "E"].map((v) => ({
 		value: v, label: v,
+	}));
+
+
+	const dep = Object.values(departments).map(item => ({
+		value: item.department,
+		label: `${item.department} - ${item.departmentName}`
 	}));
 
 
@@ -96,12 +127,14 @@ function AddTutorModal({ onClose, onAddTutor }) {
 
 							<SearchDropdown
 								label="Department"
-								name="departmentId"
-								value={formData.departmentId}
-								options={departmentOptions}
+								name="department"
+								value={formData.department}
+								options={dep}
 								onChange={handleSelectChange}
 								required
 							/>
+
+
 
 							<SearchDropdown
 								label="Category"
@@ -154,7 +187,7 @@ function AddTutorModal({ onClose, onAddTutor }) {
 	)
 }
 
-const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
+const Input = ({label, name, type = "text", value, onChange, ...props}) => (
 	<div>
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {props.required && <span className="text-red-500">*</span>}

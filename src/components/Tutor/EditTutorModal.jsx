@@ -1,17 +1,41 @@
-import React, { useState } from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
 import "../../App.css";
 import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function EditTutorModal({ tutorData, onClose, onUpdateTutor }) {
+function EditTutorModal({tutor, onClose, onUpdateTutor}) {
 
-    const [formData, setFormData] = useState({ ...tutorData });
+    const [formData, setFormData] = useState({...tutor});
+    const [departments, setDepartments] = useState([]);
+
+
+
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/api/tutor/departments`);
+                setDepartments(response.data.departments);
+            } catch (error) {
+                console.error("Error fetching departments:", error);
+            }
+        };
+
+        fetchDepartments();
+    }, []);
+
+
+
+    const dep = Object.values(departments).map(item => ({
+        value: item.department,
+        label: `${item.department} - ${item.departmentName}`
+    }));
+
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
     };
 
     const handleSelectChange = (name, option) => {
@@ -24,20 +48,25 @@ function EditTutorModal({ tutorData, onClose, onUpdateTutor }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(
-                `${apiUrl}/api/donor/updateDonor/${formData._id}`,
-                formData
-            );
-            onUpdateTutor(response.data.updatedDonor);
+            const response = await axios.post(`${apiUrl}/api/tutor/updateTutor`, formData);
+            if (response.status === 200) {
+                alert(`${response.data.message}`);
+            }
             onClose();
+            window.location.reload();
         } catch (error) {
-            console.error("Error updating donor:", error);
-        }
-    };
+            if (error.status == 401) {
+                alert(`${error.data.message}`);
+            }
+            else if (error.status == 404) {
+                alert(`${error.data.message}`);
+            }
+            else {
+                alert("Server error while updating tutor.");
+            }
+        };
+    }
 
-    const departmentOptions = ["CSE", "ECE", "ME", "CE", "EE"].map((v) => ({
-        value: v,  label: v,
-    }));
 
     const categoryOptions = ["AIDED", "SFM", "SFW"].map((v) => ({
         value: v, label: v,
@@ -47,7 +76,7 @@ function EditTutorModal({ tutorData, onClose, onUpdateTutor }) {
         value: v, label: v,
     }));
 
-    const sectionOptions = ["A", "B", "C", "D"].map((v) => ({
+    const sectionOptions = ["A", "B", "C", "D","E","F"].map((v) => ({
         value: v, label: v,
     }));
 
@@ -84,6 +113,7 @@ function EditTutorModal({ tutorData, onClose, onUpdateTutor }) {
                                 value={formData.staffId}
                                 onChange={handleChange}
                                 required
+                                disabled
                             />
 
                             <Input
@@ -96,17 +126,17 @@ function EditTutorModal({ tutorData, onClose, onUpdateTutor }) {
 
                             <SearchDropdown
                                 label="Department"
-                                name="departmentId"
-                                value={formData.departmentId}
-                                options={departmentOptions}
+                                name="department"
+                                value={formData.department}
+                                options={dep}
                                 onChange={handleSelectChange}
                                 required
                             />
 
                             <SearchDropdown
                                 label="Category"
-                                name="category"
-                                value={formData.category}
+                                name="programCategory"
+                                value={formData.programCategory}
                                 options={categoryOptions}
                                 onChange={handleSelectChange}
                                 required
@@ -154,7 +184,7 @@ function EditTutorModal({ tutorData, onClose, onUpdateTutor }) {
     )
 }
 
-const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
+const Input = ({label, name, type = "text", value, onChange, ...props}) => (
     <div>
         <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
             {label} : {props.required && <span className="text-red-500">*</span>}

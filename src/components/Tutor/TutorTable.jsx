@@ -57,7 +57,7 @@ function TutorTable({ onEditTutor, onDeleteTutor }) {
 										{tutor.department}
 									</td>
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
-										{tutor.category}
+										{tutor.programCategory}
 									</td>
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
 										{tutor.section}
