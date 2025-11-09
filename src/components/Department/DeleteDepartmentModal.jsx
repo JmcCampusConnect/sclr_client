@@ -1,21 +1,30 @@
 import React from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function DeleteDepartmentModal({ depts, onClose, onDelete }) {
+function DeleteDepartmentModal({depts, onClose, onDelete}) {
+    console.log("dlt", depts)
 
     const handleDelete = async () => {
         try {
-            // await axios.delete(`${apiUrl}/api/donor/deleteDonor/${}`);
-            onDelete();
-            onClose();
+            const response = await axios.post(`${apiUrl}/api/dept/deleteDepartment`, depts);
+
+            if (response.data.success) {
+                alert(response.data.message);
+                onClose();  // close modal
+                window.location.reload();
+            } else {
+                alert(response.data.message || "Something went wrong while deleting.");
+            }
+
         } catch (error) {
-            console.error("Error deleting department : ", error);
+            console.error("Error deleting department:", error);
         }
     };
+
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">

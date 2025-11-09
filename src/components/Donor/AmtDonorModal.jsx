@@ -90,7 +90,11 @@ function AmtDonorModal({onClose, donorData}) {
 						</button>
 						<button
 							type="submit"
-							className="px-6 py-2.5 rounded-lg font-semibold bg-green-600 hover:bg-green-700 text-white shadow-md transition"
+							disabled={amountData.generalAmt === "" && amountData.zakkathAmt === ""}
+							className={`px-6 py-2.5 rounded-lg font-semibold text-white shadow-md transition
+   									 ${amountData.generalAmt === "" && amountData.zakkathAmt === ""
+									? "bg-gray-400 cursor-not-allowed" 
+									: "bg-green-600 hover:bg-green-700 cursor-pointer"} // Enabled state `}
 						>
 							Submit
 						</button>

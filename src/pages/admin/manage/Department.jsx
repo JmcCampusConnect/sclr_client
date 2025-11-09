@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import axios from 'axios';
 import DepartmentTable from '../../../components/Department/DepartmentTable';
 import AddDepartmentModal from '../../../components/Department/AddDepartmentModal';
@@ -24,9 +24,9 @@ function Department() {
         }
     }
 
-    useEffect(() => { fetchDepts() }, []);
+    useEffect(() => {fetchDepts()}, []);
 
-    const handleDepartmentAdd = (newDonor) => { setDonors((prev) => [...prev, newDonor]) }
+    const handleDepartmentAdd = (newDonor) => {setDonors((prev) => [...prev, newDonor])}
 
     const handleEditDonor = (updatedDonor) => {
         setDonors((prev) => prev.map((depts) =>
@@ -34,8 +34,9 @@ function Department() {
         )
     }
 
-    const handleDeleteDonor = (deletedId) => { setDonors((prev) => prev.filter((depts) => depts.donorId !== deletedId)) }
+    const handleDeleteDonor = (deletedId) => {setDonors((prev) => prev.filter((depts) => depts.donorId !== deletedId))}
 
+    // console.log("Edit",editDepartment)
     return (
         <div className="relative">
             <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
@@ -63,9 +64,9 @@ function Department() {
             )}
             {editDepartment && (
                 <EditDepartmentModal
-                    depts={editDepartment}
+                    deptData={editDepartment}
                     onClose={() => setEditDepartment(null)}
-                    onEditDonor={handleEditDonor}
+                    onEdit={handleEditDonor}
                 />
             )}
             {deleteDepartments && (

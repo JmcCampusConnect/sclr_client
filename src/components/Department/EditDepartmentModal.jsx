@@ -1,34 +1,35 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import "../../App.css";
 import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function EditDepartmentModal({ deptData, onClose, onUpdateDonor }) {
+function EditDepartmentModal({deptData, onClose, onUpdateDonor}) {
 
-	const [formData, setFormData] = useState({ ...deptData });
+	// console.log("dept",deptData)
+	const [formData, setFormData] = useState({...deptData});
+	// console.log("form", formData)
 
 	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setFormData((prev) => ({ ...prev, [name]: value }));
+		const {name, value} = e.target;
+		setFormData((prev) => ({...prev, [name]: value}));
 	};
 
-	const handleSelectChange = (name, option) => {
-		setFormData((prev) => ({
-			...prev,
-			[name]: option ? option.value : "",
-		}));
-	};
+
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await axios.put(`${apiUrl}/api/donor/updateDonor/${formData._id}`, formData);
-			onUpdateDonor(response.data.updatedDonor);
-			onClose();
+			const response = await axios.post(`${apiUrl}/api/dept/updateDepartment`, formData);
+			if (response.status == 200) {
+				alert(`${response.data.message}`)
+				window.location.reload();
+				onClose();
+			}
 		} catch (error) {
 			console.error("Error updating donor:", error);
+			alert("Department Name already Exist")
 		}
 	};
 
@@ -59,8 +60,8 @@ function EditDepartmentModal({ deptData, onClose, onUpdateDonor }) {
 						</h2>
 
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<Input label="Department Id" name="donorId" value={formData.donorId} readOnly />
-							<Input label="Department Name" name="mobileNo" value={formData.mobileNo} onChange={handleChange} />
+							<Input label="Department Id" name="department" value={formData.department} readOnly />
+							<Input label="Department Name" name="departmentName" value={formData.departmentName} onChange={handleChange} required />
 						</div>
 					</div>
 
@@ -86,7 +87,7 @@ function EditDepartmentModal({ deptData, onClose, onUpdateDonor }) {
 	);
 }
 
-const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
+const Input = ({label, name, type = "text", value, onChange, ...props}) => (
 	<div>
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {props.required && <span className="text-red-500">*</span>}

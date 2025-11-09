@@ -17,7 +17,7 @@ function ActionBar({ donors }) {
                     {donors.length}
                 </span>
             </p>
-        </div>
+        </div> 
     )
 }
 
