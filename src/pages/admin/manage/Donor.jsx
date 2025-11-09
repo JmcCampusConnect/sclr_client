@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import DonorTable from "../../../components/Donor/DonorTable";
 import AddDonorModal from "../../../components/Donor/AddDonorModal";
@@ -11,34 +11,93 @@ import AmtDonarModal from "../../../components/Donor/AmtDonorModal";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function Donor() {
-
+	const [allDonors, setAllDonors] = useState([]);
 	const [donors, setDonors] = useState([]);
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [editDonor, setEditDonor] = useState(null);
 	const [deleteDonor, setDeleteDonor] = useState(null);
 	const [amtDonarModal, setAmtDonarModal] = useState(null);
-
+	const [selectedCategories, setSelectedCategories] = useState([]);
+	const [searchTerm, setSearchTerm] = useState("");
 
 	const fetchDonors = async () => {
 		try {
 			const response = await axios.get(`${apiUrl}/api/donor/fetchDonors`);
+			setAllDonors(response.data.donors);
 			setDonors(response.data.donors);
 		} catch (error) {
-			console.error("Error fetching donor data : ", error);
+			console.error("Error fetching donor data:", error);
 		}
-	}
+	};
 
-	useEffect(() => { fetchDonors() }, []);
+	useEffect(() => {
+		fetchDonors();
+	}, []);
 
-	const handleAddDonor = (newDonor) => { setDonors((prev) => [...prev, newDonor]) }
+	// Add new donor
+	const handleAddDonor = (newDonor) => {
+		setAllDonors((prev) => [...prev, newDonor]);
+		setDonors((prev) => [...prev, newDonor]);
+	};
 
+	// Edit donor
 	const handleEditDonor = (updatedDonor) => {
-		setDonors((prev) => prev.map((donor) =>
-			(donor.donorId === updatedDonor.donorId ? updatedDonor : donor))
-		)
-	}
+		setAllDonors((prev) =>
+			prev.map((donor) =>
+				donor.donorId === updatedDonor.donorId ? updatedDonor : donor
+			)
+		);
+		setDonors((prev) =>
+			prev.map((donor) =>
+				donor.donorId === updatedDonor.donorId ? updatedDonor : donor
+			)
+		);
+	};
 
-	const handleDeleteDonor = (deletedId) => { setDonors((prev) => prev.filter((donor) => donor.donorId !== deletedId)); }
+	// Delete donor
+	const handleDeleteDonor = (deletedId) => {
+		setAllDonors((prev) => prev.filter((donor) => donor.donorId !== deletedId));
+		setDonors((prev) => prev.filter((donor) => donor.donorId !== deletedId));
+	};
+
+	// Handle category checkbox change
+	const handleCategoryChange = (category) => {
+		setSelectedCategories((prevSelected) => {
+			if (prevSelected.includes(category)) {
+				return prevSelected.filter((item) => item !== category);
+			} else {
+				return [...prevSelected, category];
+			}
+		});
+	};
+
+	useEffect(() => {
+		let filtered = [...allDonors];
+
+		if (
+			selectedCategories.length > 0 &&
+			!selectedCategories.includes("All")
+		) {
+			filtered = filtered.filter((donor) =>
+				selectedCategories.includes(donor.donorType)
+			);
+		}
+
+		if (searchTerm.trim() !== "") {
+			filtered = filtered.filter(
+				(donor) =>
+					donor.donorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					donor.donorId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					donor.donorType.toLowerCase().includes(searchTerm.toLowerCase())
+			);
+		}
+
+		setDonors(filtered);
+	}, [selectedCategories, allDonors, searchTerm]);
+
+	const handleSearch = (term) => {
+		setSearchTerm(term);
+	};
 
 	return (
 		<div className="relative">
@@ -47,14 +106,26 @@ function Donor() {
 					Donor Management
 				</h1>
 			</header>
-			<DonorFilters onAdd={() => setShowAddModal(true)} />
-			<DonorActionBar donors={donors} />
+
+			{/* Filter and Add button section */}
+			<DonorFilters
+				onAdd={() => setShowAddModal(true)}
+				filterOptions={handleCategoryChange}
+				selectedCategories={selectedCategories}
+			/>
+
+			{/* Search bar and action buttons */}
+			<DonorActionBar donors={donors} handleSearch={handleSearch} />
+
+			{/* Table section */}
 			<DonorTable
 				donors={donors}
 				onEdit={(donor) => setEditDonor(donor)}
 				onDelete={(donor) => setDeleteDonor(donor)}
 				onAmount={(donor) => setAmtDonarModal(donor)}
 			/>
+
+			{/* Modals */}
 			{showAddModal && (
 				<AddDonorModal
 					onClose={() => setShowAddModal(false)}
@@ -82,7 +153,7 @@ function Donor() {
 				/>
 			)}
 		</div>
-	)
+	);
 }
 
 export default Donor;

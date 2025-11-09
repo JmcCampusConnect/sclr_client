@@ -33,6 +33,10 @@ function AddDonorModal({onClose, onAddDonor}) {
 			onClose();
 		} catch (error) {
 			console.error("Error adding donor:", error);
+			if (error.status == 409) {
+				alert(`${error.response.data.message}`);
+			}
+
 		}
 	}
 
