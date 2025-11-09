@@ -1,10 +1,10 @@
 import React from "react";
 
 const categories = ["All", "Well Wisher", "Alumini"];
-const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
+const primaryButtonClass =
+    "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
 
-function DonorFilters({ onAdd }) {
-
+function DonorFilters({onAdd, filterOptions, selectedCategories}) {
     return (
         <div className="mb-6 flex justify-between">
             <div>
@@ -19,6 +19,8 @@ function DonorFilters({ onAdd }) {
                         >
                             <input
                                 type="checkbox"
+                                checked={selectedCategories.includes(cat)}
+                                onChange={() => filterOptions(cat)}
                                 className="h-4 w-4 accent-indigo-600 rounded-md focus:ring-indigo-500"
                             />
                             <span className="ml-2 text-sm lg:text-base text-gray-700 dark:text-gray-200">
@@ -29,10 +31,12 @@ function DonorFilters({ onAdd }) {
                 </div>
             </div>
             <div className="flex items-center">
-                <button onClick={onAdd} className={primaryButtonClass}>Add Donor</button>
+                <button onClick={onAdd} className={primaryButtonClass}>
+                    Add Donor
+                </button>
             </div>
         </div>
-    )
+    );
 }
 
 export default DonorFilters;
