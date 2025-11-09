@@ -4,7 +4,7 @@ import InputBox from '../../common/InputBox';
 import DropDown from '../../common/DropDown';
 import HeaderTag from '../../common/HeaderTag';
 
-function AcademicDetails({ register, errors, watch, setValue, readOnly = false }) {
+function AcademicDetails({ register, errors, watch, setValue, readOnly = false, loginConstraint = false }) {
 
     const graduate = watch('graduate');
     const semesterOptions = graduate === 'PG'
@@ -33,7 +33,7 @@ function AcademicDetails({ register, errors, watch, setValue, readOnly = false }
                     required
                     register={register}
                     errors={errors}
-                    readOnly={readOnly}
+                    readOnly={readOnly || loginConstraint}
                 />
                 <RadioButton
                     name="semester"
@@ -102,7 +102,7 @@ function AcademicDetails({ register, errors, watch, setValue, readOnly = false }
                         ]}
                         required
                         errors={errors}
-                        readOnly={readOnly}
+                         readOnly={readOnly || loginConstraint}
                         setValue={setValue}
                         watch={watch}
                     />

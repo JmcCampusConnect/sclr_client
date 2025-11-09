@@ -13,7 +13,7 @@ function LastInstitution({ register, errors, watch, setValue }) {
         if (marksSecured && maxMarks && !isNaN(marksSecured) && !isNaN(maxMarks)) {
             const percentage = ((Number(marksSecured) / Number(maxMarks)) * 100).toFixed(2);
             setValue("lastStudiedInstitutionPercentage", percentage);
-        } else { setValue("lastStudiedInstitutionPercentage", -1) }
+        } else { setValue("lastStudiedInstitutionPercentage", "") }
     }, [marksSecured, maxMarks, setValue]);
  
     return (
@@ -21,7 +21,7 @@ function LastInstitution({ register, errors, watch, setValue }) {
             {semester === "I" && (graduate === "UG" || graduate === "PG") && (
                 <>
                     <HeaderTag label='Education Details' />
-                    <div className="grid grid-cols-1 gap-6 border border-black p-6 rounded-lg bg-gray-50 shadow-md">
+                    <div className="grid grid-cols-1 border border-gray-200 p-6 rounded-xl bg-white shadow-md space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <InputBox
                                 type='text'
