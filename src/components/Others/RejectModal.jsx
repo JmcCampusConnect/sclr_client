@@ -31,7 +31,7 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
             return;
         }
 
-        const payload = { registerNo: student.registerNo, reason: finalReason }
+        const payload = { registerNo: student.registerNo, reason: finalReason, _id: student._id };
 
         try {
 
