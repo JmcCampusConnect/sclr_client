@@ -1,6 +1,35 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import SearchDropdown from "../../common/SearchDropDown";
 
-function TutorFilterSection({ }) {
+function TutorFilterSection({depts, filterForm}) {
+
+    const [filterFormData, setFilterFormData] = useState({
+        category: "All",
+        department: "",
+        batch: "All"
+    });
+
+    const batchOptions = ["All", "2020", "2021", "2022", "2023", "2024","2025"].map((v) => ({
+        value: v, label: v,
+    }));
+
+    const categoryOptions = ["All", "AIDED", "SFM", "SFW"].map((v) => ({
+        value: v, label: v,
+    }));
+
+    const handleSelectChange = (name, option) => {
+        const updatedForm = {
+            ...filterFormData,
+            [name]: option ? option.value : "",
+        };
+        setFilterFormData(updatedForm);
+        filterForm(updatedForm); // Call with latest value
+    };
+
+    // console.log(filterFormData)
+
+
+
 
     const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
 
@@ -11,51 +40,38 @@ function TutorFilterSection({ }) {
 
                 {/* Category */}
                 <div className="space-y-2.5">
-                    <label
-                        htmlFor="verification-status"
-                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Catergory :
-                    </label>
-                    <select id="verification-status" className={formControlClass}>
-                        <option value="all">All</option>
-                        <option value="aided">AIDED</option>
-                        <option value="sfm">SFM</option>
-                        <option value="sfw">SFW</option>
-                    </select>
+                    <SearchDropdown
+                        label="Category"
+                        name="category"
+                        value={filterFormData.category}
+                        options={categoryOptions}
+                        onChange={handleSelectChange}
+                    // required
+                    />
                 </div>
 
                 {/* Department ID */}
                 <div className="space-y-2.5">
-                    <label
-                        htmlFor="progress-type"
-                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Department ID :
-                    </label>
-                    <select id="progress-type" className={formControlClass}>
-                        <option value="all">All</option>
-                        <option value="cs">Computer Science</option>
-                        <option value="it">Information Technology</option>
-                    </select>
+                    <SearchDropdown
+                        label="Department ID"
+                        name="department"
+                        value={filterFormData.department}
+                        options={depts}
+                        onChange={handleSelectChange}
+                    />
                 </div>
 
                 {/* Batch*/}
                 <div className="space-y-2.5">
-                    <label
-                        htmlFor="search-mode"
-                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Batch :
-                    </label>
-                    <select
-                        className={formControlClass}
-                    >
-                        <option value="all">All</option>
-                        <option value="donor1">Batch 1</option>
-                        <option value="donor2">Batch 2</option>
-                        <option value="donor3">Batch 3</option>
-                    </select>
+                    <SearchDropdown
+                        label="Batch"
+                        name="batch"
+                        value={filterFormData.batch}
+                        options={batchOptions}
+                        onChange={handleSelectChange}
+                    // required
+                    />
+
                 </div>
 
             </div>

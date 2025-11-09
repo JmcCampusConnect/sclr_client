@@ -1,11 +1,11 @@
 import React from "react";
 
-function DepartmentActionBar({ onAddDepartment }) {
+function DepartmentActionBar({onAddDepartment,searchDepts}) {
 
 	const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
 	const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
 
-	return ( 
+	return (
 		<>
 			{/* Buttons */}
 			<div className="flex flex-col md:flex-row justify-between items-center gap-4 my-6">
@@ -29,6 +29,7 @@ function DepartmentActionBar({ onAddDepartment }) {
 				<input
 					placeholder="🔍 Search applications..."
 					className={`w-full md:w-1/2 ${formControlClass}`}
+					onChange={(e) => searchDepts(e.target.value)}
 				/>
 
 				<p className="text-sm lg:text-base font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">

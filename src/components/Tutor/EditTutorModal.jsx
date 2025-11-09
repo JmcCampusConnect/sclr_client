@@ -76,7 +76,7 @@ function EditTutorModal({tutor, onClose, onUpdateTutor}) {
         value: v, label: v,
     }));
 
-    const sectionOptions = ["A", "B", "C", "D","E","F"].map((v) => ({
+    const sectionOptions = ["A", "B", "C", "D","E","F","G","H"].map((v) => ({
         value: v, label: v,
     }));
 
@@ -135,8 +135,8 @@ function EditTutorModal({tutor, onClose, onUpdateTutor}) {
 
                             <SearchDropdown
                                 label="Category"
-                                name="programCategory"
-                                value={formData.programCategory}
+                                name="category"
+                                value={formData.category}
                                 options={categoryOptions}
                                 onChange={handleSelectChange}
                                 required

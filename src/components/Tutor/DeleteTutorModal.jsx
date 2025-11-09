@@ -1,19 +1,34 @@
 import React from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function DeleteTutorModal({ tutor, onClose, onDelete }) {
+function DeleteTutorModal({tutor, onClose, onDelete}) {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`${apiUrl}/api/tutor/deleteTutor/${tutor.staffId}`);
-            onDelete(tutor.staffId);
+            const response = await axios.post(`${apiUrl}/api/tutor/deleteTutor`, tutor);
+            if (response.status === 200) {
+                alert(`${response.data.message}`);
+                window.location.reload();
+                // onDelete(tutor.staffId);
+            }
             onClose();
         } catch (error) {
             console.error("Error deleting tutor : ", error);
+            if (error.status == 400) {
+                alert(`${error.data.message}`);
+            }
+            else if (error.status == 404) {
+                alert(`${error.data.message}`);
+
+            }
+            else {
+                alert("Server error while deleting tutor.");
+            }
+
         }
     };
 

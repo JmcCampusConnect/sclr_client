@@ -10,15 +10,18 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 function Department() {
 
-    const [depts, setDepts] = useState([]);
     const [showAddModal, setShowAddModal] = useState(false);
     const [editDepartment, setEditDepartment] = useState(null);
     const [deleteDepartments, setDeleteDepartments] = useState(null);
-
+    const [depts, setDepts] = useState([]); // final table data (visible)
+    const [allDepts, setAllDepts] = useState([]); // full data from API
+    const [filteredDepts, setFilteredDepts] = useState([]);
     const fetchDepts = async () => {
         try {
             const response = await axios.get(`${apiUrl}/api/dept/fetchDepts`);
             setDepts(response.data.depts);
+            setAllDepts(response.data.depts);
+            setFilteredDepts(response.data.depts);
         } catch (error) {
             console.error("Error fetching depts data : ", error);
         }
@@ -36,6 +39,23 @@ function Department() {
 
     const handleDeleteDonor = (deletedId) => {setDonors((prev) => prev.filter((depts) => depts.donorId !== deletedId))}
 
+
+    const handleSearch = (searchTerm) => {
+        console.log("hvhv")
+        if (!searchTerm) {
+            setDepts(filteredDepts); // restore current filtered data
+            return;
+        }
+
+        const searched = filteredDepts.filter((dept) =>
+            dept.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (dept.departmentName && dept.departmentName.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+
+        setDepts(searched);
+    };
+
+
     // console.log("Edit",editDepartment)
     return (
         <div className="relative">
@@ -49,6 +69,7 @@ function Department() {
                 depts={depts}
                 onAddDepartment={() => setShowAddModal(true)}
                 onclose={() => setShowAddModal(false)}
+                searchDepts={(e)=>handleSearch(e)}
             />
             <DepartmentTable
                 depts={depts}

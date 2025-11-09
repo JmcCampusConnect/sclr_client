@@ -54,7 +54,7 @@ function AddTutorModal({onClose, onAddTutor}) {
 			if (error.status == 400) {
 				alert("Tutor with this Staff ID already exists.");
 			}
-			else if(error.status == 401){
+			else if (error.status == 401) {
 				alert("All fields are required to add a tutor.");
 			}
 
@@ -71,7 +71,7 @@ function AddTutorModal({onClose, onAddTutor}) {
 		value: v, label: v,
 	}));
 
-	const sectionOptions = ["A", "B", "C", "D", "E"].map((v) => ({
+	const sectionOptions = ["A", "B", "C", "D", "E","F","G","H"].map((v) => ({
 		value: v, label: v,
 	}));
 

@@ -3,18 +3,18 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function TutorTable({ onEditTutor, onDeleteTutor }) {
+function TutorTable({ onEditTutor, onDeleteTutor,tutors }) {
 
 	const navigate = useNavigate();
-	const [tutors, setTutors] = useState([]);
+	// const [tutors, setTutors] = useState([]);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			const response = await axios.get(`${apiUrl}/api/tutor/fetchTutors`);
-			setTutors(response.data.tutors);
-		};
-		fetchData();
-	}, []);
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		const response = await axios.get(`${apiUrl}/api/tutor/fetchTutors`);
+	// 		setTutors(response.data.tutors);
+	// 	};
+	// 	fetchData();
+	// }, []);
 
 	return (
 		<div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
@@ -57,7 +57,7 @@ function TutorTable({ onEditTutor, onDeleteTutor }) {
 										{tutor.department}
 									</td>
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
-										{tutor.programCategory}
+										{tutor.category}
 									</td>
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
 										{tutor.section}
