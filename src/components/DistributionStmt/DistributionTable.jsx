@@ -36,28 +36,28 @@ function DistributionTable({ distribution }) {
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
 										{index + 1}
 									</td>
-									<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
 										{dist.registerNo}
 									</td>
-									<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
 										{dist.name}
 									</td>
-									<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
 										{dist.department}
 									</td>
-									<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
 										{dist.category}
 									</td>
-									<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
 										{dist.sclrType}
 									</td>
-									<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
 										{dist.donorName}
 									</td>
-									<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
 										{dist.donorType}
 									</td>
-									<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
 										{`₹ ${dist.givenAmt.toLocaleString("en-IN")}`}
 									</td>
 								</tr>

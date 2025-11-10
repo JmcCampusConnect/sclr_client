@@ -39,7 +39,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
 										{app.registerNo}
 									</td>
-									<td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white whitespace-nowrap">
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white whitespace-nowrap">
 										{app.name}
 									</td>
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">

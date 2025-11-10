@@ -35,6 +35,7 @@ function LoginForm({ register, errors, registerSubmit, handleSubmit }) {
                 />
                 <div className='flex justify-end'>
                     <button
+                        type='button'
                         onClick={() => navigate('/forgotPassword')}
                         className="block text-sm text-right text-blue-800 hover:text-blue-500 cursor-pointer"
                     >
@@ -42,7 +43,8 @@ function LoginForm({ register, errors, registerSubmit, handleSubmit }) {
                     </button>
                 </div>
                 <div className="flex justify-between gap-8">
-                    <button type="button"
+                    <button
+                        type="button"
                         onClick={() => navigate('/')}
                         className="w-1/2 rounded-lg px-3 py-2 bg-orange-500 hover:bg-orange-600 transition-colors duration-300 text-white font-bold"
                     >

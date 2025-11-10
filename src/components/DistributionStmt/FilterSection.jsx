@@ -57,6 +57,21 @@ function FilterSection({ }) {
                     </select>
                 </div>
 
+                {/* Semester */}
+                <div className="space-y-2.5">
+                    <label
+                        htmlFor="verification-status"
+                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
+                    >
+                        Semester :
+                    </label>
+                    <select id="semester" className={formControlClass}>
+                        <option value="all">All</option>
+                        <option value="evemSem">Even Semster</option>
+                        <option value="oddSem">Odd Semester</option>
+                    </select>
+                </div>
+
                 {/* From Date */}
                 <div className="space-y-2.5">
                     <label
