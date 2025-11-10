@@ -137,8 +137,13 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
         const payload = {
             academicYear: new Date().getFullYear(),
             scholarships: scholarships.map((s) => ({
-                ...s, category: selectedStudent?.category, registerNo: selectedStudent?.registerNo,
-                name: selectedStudent?.name, sclrType: selectedStudent?.sclrType, department: selectedStudent?.department,
+                ...s, category: selectedStudent?.category,
+                semester: selectedStudent?.semester,
+                registerNo: selectedStudent?.registerNo, 
+                graduate: selectedStudent?.graduate,
+                name: selectedStudent?.name, 
+                sclrType: selectedStudent?.sclrType, 
+                department: selectedStudent?.department,
             })),
         };
 

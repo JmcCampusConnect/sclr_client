@@ -15,7 +15,8 @@ const CommonStaffDashboard = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const [cardData, setCardData] = useState(null);
     const [pieData, setPieData] = useState(null);
-    const [barData, setBarData] = useState(null);
+    const [enrollmentData, setEnrollmentData] = useState(null);
+    const [distributedData, setDistributedData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -37,7 +38,8 @@ const CommonStaffDashboard = () => {
                     totalDonors: c?.totalDonors ?? 0,
                 });
                 setPieData(pieRes.data);
-                setBarData(barRes.data);
+                setEnrollmentData(barRes.data.enrollment);
+                setDistributedData(barRes.data.distributed)
             } catch (err) {
                 console.error('Error fetching dashboard data : ', err);
                 setError('Unable to load dashboard data.');
@@ -49,13 +51,13 @@ const CommonStaffDashboard = () => {
 
     if (loading) return <DashboardError type="loading" />;
     if (error) return <DashboardError type="error" message={error} />;
-    if (!pieData || !cardData || !barData) return null;
+    if (!pieData || !cardData || !enrollmentData || !distributedData) return null;
 
     return (
         <section className="transition-colors">
             <DashboardCards cardData={cardData} />
             <DashboardPie cardData={cardData} pieData={pieData} />
-            <DashboardBar barData={barData} />
+            <DashboardBar enrollmentData={enrollmentData} distributedData={distributedData} />
         </section>
     )
 }

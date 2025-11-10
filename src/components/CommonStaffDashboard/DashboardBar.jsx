@@ -4,9 +4,9 @@ import { Chart as ChartJS } from "chart.js/auto";
 
 const legendSpacingPlugin = { id: "legendSpacing" }
 
-const DashboardBar = ({ barData }) => {
+const DashboardBar = ({ enrollmentData, distributedData }) => {
 
-    if (!barData?.ug || !barData?.pg) return null;
+    if (!enrollmentData?.ug || !enrollmentData?.pg) return null;
 
     const secondaryColor = "#ff6b81";
     const primaryColor = "#4c7cff";
@@ -14,17 +14,17 @@ const DashboardBar = ({ barData }) => {
     const hoverSecondaryColor = "#e65a71";
     const neutralText = "#374151";
 
-    const data = {
+    const enrollData = {
         labels: ["UG 1st", "UG 2nd", "UG 3rd", "PG 1st", "PG 2nd"],
         datasets: [
             {
                 label: "Men",
                 data: [
-                    barData.ug.men[0],
-                    barData.ug.men[1],
-                    barData.ug.men[2],
-                    barData.pg.men[0],
-                    barData.pg.men[1],
+                    enrollmentData.ug.men[0],
+                    enrollmentData.ug.men[1],
+                    enrollmentData.ug.men[2],
+                    enrollmentData.pg.men[0],
+                    enrollmentData.pg.men[1],
                 ],
                 backgroundColor: primaryColor,
                 borderRadius: 6,
@@ -34,11 +34,11 @@ const DashboardBar = ({ barData }) => {
             {
                 label: "Women",
                 data: [
-                    barData.ug.women[0],
-                    barData.ug.women[1],
-                    barData.ug.women[2],
-                    barData.pg.women[0],
-                    barData.pg.women[1],
+                    enrollmentData.ug.women[0],
+                    enrollmentData.ug.women[1],
+                    enrollmentData.ug.women[2],
+                    enrollmentData.pg.women[0],
+                    enrollmentData.pg.women[1],
                 ],
                 backgroundColor: secondaryColor,
                 borderRadius: 6,
@@ -46,7 +46,41 @@ const DashboardBar = ({ barData }) => {
                 hoverBackgroundColor: hoverSecondaryColor,
             },
         ],
-    };
+    }
+
+    const distributeData = {
+        labels: ["UG 1st", "UG 2nd", "UG 3rd", "PG 1st", "PG 2nd"],
+        datasets: [
+            {
+                label: "Men",
+                data: [
+                    distributedData.ug.men[0],
+                    distributedData.ug.men[1],
+                    distributedData.ug.men[2],
+                    distributedData.pg.men[0],
+                    distributedData.pg.men[1],
+                ],
+                backgroundColor: primaryColor,
+                borderRadius: 6,
+                barThickness: 30,
+                hoverBackgroundColor: hoverPrimaryColor,
+            },
+            {
+                label: "Women",
+                data: [
+                    distributedData.ug.women[0],
+                    distributedData.ug.women[1],
+                    distributedData.ug.women[2],
+                    distributedData.pg.women[0],
+                    distributedData.pg.women[1],
+                ],
+                backgroundColor: secondaryColor,
+                borderRadius: 6,
+                barThickness: 30,
+                hoverBackgroundColor: hoverSecondaryColor,
+            },
+        ],
+    }
 
     const options = {
         responsive: true,
@@ -68,7 +102,6 @@ const DashboardBar = ({ barData }) => {
             },
             title: {
                 display: true,
-                text: "Student Distribution by Year & Gender",
                 color: neutralText,
                 font: { size: 16, weight: "600" },
                 padding: { bottom: 20 },
@@ -103,10 +136,10 @@ const DashboardBar = ({ barData }) => {
             <div className="bg-white rounded-xl border border-gray-200 shadow-lg transition-all duration-300">
                 <div className="p-6">
                     <h2 className="text-lg font-semibold text-gray-800 mb-6 border-b pb-3">
-                        Enrollment Trend
+                        Distribution Statement by Year and Gender
                     </h2>
                     <div className="h-[400px]">
-                        <Bar data={data} options={options} plugins={[legendSpacingPlugin]} />
+                        <Bar data={distributeData} options={options} plugins={[legendSpacingPlugin]} />
                     </div>
                 </div>
             </div>
@@ -114,12 +147,12 @@ const DashboardBar = ({ barData }) => {
             {/* Summary Card (Right Side) */}
             <div className="p-6 bg-white rounded-xl border border-gray-200 shadow-lg transition-all duration-300">
                 <h2 className="text-lg font-semibold text-gray-800 mb-6 border-b pb-3">
-                    Detailed Year-wise Breakdown
+                   Applicants by Year and Gender
                 </h2>
                 <div className="flex flex-col gap-6">
-                    {data.labels.map((label, i) => {
-                        const men = data.datasets[0].data[i];
-                        const women = data.datasets[1].data[i];
+                    {enrollData.labels.map((label, i) => {
+                        const men = enrollData.datasets[0].data[i];
+                        const women = enrollData.datasets[1].data[i];
                         const total = men + women;
                         const menPercent = total ? (men / total) * 100 : 0;
                         const womenPercent = total ? (women / total) * 100 : 0;

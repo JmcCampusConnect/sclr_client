@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import ApplicationStatus from "../../components/StudentDashboard/ApplicationStatus";
 import PersonalDetails from "../../components/StudentDashboard/PersonalDetails";
@@ -15,23 +16,38 @@ function AdminViewAppln() {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const [donors, setDonors] = useState([]);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [showAcceptModal, setShowAcceptModal] = useState(false);
     const [showRejectModal, setShowRejectModal] = useState(false);
 
     const { student } = location.state || {};
 
-    const openAcceptModal = (student) => {
-		setSelectedStudent(student);
-		setShowAcceptModal(true);
-		setShowRejectModal(false);
-	}
+    const fetchDonors = async () => {
+        try {
+            const response = await axios.get(`${apiUrl}/api/admin/application/fetchDonors`);
+            // console.log(response.data)
+            setDonors(response.data.donors);
+        } catch (error) {
+            console.error("Error fetching students for admin application : ", error);
+        }
+    };
 
-	const openRejectModal = (student) => {
-		setShowRejectModal(true);
-		setShowAcceptModal(false);
-		setSelectedStudent(student);
-	}
+    useEffect(() => {
+        fetchDonors();
+    }, []);
+
+    const openAcceptModal = (student) => {
+        setSelectedStudent(student);
+        setShowAcceptModal(true);
+        setShowRejectModal(false);
+    }
+
+    const openRejectModal = (student) => {
+        setShowRejectModal(true);
+        setShowAcceptModal(false);
+        setSelectedStudent(student);
+    }
 
     const closeModal = () => {
         setShowAcceptModal(false);
@@ -97,7 +113,12 @@ function AdminViewAppln() {
                             </button>
                         </div>
                         <PrintApplication student={student} />
-                        <AcceptModal showAcceptModal={showAcceptModal} closeModal={closeModal} selectedStudent={selectedStudent} />
+                        <AcceptModal
+                            showAcceptModal={showAcceptModal}
+                            closeModal={closeModal}
+                            selectedStudent={selectedStudent}
+                            donors={donors}
+                        />
                         <RejectModal showRejectModal={showRejectModal} closeModal={closeModal} selectedStudent={selectedStudent} />
                     </div>
                 </div>
