@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UploadCloud, Download, FileText, Loader2 } from "lucide-react";
+import { UploadCloud, Download, FileText, Loader2, Hammer } from "lucide-react";
 import axios from "axios";
 
 const UploadCard = ({ title, name, uploadUrl, downloadUrl, sampleUrl }) => {
@@ -103,38 +103,68 @@ const UploadCard = ({ title, name, uploadUrl, downloadUrl, sampleUrl }) => {
 
 const UploadCenter = () => {
 
+    // return (
+    //     <div>
+    //         <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
+    //             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
+    //                 Upload Center
+    //             </h1>
+    //         </header>
+    //         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-8">
+    //             <UploadCard
+    //                 title="Tutor File"
+    //                 name="tutor_file"
+    //                 uploadUrl="/api/upload/tutor"
+    //                 downloadUrl="/api/download/tutor"
+    //                 sampleUrl="/api/sample/tutor"
+    //             />
+
+    //             <UploadCard
+    //                 title="Student File"
+    //                 name="student_file"
+    //                 uploadUrl="/api/upload/student"
+    //                 downloadUrl="/api/download/student"
+    //                 sampleUrl="/api/sample/student"
+    //             />
+
+    //             <UploadCard
+    //                 title="Department File"
+    //                 name="department_file"
+    //                 uploadUrl="/api/upload/department"
+    //                 downloadUrl="/api/download/department"
+    //                 sampleUrl="/api/sample/department"
+    //             />
+    //         </div>
+    //     </div>
+    // )
     return (
-        <div>
-            <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
-                    Upload Center
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-center px-6">
+            <div className="bg-white shadow-xl rounded-2xl p-10 max-w-md w-full border border-gray-200">
+                <div className="flex justify-center mb-6">
+                    <div className="p-4 bg-indigo-100 rounded-full">
+                        <Hammer size={48} className="text-indigo-600" />
+                    </div>
+                </div>
+
+                <h1 className="text-3xl font-bold text-gray-800 mb-3">
+                    Under Construction
                 </h1>
-            </header>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-8">
-                <UploadCard
-                    title="Tutor File"
-                    name="tutor_file"
-                    uploadUrl="/api/upload/tutor"
-                    downloadUrl="/api/download/tutor"
-                    sampleUrl="/api/sample/tutor"
-                />
 
-                <UploadCard
-                    title="Student File"
-                    name="student_file"
-                    uploadUrl="/api/upload/student"
-                    downloadUrl="/api/download/student"
-                    sampleUrl="/api/sample/student"
-                />
+                <p className="text-gray-600 mb-6">
+                    This section is currently being built. We’re working to bring this feature to you soon.
+                </p>
 
-                <UploadCard
-                    title="Department File"
-                    name="department_file"
-                    uploadUrl="/api/upload/department"
-                    downloadUrl="/api/download/department"
-                    sampleUrl="/api/sample/department"
-                />
+                <button
+                    onClick={() => window.location.reload()}
+                    className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold shadow hover:bg-indigo-700 transition-all duration-200"
+                >
+                    Refresh Later
+                </button>
             </div>
+
+            <p className="text-sm text-gray-500 mt-8">
+                © {new Date().getFullYear()} Data Management Portal
+            </p>
         </div>
     )
 }
