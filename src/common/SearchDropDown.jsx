@@ -1,35 +1,48 @@
 import React from "react";
 import Select from "react-select";
 
-export default function SearchDropdown({ label, name, value, options = [], onChange, required = false }) {
+function SearchDropdown({ label, name,  value, options = [],  onChange,  required = false, error}) {
 
     const selected = options.find((opt) => opt.value === value) || null;
 
     return (
-        <div>
+        <div className="space-y-1">
             {label && (
                 <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
                     {label} : {required && <span className="text-red-500">*</span>}
                 </label>
             )}
             <Select
+                inputId={name}         
+                name={name}             
                 value={selected}
                 onChange={(option) => onChange(name, option)}
                 options={options}
                 isSearchable
                 placeholder=""
                 styles={{
-                    control: (base) => ({
+                    control: (base, state) => ({
                         ...base,
                         backgroundColor: "transparent",
-                        borderColor: "#d1d5db",
+                        borderColor: error ? "#ef4444" : "#d1d5db", 
+                        boxShadow: state.isFocused
+                            ? error
+                                ? "0 0 0 1px #ef4444"
+                                : "0 0 0 1px #3b82f6"
+                            : "none",
                         borderRadius: "8px",
                         padding: "2px",
+                        "&:hover": {
+                            borderColor: error ? "#ef4444" : "#3b82f6",
+                        },
                     }),
                     singleValue: (base) => ({ ...base, color: "#111827" }),
                     menu: (base) => ({ ...base, zIndex: 9999 }),
                 }}
             />
+            {error && <p className="text-red-500 text-sm mt-1.5">{error}</p>}
         </div>
     )
 }
+
+export default SearchDropdown

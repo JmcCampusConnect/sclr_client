@@ -13,30 +13,76 @@ function AddDonorModal({ onClose, onAddDonor }) {
 		zakkathAmt: "", zakkathBal: ""
 	});
 
+	const [errors, setErrors] = useState({});
+
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
-	}
+		setErrors((prev) => {
+			const updated = { ...prev };
+			if (name === "generalAmt" && value) delete updated.zakkathAmt;
+			if (name === "zakkathAmt" && value) delete updated.generalAmt;
+			delete updated[name];
+			return updated;
+		});
+	};
+
 
 	const handleSelectChange = (name, option) => {
 		setFormData((prev) => ({
 			...prev, [name]: option ? option.value : "",
 		}));
-	}
+		setErrors((prev) => ({ ...prev, [name]: "" }));
+	};
+
+	const validateForm = () => {
+
+		const newErrors = {};
+
+		if (!formData.donorName.trim()) {
+			newErrors.donorName = "Donor Name is required.";
+		}
+
+		if (!formData.donorType) {
+			newErrors.donorType = "Donor Type is required.";
+		}
+
+		const hasGeneral = !!formData.generalAmt && Number(formData.generalAmt) > 0;
+		const hasZakkath = !!formData.zakkathAmt && Number(formData.zakkathAmt) > 0;
+
+		if (!hasGeneral && !hasZakkath) {
+			newErrors.generalAmt = "Either General Amount or Zakkath Amount is required.";
+			newErrors.zakkathAmt = "Either Zakkath Amount or General Amount is required.";
+		}
+
+		setErrors(newErrors);
+		return newErrors;
+	};
+
 
 	const handleSubmit = async (e) => {
+
 		e.preventDefault();
+
+		const newErrors = validateForm();
+
+		if (Object.keys(newErrors).length > 0) {
+			const firstErrorField = Object.keys(newErrors)[0];
+			const el = document.querySelector(`[name="${firstErrorField}"]`);
+			if (el) el.focus();
+			return;
+		}
+
 		try {
 			const response = await axios.post(`${apiUrl}/api/donor/addDonor`, formData);
-			alert('Donor added successfully')
+			alert('Donor added successfully');
 			onAddDonor(response.data.donor);
 			onClose();
 		} catch (error) {
 			console.error("Error adding donor : ", error);
-			if (error.status == 409) {
-				alert(`${error.response.data.message}`);
+			if (error?.response?.status === 409) {
+				alert(error.response.data.message);
 			}
-
 		}
 	}
 
@@ -59,7 +105,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
 	const donorTypeOptions = [
 		{ value: "Alumini", label: "Alumini" },
 		{ value: "Well Wishers", label: "Well Wishers" },
-	]
+	];
 
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
@@ -79,23 +125,24 @@ function AddDonorModal({ onClose, onAddDonor }) {
 				</div>
 
 				{/* Form */}
-				<form onSubmit={handleSubmit} className="p-6 space-y-6">
+				<form onSubmit={handleSubmit} noValidate className="p-6 space-y-6">
 
 					{/* Basic Information */}
 					<div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
-
 						<h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
 							🧾 Basic Information
 						</h2>
 
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-							{/* <Input label="Donor ID" name="donorId" value={formData.donorId} readOnly /> */}
 							<Input
 								label="Donor Name"
 								name="donorName"
 								value={formData.donorName}
 								required
-								onChange={(e) => setFormData((prev) => ({ ...prev, donorName: e.target.value.toUpperCase() }))}
+								error={errors.donorName}
+								onChange={(e) =>
+									setFormData((prev) => ({ ...prev, donorName: e.target.value.toUpperCase() }))
+								}
 							/>
 							<Input label="Mobile No" name="mobileNo" value={formData.mobileNo} onChange={handleChange} />
 							<Input label="Email ID" name="emailId" type="email" value={formData.emailId} onChange={handleChange} />
@@ -133,14 +180,13 @@ function AddDonorModal({ onClose, onAddDonor }) {
 								options={donorTypeOptions}
 								onChange={handleSelectChange}
 								required
+								error={errors.donorType}
 							/>
-							{/* <Input label="Donor Date" name="donorDate" type="date" value={formData.donorDate} onChange={handleChange} /> */}
 						</div>
 					</div>
 
 					{/* Payment Details */}
 					<div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
-
 						<h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
 							💰 Payment Details
 						</h2>
@@ -153,6 +199,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
 								value={formData.generalAmt}
 								onChange={handleChange}
 								onWheel={(e) => e.target.blur()}
+								error={errors.generalAmt}
 							/>
 							<Input
 								label="Zakkath Amount"
@@ -161,6 +208,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
 								value={formData.zakkathAmt}
 								onChange={handleChange}
 								onWheel={(e) => e.target.blur()}
+								error={errors.zakkathAmt}
 							/>
 						</div>
 					</div>
@@ -184,11 +232,11 @@ function AddDonorModal({ onClose, onAddDonor }) {
 				</form>
 			</div>
 		</div>
-	)
+	);
 }
 
-const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
-	<div>
+const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
+	<div className="space-y-2">
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {props.required && <span className="text-red-500">*</span>}
 		</label>
@@ -198,50 +246,11 @@ const Input = ({ label, name, type = "text", value, onChange, ...props }) => (
 			value={value}
 			onChange={onChange}
 			{...props}
-			className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
+			className={`w-full p-2.5 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 outline-none transition
+				${error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
 		/>
+		{error && <p className="text-red-500 text-sm mt-1">{error}</p>}
 	</div>
-)
-
-const Select = ({ label, name, value, onChange, options, required }) => (
-	<div>
-		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
-			{label} : {required && <span className="text-red-500">*</span>}
-		</label>
-		<select
-			name={name}
-			value={value}
-			onChange={onChange}
-			required={required}
-			className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
-		>
-			<option value="">Select</option>
-			{options?.map((opt) => (
-				<option key={opt} value={opt}>
-					{opt}
-				</option>
-			))}
-		</select>
-	</div>
-)
-
-const Radio = ({ label, name, checked, onChange }) => (
-	<label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
-		<div className='flex flex-col justify-center'>
-			<div className="flex gap-4 items-center mt-2">
-				<label className="flex items-center gap-2 text-md">
-					<input
-						type="radio"
-						name={name}
-						checked={checked}
-						onChange={onChange}
-						className="w-4 h-4 accent-blue-500"
-					/>
-					{label}
-				</label>
-			</div>
-		</div>
-	</label>
 )
 
 export default AddDonorModal;

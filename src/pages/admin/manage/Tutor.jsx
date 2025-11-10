@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 import TutorFilterSection from '../../../components/Tutor/TutorFilterSection'
@@ -16,14 +16,14 @@ function Tutor() {
     const [departments, setDepartments] = useState([]);
     const [filterFormData, setFilterFormData] = useState()
     const [tutors, setTutors] = useState([]);
-    const [allTutors, setAllTutors] = useState([]); // store original data
+    const [allTutors, setAllTutors] = useState([]);
     const [filteredTutors, setFilteredTutors] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             const response = await axios.get(`${apiUrl}/api/tutor/fetchTutors`);
             setTutors(response.data.tutors);
-            setAllTutors(response.data.tutors); // keep full data here
+            setAllTutors(response.data.tutors);
             setFilteredTutors(response.data.tutors);
         };
 
@@ -40,64 +40,39 @@ function Tutor() {
         fetchDepartments();
     }, []);
 
-    // Deptartment options for dropdowns
     const dep = Object.values(departments).map(item => ({
         value: item.department,
         label: `${item.department} - ${item.departmentName}`
     }));
 
-
-    // Dropdown filter
     const handleFilterForm = () => {
-        if (!filterFormData) return;
 
+        if (!filterFormData) return;
         const filtered = allTutors.filter(tutor => {
             const matchesCategory =
                 filterFormData.category === "All" || tutor.category === filterFormData.category;
-
             const matchesDepartment =
                 filterFormData.department === "All" || tutor.department === filterFormData.department;
-
             const matchesBatch =
                 filterFormData.batch === "All" || tutor.batch === filterFormData.batch;
-
             return matchesCategory && matchesDepartment && matchesBatch;
-        });
-
-        setFilteredTutors(filtered); // store filtered result
-        setTutors(filtered); // also show it in table
-    };
+        })
+        setFilteredTutors(filtered);
+        setTutors(filtered);
+    }
 
     // Search filter
     const handleSearch = (searchTerm) => {
         if (!searchTerm) {
-            setTutors(filteredTutors); // restore current filtered data
+            setTutors(filteredTutors);
             return;
         }
-
         const searched = filteredTutors.filter(tutor =>
             tutor.staffName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             tutor.staffId.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
+        )
         setTutors(searched);
-    };
-
-
-
-
-    const handleAddTutor = (newTutor) => {
-        console.log("New tutor added : ", newTutor);
     }
-
-    const handleEditTutor = (updatedTutor) => {
-        console.log("Tutor updated : ", updatedTutor);
-    }
-
-    const handleDeleteTutor = (tutorId) => {
-        console.log("Tutor deleted with ID : ", tutorId);
-    }
-
 
     return (
         <>
@@ -112,6 +87,7 @@ function Tutor() {
                 filterForm={(e) => setFilterFormData(e)}
             />
             <TutorActionBar
+                tutors={tutors}
                 onClose={() => setAddTutor(null)}
                 onAddTutor={() => setAddTutor({})}
                 filterDropdownData={handleFilterForm}
@@ -125,7 +101,6 @@ function Tutor() {
             {addTutor && (
                 <AddTutorModal
                     tutor={addTutor}
-                    onAddTutor={handleAddTutor}
                     onClose={() => setAddTutor(null)}
                 />
             )}
@@ -133,14 +108,12 @@ function Tutor() {
                 <EditTutorModal
                     tutor={editTutor}
                     onClose={() => setEditTutor(null)}
-                    onEditTutor={handleEditTutor}
                 />
             )}
             {deleteTutor && (
                 <DeleteTutorModal
                     tutor={deleteTutor}
                     onClose={() => setDeleteTutor(null)}
-                    onDelete={handleDeleteTutor}
                 />
             )}
         </>

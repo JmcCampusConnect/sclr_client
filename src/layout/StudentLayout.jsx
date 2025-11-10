@@ -3,7 +3,7 @@ import JmcLogo from '../assets/logos/JmcLogo.png'
 import { Outlet, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from '../context/AuthContext';
-import { faClipboard, faSignOutAlt, faChalkboard, faMapSigns } from '@fortawesome/free-solid-svg-icons';
+import { faClipboard, faSignOutAlt, faChalkboard, faMapSigns,faTools } from '@fortawesome/free-solid-svg-icons';
 
 function StudentLayout() {
 
@@ -26,6 +26,11 @@ function StudentLayout() {
             icon: faMapSigns,
             name: 'Guidelines',
             path: `/student/${userId}/guidelines`
+        },
+        {
+            icon: faTools,
+            name: 'Change Password',
+            path: `/student/${userId}/changePassword`
         }
     ]
 

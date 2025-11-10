@@ -24,8 +24,15 @@ function Donor() {
 	const fetchDonors = async () => {
 		try {
 			const response = await axios.get(`${apiUrl}/api/donor/fetchDonors`);
-			setAllDonors(response.data.donors);
-			setDonors(response.data.donors);
+			const donors = response.data.donors || [];
+			const sortedDonors = [...donors].sort((a, b) => {
+				const idA = parseInt(a.donorId, 10);
+				const idB = parseInt(b.donorId, 10);
+				return idA - idB; 
+			});
+
+			setAllDonors(sortedDonors);
+			setDonors(sortedDonors);
 		} catch (error) {
 			console.error("Error fetching donor data : ", error);
 		}

@@ -19,17 +19,17 @@ function DepartmentTable({ depts, onEdit, onDelete }) {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                        {depts.length > 0 ? (
+                        {depts?.length > 0 ? (
                             depts.map((depts) => (
                                 <tr
-                                    key={depts.department}
+                                    key={depts?.department}
                                     className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
                                 >
                                     <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
-                                        {depts.department}
+                                        {depts?.department}
                                     </td>
                                     <td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
-                                        {depts.departmentName}
+                                        {depts?.departmentName}
                                     </td>
                                     <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
                                         <div className="flex justify-center gap-2">

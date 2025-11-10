@@ -33,11 +33,14 @@ function LoginForm({ register, errors, registerSubmit, handleSubmit }) {
                     name='userPassword'
                     placeholder='Password'
                 />
-                <span
-                    className="block text-sm text-right text-blue-800 hover:text-blue-500 cursor-pointer"
-                >
-                    Forgot Password ?
-                </span>
+                <div className='flex justify-end'>
+                    <button
+                        onClick={() => navigate('/forgotPassword')}
+                        className="block text-sm text-right text-blue-800 hover:text-blue-500 cursor-pointer"
+                    >
+                        Forgot Password ?
+                    </button>
+                </div>
                 <div className="flex justify-between gap-8">
                     <button type="button"
                         onClick={() => navigate('/')}

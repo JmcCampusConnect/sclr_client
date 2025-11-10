@@ -33,7 +33,7 @@ function StaffLayout() {
         { icon: faClipboardList, name: attendanceName, path: `/staff/${userId}/classAttendance`, show: Object.keys(attendanceMap).includes(userId) },
         { icon: faBook, name: subjectName, path: `/staff/${userId}/dmAttendance`, show: Object.keys(subjectMap).includes(userId) },
         { icon: faBuilding, name: 'COE', path: `/staff/${userId}/markEntry`, show: userId === 'JMCCOE' },
-        { icon: faTools, name: 'Settings', path: `/staff/${userId}/settings`, show: true },
+        { icon: faTools, name: 'Change Password', path: `/staff/${userId}/changePassword`, show: true },
     ]
 
     return (

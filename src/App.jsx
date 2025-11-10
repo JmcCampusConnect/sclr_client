@@ -15,13 +15,15 @@ import StudentLayout from "./layout/StudentLayout";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import LoginApplication from "./pages/student/LoginApplication";
 import StudentGuidelines from "./pages/student/StudentGuidelines";
+import StudentChangePassword from './pages/student/ChangePassword';
+
 
 // Staff Pages
 import StaffLayout from "./layout/StaffLayout";
 import ClassAttendance from "./pages/staff/ClassAttendance";
 import DmAttendance from "./pages/staff/DmAttendance";
 import CoeMark from "./pages/staff/CoeMark";
-import StaffSettings from "./pages/staff/StaffSettings";
+import StaffChangePassword from "./pages/staff/ChangePassword";
 
 // Admin Pages
 import AdminLayout from "./layout/AdminLayout";
@@ -39,11 +41,12 @@ import Application from './pages/admin/manage/Application';
 import CheckStatus from './pages/admin/CheckStatus';
 import ProgressReport from './pages/admin/ProgressReport';
 import FundsAvailable from './pages/admin/report/FundsAvailable';
-import ChangePassword from './pages/admin/ChangePassword';
+import AdminChangePassword from './pages/admin/ChangePassword';
 import GuideLines from './pages/admin/GuideLines';
 import UploadCenter from './pages/admin/UploadCenter';
 import DataDeletion from './pages/admin/DataDeletion';
 import Department from './pages/admin/manage/Department';
+import ForgotPassword from './pages/others/ForgotPassword';
 
 function App() {
 
@@ -55,6 +58,7 @@ function App() {
 				<Routes>
 					{/* Public Routes */}
 					<Route path="/" element={<LandingPage />} />
+					<Route path="/forgotPassword" element={<ForgotPassword />} />
 					<Route path="/login" element={<LoginPage />} />
 					<Route path="/student" element={<StudentHome />} />
 
@@ -75,6 +79,7 @@ function App() {
 						<Route path="dashboard" element={<StudentDashboard />} />
 						<Route path="application" element={<LoginApplication />} />
 						<Route path="guidelines" element={<StudentGuidelines />} />
+						<Route path="changePassword" element={<StudentChangePassword />} />
 					</Route>
 
 					{/* Admin */}
@@ -102,7 +107,7 @@ function App() {
 						<Route path="applicationManage" element={<Application />} />
 						<Route path="progressReport" element={<ProgressReport />} />
 						<Route path="fundsAvailable" element={<FundsAvailable />} />
-						<Route path="changePassword" element={<ChangePassword />} />
+						<Route path="changePassword" element={<AdminChangePassword />} />
 						<Route path="guidelines" element={<GuideLines />} />
 						<Route path="dataDeletion" element={<DataDeletion />} />
 						<Route path="uploadCenter" element={<UploadCenter />} />
@@ -121,7 +126,7 @@ function App() {
 						<Route path="dmAttendance" element={<DmAttendance />} />
 						<Route path="markEntry" element={<CoeMark />} />
 						<Route path="dashboard" element={<CommonStaffDashboard />} />
-						<Route path="settings" element={<StaffSettings />} />
+						<Route path="changePassword" element={<StaffChangePassword />} />
 					</Route>
 
 				</Routes>

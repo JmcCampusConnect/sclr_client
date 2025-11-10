@@ -1,6 +1,6 @@
 import React from "react";
 
-function DepartmentActionBar({onAddDepartment,searchDepts}) {
+function DepartmentActionBar({ onAddDepartment, searchDepts, depts }) {
 
 	const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
 	const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
@@ -35,7 +35,7 @@ function DepartmentActionBar({onAddDepartment,searchDepts}) {
 				<p className="text-sm lg:text-base font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
 					No. of Departments : {" "}
 					<span className="font-semibold text-indigo-600 dark:text-indigo-400">
-						150
+						{depts.length}
 					</span>
 				</p>
 			</div>

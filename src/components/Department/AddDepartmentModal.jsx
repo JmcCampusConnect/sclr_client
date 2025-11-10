@@ -1,35 +1,61 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "../../App.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AddDepartmentModal({onClose, onAddDepartment}) {
+function AddDepartmentModal({ onClose, onAddDepartment }) {
 
-    const [formData, setFormData] = useState({department: "", departmentName: ""});
+    const [formData, setFormData] = useState({ department: "", departmentName: "" });
+    const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData((prev) => ({...prev, [name]: value}));
-    }
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
+    };
+
+    const handleUppercaseChange = (e) => {
+        const { value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            departmentName: value.toUpperCase(),
+        }));
+        setErrors((prev) => ({ ...prev, departmentName: "" }));
+    };
+
+    const validateForm = () => {
+        const newErrors = {};
+        if (!formData.department.trim())
+            newErrors.department = "Department ID is required.";
+        if (!formData.departmentName.trim())
+            newErrors.departmentName = "Department Name is required.";
+        setErrors(newErrors);
+        return newErrors;
+    };
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
+        const newErrors = validateForm();
+        if (Object.keys(newErrors).length > 0) {
+            const firstErrorField = Object.keys(newErrors)[0];
+            const el = document.querySelector(`[name="${firstErrorField}"]`);
+            if (el) el.focus();
+            return;
+        }
 
         try {
             const response = await axios.post(`${apiUrl}/api/dept/addDepartment`, formData);
-
             if (response.data.success) {
                 alert(response.data.message);
+                onAddDepartment?.(response.data.department);
                 onClose();
-                window.location.reload();
             } else {
                 alert(response.data.message || "Something went wrong.");
             }
-
         } catch (error) {
-            console.error("Error adding department:", error);
-
+            console.error("Error adding department : ", error);
             if (error.response) {
                 alert(error.response.data.message || "Server error occurred.");
             } else if (error.request) {
@@ -38,15 +64,11 @@ function AddDepartmentModal({onClose, onAddDepartment}) {
                 alert("Unexpected error. Please try again later.");
             }
         }
-    };
-
-
-
+    }
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full border border-gray-200 dark:border-gray-700 max-w-6xl hide-scrollbar overflow-y-auto max-h-[80vh]">
-
                 {/* Header */}
                 <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -60,10 +82,8 @@ function AddDepartmentModal({onClose, onAddDepartment}) {
                     </button>
                 </div>
 
-
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-6 font-semibold">
-
+                <form onSubmit={handleSubmit} noValidate className="p-6 space-y-6">
                     {/* Basic Information */}
                     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
@@ -77,18 +97,15 @@ function AddDepartmentModal({onClose, onAddDepartment}) {
                                 value={formData.department}
                                 onChange={handleChange}
                                 required
+                                error={errors.department}
                             />
                             <Input
                                 label="Department Name"
                                 name="departmentName"
                                 value={formData.departmentName}
-                                onChange={(e) =>
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        departmentName: e.target.value.toUpperCase(),
-                                    }))
-                                }
+                                onChange={handleUppercaseChange}
                                 required
+                                error={errors.departmentName}
                             />
                         </div>
                     </div>
@@ -112,11 +129,11 @@ function AddDepartmentModal({onClose, onAddDepartment}) {
                 </form>
             </div>
         </div>
-    );
+    )
 }
 
-const Input = ({label, name, type = "text", value, onChange, ...props}) => (
-    <div>
+const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
+    <div className="space-y-2">
         <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
             {label} : {props.required && <span className="text-red-500">*</span>}
         </label>
@@ -126,8 +143,10 @@ const Input = ({label, name, type = "text", value, onChange, ...props}) => (
             value={value}
             onChange={onChange}
             {...props}
-            className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
+            className={`w-full p-2.5 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 outline-none transition
+      		${error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
         />
+        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
 )
 

@@ -8,12 +8,12 @@ const apiUrl = import.meta.env.VITE_API_URL;
 function DeleteTutorModal({tutor, onClose, onDelete}) {
 
     const handleDelete = async () => {
+
         try {
             const response = await axios.post(`${apiUrl}/api/tutor/deleteTutor`, tutor);
             if (response.status === 200) {
                 alert(`${response.data.message}`);
                 window.location.reload();
-                // onDelete(tutor.staffId);
             }
             onClose();
         } catch (error) {
@@ -30,7 +30,7 @@ function DeleteTutorModal({tutor, onClose, onDelete}) {
             }
 
         }
-    };
+    }
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">

@@ -1,39 +1,56 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "../../App.css";
-import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function EditDepartmentModal({deptData, onClose, onUpdateDonor}) {
-
-	// console.log("dept",deptData)
-	const [formData, setFormData] = useState({...deptData});
-	// console.log("form", formData)
+function EditDepartmentModal({ deptData, onClose }) {
+	const [formData, setFormData] = useState({ ...deptData });
+	const [errors, setErrors] = useState({});
 
 	const handleChange = (e) => {
-		const {name, value} = e.target;
-		setFormData((prev) => ({...prev, [name]: value}));
-	};
+		const { name, value } = e.target;
+		setFormData((prev) => ({
+			...prev,
+			[name]: name === "departmentName" ? value.toUpperCase() : value,
+		}));
+		setErrors((prev) => ({ ...prev, [name]: "" }));
+	}
 
-
+	const validate = () => {
+		const newErrors = {};
+		if (!formData.departmentName?.trim()) {
+			newErrors.departmentName = "Department Name is required";
+		}
+		return newErrors;
+	}
 
 	const handleSubmit = async (e) => {
+
 		e.preventDefault();
+		const validationErrors = validate();
+		if (Object.keys(validationErrors).length > 0) {
+			setErrors(validationErrors);
+			return;
+		}
+
 		try {
+
 			const response = await axios.post(`${apiUrl}/api/dept/updateDepartment`, formData);
-			if (response.status == 200) {
-				alert(`${response.data.message}`)
-				window.location.reload();
+			if (response.status === 200) {
+				alert(response.data.message || "Department updated successfully.");
 				onClose();
+				window.location.reload();
 			}
 		} catch (error) {
-			console.error("Error updating donor:", error);
-			alert("Department Name already Exist")
+			console.error("Error updating department:", error);
+			if (error.response?.data?.message) {
+				alert(error.response.data.message);
+			} else {
+				alert("Department Name already exists or update failed.");
+			}
 		}
-	};
-
-
+	}
 
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
@@ -52,16 +69,28 @@ function EditDepartmentModal({deptData, onClose, onUpdateDonor}) {
 				</div>
 
 				{/* Form */}
-				<form onSubmit={handleSubmit} className="p-6 space-y-6 font-semibold">
-					{/* Basic Information */}
+				<form onSubmit={handleSubmit} className="p-6 space-y-6">
 					<div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
 						<h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
 							🧾 Basic Information
 						</h2>
 
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<Input label="Department Id" name="department" value={formData.department} readOnly />
-							<Input label="Department Name" name="departmentName" value={formData.departmentName} onChange={handleChange} required />
+							<Input
+								label="Department ID"
+								name="department"
+								value={formData.department}
+								readOnly
+							/>
+
+							<Input
+								label="Department Name"
+								name="departmentName"
+								value={formData.departmentName}
+								onChange={handleChange}
+								required
+								error={errors.departmentName}
+							/>
 						</div>
 					</div>
 
@@ -87,7 +116,7 @@ function EditDepartmentModal({deptData, onClose, onUpdateDonor}) {
 	);
 }
 
-const Input = ({label, name, type = "text", value, onChange, ...props}) => (
+const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
 	<div>
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {props.required && <span className="text-red-500">*</span>}
@@ -98,9 +127,14 @@ const Input = ({label, name, type = "text", value, onChange, ...props}) => (
 			value={value}
 			onChange={onChange}
 			{...props}
-			className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
+			className={`w-full p-2.5 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 outline-none transition
+				${error
+					? "border-red-500 focus:ring-red-500"
+					: "border-gray-300 dark:border-gray-600 focus:ring-blue-500"
+				}`}
 		/>
+		{error && <p className="text-red-500 text-sm mt-1">{error}</p>}
 	</div>
-);
+)
 
 export default EditDepartmentModal;

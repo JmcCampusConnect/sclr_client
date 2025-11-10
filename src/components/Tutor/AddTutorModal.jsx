@@ -1,16 +1,19 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import '../../App.css';
+import "../../App.css";
 import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AddTutorModal({onClose, onAddTutor}) {
+function AddTutorModal({ onClose, onAddTutor }) {
 
 	const [departments, setDepartments] = useState([]);
 	const [formData, setFormData] = useState({
-		staffId: "", staffName: "", department: "", category: "", section: "", batch: ""
+		staffId: "", staffName: "", department: "",
+		category: "", section: "", batch: "",
 	});
+
+	const [errors, setErrors] = useState({});
 
 	useEffect(() => {
 		const fetchDepartments = async () => {
@@ -25,43 +28,63 @@ function AddTutorModal({onClose, onAddTutor}) {
 		fetchDepartments();
 	}, []);
 
-
 	const handleChange = (e) => {
-		const {name, value} = e.target;
-		setFormData((prev) => ({...prev, [name]: value}));
-	}
+		const { name, value } = e.target;
+		setFormData((prev) => ({ ...prev, [name]: value }));
+		setErrors((prev) => ({ ...prev, [name]: "" }));
+	};
 
 	const handleSelectChange = (name, option) => {
 		setFormData((prev) => ({
 			...prev,
 			[name]: option ? option.value : "",
-		}))
-	}
+		}));
+		setErrors((prev) => ({ ...prev, [name]: "" }));
+	};
+
+	const validateForm = () => {
+		const newErrors = {};
+		if (!formData.staffId.trim()) newErrors.staffId = "Staff ID is required.";
+		if (!formData.staffName.trim())
+			newErrors.staffName = "Staff Name is required.";
+		if (!formData.department)
+			newErrors.department = "Department is required.";
+		if (!formData.category) newErrors.category = "Category is required.";
+		if (!formData.section) newErrors.section = "Section is required.";
+		if (!formData.batch) newErrors.batch = "Batch is required.";
+
+		setErrors(newErrors);
+		return newErrors;
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		const newErrors = validateForm();
+		if (Object.keys(newErrors).length > 0) {
+			const firstErrorField = Object.keys(newErrors)[0];
+			const el = document.querySelector(`[name="${firstErrorField}"]`);
+			if (el) el.focus();
+			return;
+		}
+
 		try {
 			const response = await axios.post(`${apiUrl}/api/tutor/addTutor`, formData);
 			if (response.status === 201) {
 				alert("Tutor added successfully!");
+				onAddTutor?.(response.data.tutor);
 				onClose();
-				window.location.reload();
-			}
-			else {
+			} else {
 				console.error("Failed to add tutor:", response.data.message);
 			}
 		} catch (error) {
-			if (error.status == 400) {
+			if (error?.response?.status === 400) {
 				alert("Tutor with this Staff ID already exists.");
-			}
-			else if (error.status == 401) {
+			} else if (error?.response?.status === 401) {
 				alert("All fields are required to add a tutor.");
 			}
-
-			console.error("Error adding donor:", error);
+			console.error("Error adding tutor : ", error);
 		}
-	}
-
+	};
 
 	const categoryOptions = ["AIDED", "SFM", "SFW"].map((v) => ({
 		value: v, label: v,
@@ -71,21 +94,18 @@ function AddTutorModal({onClose, onAddTutor}) {
 		value: v, label: v,
 	}));
 
-	const sectionOptions = ["A", "B", "C", "D", "E","F","G","H"].map((v) => ({
+	const sectionOptions = ["A", "B", "C", "D", "E", "F", "G", "H"].map((v) => ({
 		value: v, label: v,
 	}));
 
-
-	const dep = Object.values(departments).map(item => ({
+	const dep = Object.values(departments).map((item) => ({
 		value: item.department,
-		label: `${item.department} - ${item.departmentName}`
+		label: `${item.department} - ${item.departmentName}`,
 	}));
-
 
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
 			<div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full border border-gray-200 dark:border-gray-700 max-w-6xl hide-scrollbar overflow-y-auto max-h-[80vh]">
-
 				{/* Header */}
 				<div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
 					<h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -100,8 +120,7 @@ function AddTutorModal({onClose, onAddTutor}) {
 				</div>
 
 				{/* Form */}
-				<form onSubmit={handleSubmit} className="p-6 space-y-7 font-semibold">
-
+				<form onSubmit={handleSubmit} noValidate className="p-6 space-y-">
 					{/* Section 1: Basic Info */}
 					<div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
 						<h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
@@ -109,13 +128,13 @@ function AddTutorModal({onClose, onAddTutor}) {
 						</h2>
 
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
 							<Input
 								label="Staff ID"
 								name="staffId"
 								value={formData.staffId}
 								onChange={handleChange}
 								required
+								error={errors.staffId}
 							/>
 							<Input
 								label="Staff Name"
@@ -123,6 +142,7 @@ function AddTutorModal({onClose, onAddTutor}) {
 								value={formData.staffName}
 								onChange={handleChange}
 								required
+								error={errors.staffName}
 							/>
 
 							<SearchDropdown
@@ -131,10 +151,9 @@ function AddTutorModal({onClose, onAddTutor}) {
 								value={formData.department}
 								options={dep}
 								onChange={handleSelectChange}
+								error={errors.department}
 								required
 							/>
-
-
 
 							<SearchDropdown
 								label="Category"
@@ -142,6 +161,7 @@ function AddTutorModal({onClose, onAddTutor}) {
 								value={formData.category}
 								options={categoryOptions}
 								onChange={handleSelectChange}
+								error={errors.category}
 								required
 							/>
 
@@ -151,6 +171,7 @@ function AddTutorModal({onClose, onAddTutor}) {
 								value={formData.batch}
 								options={batchOptions}
 								onChange={handleSelectChange}
+								error={errors.batch}
 								required
 							/>
 
@@ -160,6 +181,7 @@ function AddTutorModal({onClose, onAddTutor}) {
 								value={formData.section}
 								options={sectionOptions}
 								onChange={handleSelectChange}
+								error={errors.section}
 								required
 							/>
 						</div>
@@ -187,8 +209,8 @@ function AddTutorModal({onClose, onAddTutor}) {
 	)
 }
 
-const Input = ({label, name, type = "text", value, onChange, ...props}) => (
-	<div>
+const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
+	<div className="space-y-2">
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {props.required && <span className="text-red-500">*</span>}
 		</label>
@@ -198,9 +220,11 @@ const Input = ({label, name, type = "text", value, onChange, ...props}) => (
 			value={value}
 			onChange={onChange}
 			{...props}
-			className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
+			className={`w-full p-2.5 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 outline-none transition
+      		${error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
 		/>
+		{error && <p className="text-red-500 text-sm mt-1">{error}</p>}
 	</div>
-)
+);
 
 export default AddTutorModal;

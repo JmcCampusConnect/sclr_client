@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import DepartmentTable from '../../../components/Department/DepartmentTable';
 import AddDepartmentModal from '../../../components/Department/AddDepartmentModal';
@@ -13,9 +13,10 @@ function Department() {
     const [showAddModal, setShowAddModal] = useState(false);
     const [editDepartment, setEditDepartment] = useState(null);
     const [deleteDepartments, setDeleteDepartments] = useState(null);
-    const [depts, setDepts] = useState([]); // final table data (visible)
-    const [allDepts, setAllDepts] = useState([]); // full data from API
+    const [depts, setDepts] = useState([]);
+    const [allDepts, setAllDepts] = useState([]);
     const [filteredDepts, setFilteredDepts] = useState([]);
+
     const fetchDepts = async () => {
         try {
             const response = await axios.get(`${apiUrl}/api/dept/fetchDepts`);
@@ -27,9 +28,9 @@ function Department() {
         }
     }
 
-    useEffect(() => {fetchDepts()}, []);
+    useEffect(() => { fetchDepts() }, []);
 
-    const handleDepartmentAdd = (newDonor) => {setDonors((prev) => [...prev, newDonor])}
+    const handleDepartmentAdd = (newDonor) => { setDonors((prev) => [...prev, newDonor]) }
 
     const handleEditDonor = (updatedDonor) => {
         setDonors((prev) => prev.map((depts) =>
@@ -37,26 +38,20 @@ function Department() {
         )
     }
 
-    const handleDeleteDonor = (deletedId) => {setDonors((prev) => prev.filter((depts) => depts.donorId !== deletedId))}
-
+    const handleDeleteDonor = (deletedId) => { setDonors((prev) => prev.filter((depts) => depts.donorId !== deletedId)) }
 
     const handleSearch = (searchTerm) => {
-        console.log("hvhv")
         if (!searchTerm) {
-            setDepts(filteredDepts); // restore current filtered data
+            setDepts(filteredDepts);
             return;
         }
-
         const searched = filteredDepts.filter((dept) =>
             dept.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (dept.departmentName && dept.departmentName.toLowerCase().includes(searchTerm.toLowerCase()))
         );
-
         setDepts(searched);
     };
 
-
-    // console.log("Edit",editDepartment)
     return (
         <div className="relative">
             <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
@@ -69,7 +64,7 @@ function Department() {
                 depts={depts}
                 onAddDepartment={() => setShowAddModal(true)}
                 onclose={() => setShowAddModal(false)}
-                searchDepts={(e)=>handleSearch(e)}
+                searchDepts={(e) => handleSearch(e)}
             />
             <DepartmentTable
                 depts={depts}

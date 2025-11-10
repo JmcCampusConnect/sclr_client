@@ -4,7 +4,7 @@ import axios from "axios";
 import HeaderTag from '../../common/HeaderTag';
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function StaffSettings() {
+function ChangePassword() {
 
     const [password, setPassword] = useState({ pass: '', conpass: '' });
     const [isConpassTyped, setIsConpassTyped] = useState(false);
@@ -59,7 +59,7 @@ function StaffSettings() {
                 </div>
                 <div className="">
                     <label className="block mb-2 font-semibold text-gray-700">
-                        Re-enter Password : <span className="text-red-500 text-lg">*</span>
+                        Confirm Password : <span className="text-red-500 text-lg">*</span>
                     </label>
                     <input
                         type="password"
@@ -87,4 +87,4 @@ function StaffSettings() {
     )
 }
 
-export default StaffSettings
+export default ChangePassword
