@@ -68,6 +68,7 @@ function CoeMark() {
             setChangedStudents((prev) => {
                 const existsIndex = prev.findIndex(s => s.registerNo === student.registerNo);
                 const changedStudent = {
+                    _id: student._id,
                     registerNo: student.registerNo,
                     semesterMarkPercentage: student.semesterMarkPercentage,
                     semesterArrear: student.semesterArrear,
@@ -169,7 +170,8 @@ function CoeMark() {
                                         <input
                                             type="text"
                                             className="w-28 border border-gray-200 p-2 rounded-lg text-center bg-gray-50 font-semibold text-gray-600"
-                                            value={student.semesterMarkPercentage ? student.semesterMarkPercentage.toFixed(2) : "0.00"}
+                                            value={student.semesterMarkPercentage && student.semesterMarkPercentage >= 0 ? student.semesterMarkPercentage.toFixed(2) : "0.00"}
+
                                             readOnly
                                         />
                                     </td>

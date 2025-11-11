@@ -30,6 +30,7 @@ function ClassAttendance() {
                     setStudents(response.data.studentData);
                     setCount(response.data.counts)
                     setStudentRows(response.data.studentData.map(stu => ({
+                        _id: stu._id,
                         regNo: stu.registerNo,
                         prevSem: stu.semester === "I" ? 100 : "",
                         currSem: "",
@@ -132,6 +133,7 @@ function ClassAttendance() {
         const enteredData = studentRows
             .filter(row => row.currSem !== "" && row.percentage !== "")
             .map(row => ({
+                _id: row._id,
                 regNo: row.regNo,
                 percentage: row.percentage,
                 remark: row.remark
@@ -153,8 +155,23 @@ function ClassAttendance() {
             <HeaderTag label={staffData.staffName} />
             <StaffStatus counts={count} />
 
-            <div className="text-right font-semibold mb-4 text-lg">
-                No of Students : {students.length}
+            {/* Working Days + Student Count */}
+            <div className="flex flex-wrap justify-between items-center mb-6 font-semibold text-lg">
+                <div className="flex items-center gap-4">
+                    <label>Current Year Working Days :</label>
+                    <input
+                        type="number"
+                        className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
+                        value={workingDays}
+                        onChange={(e) => handleWorkingDaysChange(e.target.value)}
+                        onFocus={(e) =>
+                            e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false })
+                        }
+                    />
+                </div>
+                <div className="text-right">
+                    No of Students : {students.length}
+                </div>
             </div>
 
             <div className="overflow-y-auto overflow-x-auto rounded-2xl shadow-lg ring-1 ring-black/10 max-h-[500px] bg-white">
@@ -181,23 +198,24 @@ function ClassAttendance() {
 
                                     {/* Prev Sem (%) */}
                                     <td className="px-4 py-3 text-center border-r border-gray-200">
-                                        <input
-                                            type="number"
-                                            placeholder="Prev Sem"
-                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
-                                            value={studentRows[index]?.prevSem ?? ""}
-                                            onChange={e => handleInputChange(index, 'prevSem', e.target.value)}
-                                            disabled={studentRows[index]?.isSemOne}
-                                            onFocus={e => {
-                                                e.target.addEventListener('wheel', (ev) => ev.preventDefault(), { passive: false });
-                                            }}
-                                        />
+                                        {studentRows[index]?.isSemOne ? (
+                                            <span className="text-gray-400 font-medium">N/A</span>
+                                        ) : (
+                                            <input
+                                                type="number"
+                                                className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
+                                                value={studentRows[index]?.prevSem ?? ""}
+                                                onChange={e => handleInputChange(index, 'prevSem', e.target.value)}
+                                                onFocus={e => {
+                                                    e.target.addEventListener('wheel', (ev) => ev.preventDefault(), { passive: false });
+                                                }}
+                                            />
+                                        )}
                                     </td>
                                     {/* Curr Sem Attended */}
                                     <td className="px-4 py-3 text-center border-r border-gray-200">
                                         <input
                                             type="number"
-                                            placeholder="Curr Sem"
                                             className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
                                             value={studentRows[index]?.currSem ?? ""}
                                             onChange={e => handleInputChange(index, 'currSem', e.target.value)}
@@ -210,7 +228,6 @@ function ClassAttendance() {
                                     <td className="px-4 py-3 text-center border-r border-gray-200">
                                         <input
                                             type="number"
-                                            placeholder="Percentage"
                                             className="w-28 border border-gray-200 p-2 rounded-lg text-center bg-gray-50 font-semibold text-gray-600"
                                             value={studentRows[index]?.percentage ?? ""}
                                             readOnly
@@ -223,7 +240,6 @@ function ClassAttendance() {
                                     <td className="px-4 py-3 text-center border-gray-200">
                                         <input
                                             type="text"
-                                            placeholder="Remark"
                                             className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
                                             value={studentRows[index]?.remark ?? ""}
                                             onChange={e => handleInputChange(index, 'remark', e.target.value)}

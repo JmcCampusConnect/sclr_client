@@ -115,21 +115,24 @@ function DmAttendance() {
     };
 
     const onSubmit = async () => {
-
-        const submissionArray = Object.entries(editedStudents).map(([registerNo, data]) => ({
-            registerNo,
-            previousYearDays: data.prev,
-            currentYearDays: data.curr,
-            percentage: data.percentage,
-            remark: data.remark.trim() === "" ? "Good" : data.remark
-        }));
+        const submissionArray = Object.entries(editedStudents).map(([registerNo, data]) => {
+            const student = students.find(std => std.registerNo === registerNo); 
+            return {
+                _id: student?._id,
+                registerNo,
+                previousYearDays: data.prev,
+                currentYearDays: data.curr,
+                percentage: data.percentage,
+                remark: data.remark.trim() === "" ? "Good" : data.remark
+            }
+        })
 
         try {
             const saveStudents = await addData(`${apiUrl}/api/staff/dm/saveStdutntDM`, submissionArray);
-            alert("Attendance saved");
+            alert("Attendance saved successfully");
             window.location.reload();
         } catch (e) {
-            console.log("Something went wrong while saving attendance DM");
+            console.log("Something went wrong while saving attendance DM", e);
             addError && addError(e);
         }
     }
@@ -229,7 +232,7 @@ function DmAttendance() {
                                         {/* Prev Year */}
                                         <td className="px-4 py-3 text-center border-r border-gray-200">
                                             {student.semester === "I" ? (
-                                                <span className="text-gray-400">NA</span>
+                                                <span className="text-gray-400">N/A</span>
                                             ) : (
                                                 <input
                                                     type="number"
