@@ -5,7 +5,7 @@ import HeaderTag from '../../common/HeaderTag';
 
 function ParentSection({ register, errors, watch, readOnly = false }) {
 
-    const siblingsStatus = watch("siblingsStatus")
+    const siblingsStatus = watch("siblingsStatus");
 
     return (
         <>

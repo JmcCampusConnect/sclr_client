@@ -64,10 +64,9 @@ function LoginApplication() {
     const [studentData, setStudentData] = useState(null);
     const [canApply, setCanApply] = useState(true);
     const [sclrType, setSclrType] = useState(null);
-    const [lastYearCreditedAmount, setLastYearCreditedAmount] = useState(0);
 
     const { register, handleSubmit, formState: { errors, isSubmitting }, watch, setValue,
-    } = useForm({ resolver: yupResolver(schema) })
+    } = useForm({ resolver: yupResolver(schema), shouldUnregister: true })
 
     const navigate = useNavigate();
     const { addData } = useAdd();
@@ -80,13 +79,13 @@ function LoginApplication() {
 
             try {
                 const response = await axios.get(`${apiUrl}/api/student/fetchStudentData`, { params: { registerNo: userId.toUpperCase() } });
-                const { student, canApply, lastYearCreditedAmount } = response.data;
+                const { student, canApply } = response.data;
+                const { lastYearCreditedAmount, currentYearCreditedAmount } = student
                 setStudentData(student);
                 setCanApply(canApply);
-                setSclrType(lastYearCreditedAmount === 0 ? "Fresher" : "Renewal");
-                setLastYearCreditedAmount(lastYearCreditedAmount);
-                setValue('lastYearCreditedAmount', lastYearCreditedAmount);
-                setValue('sclrType', sclrType)
+                const type = lastYearCreditedAmount && currentYearCreditedAmount === 0 ? "Fresher" : "Renewal";
+                setSclrType(type);
+                setValue('sclrType', type);
                 Object.keys(student).forEach((key) => { if (key in student) setValue(key, student[key]) });
             } catch (error) {
                 console.error('Error in fetching student data : ', error.response ? error.response.data : error);
@@ -99,10 +98,9 @@ function LoginApplication() {
     useEffect(() => {
         if (studentData) {
             Object.keys(studentData).forEach((key) => setValue(key, studentData[key]));
-            setValue('lastYearCreditedAmount', lastYearCreditedAmount);
             setValue('sclrType', sclrType)
         }
-    }, [studentData, lastYearCreditedAmount, setValue, sclrType]);
+    }, [studentData, setValue, sclrType]);
 
 
     const loginFormSubmit = async (formData) => {
@@ -111,12 +109,10 @@ function LoginApplication() {
         const dataToSend = new FormData();
 
         Object.keys(formData).forEach((key) => {
-            if (key !== "tutorVerificationDetails" && key !== "createdAt") {
-                if (key === "jamathLetter" && formData[key] instanceof FileList) {
-                    dataToSend.append(key, formData[key][0]);
-                } else {
-                    dataToSend.append(key, formData[key]);
-                }
+            if (key === "jamathLetter" && formData[key] instanceof FileList) {
+                dataToSend.append(key, formData[key][0]);
+            } else {
+                dataToSend.append(key, formData[key]);
             }
         })
 
@@ -127,7 +123,7 @@ function LoginApplication() {
                 navigate(`/student/${userId}/dashboard`);
             } else { alert('Error in saving Application') }
         } catch (error) {
-            console.log('Error in saving Login Application : ', error);
+            console.error('Error in saving Login Application : ', error);
         }
     }
 
@@ -161,7 +157,7 @@ function LoginApplication() {
                 addtionalInfo={true}
                 readOnly={!canApply}
                 sclrType={sclrType}
-                lastYearCreditedAmount={lastYearCreditedAmount}
+                lastYearCreditedAmount={studentData?.lastYearCreditedAmount}
             />
 
             <ParentSection

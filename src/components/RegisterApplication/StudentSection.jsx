@@ -14,7 +14,7 @@ function StudentSection({ register, errors, setValue, watch, addtionalInfo, read
                 <DropDown
                     name="religion"
                     label="Religion"
-                    options={['Islam', 'Hindu', 'Christian', 'Others']}
+                    options={['Muslim', 'Hindu', 'Christian', 'Others']}
                     required
                     errors={errors}
                     readOnly={readOnly}

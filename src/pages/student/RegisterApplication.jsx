@@ -91,7 +91,7 @@ function RegisterApplication() {
 
     const [instructionModal, setInstructionModal] = useState(true);
     const { register, handleSubmit, formState: { errors, isSubmitting }, watch, setValue } = useForm({
-        resolver: yupResolver(schema)
+        resolver: yupResolver(schema),  shouldUnregister: true
     });
     const navigate = useNavigate();
     const { addData, addError } = useAdd();
@@ -125,8 +125,17 @@ function RegisterApplication() {
         Object.keys(formData).forEach((key) => {
             if (key === "jamathLetter" && formData[key] instanceof FileList) {
                 dataToSend.append(key, formData[key][0]);
-            } else { dataToSend.append(key, formData[key]) }
-        })
+            }
+            else if (
+                key === "lastStudiedInstitutionPercentage" &&
+                (formData[key] === "" || formData[key] === null || formData[key] === undefined)
+            ) {
+                dataToSend.append(key, -1);
+            }
+            else {
+                dataToSend.append(key, formData[key]);
+            }
+        });
         try {
             const response = await addData(`${apiUrl}/api/student/registerApplication`, dataToSend);
             if (response.data.status === 201) {
@@ -135,7 +144,7 @@ function RegisterApplication() {
             }
             else { alert('Error in saving Application') }
         } catch (error) {
-            console.log('Error in saving Register Application : ', error);
+            console.error('Error in saving Register Application : ', error);
         }
     }
 

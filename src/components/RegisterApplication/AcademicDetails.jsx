@@ -19,7 +19,6 @@ function AcademicDetails({ register, errors, watch, setValue, readOnly = false, 
             try {
                 const response = await axios.get(`${apiUrl}/api/tutor/departments`);
                 setDepartments(response.data?.departments);
-                console.log(response.data.departments)
             } catch (error) {
                 console.error("Error fetching departments : ", error);
             }
@@ -32,12 +31,11 @@ function AcademicDetails({ register, errors, watch, setValue, readOnly = false, 
         label: `${item.department} - ${item.departmentName}`,
     }));
 
-
     return (
         <>
             <HeaderTag label="Academic Details" />
 
-            {/* Section 1 - Radio Buttons */}
+            {/* Section 1 - Radio  Buttons */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border border-gray-200 p-6 rounded-xl bg-white shadow-md">
                 <RadioButton
                     name="graduate"
@@ -46,7 +44,7 @@ function AcademicDetails({ register, errors, watch, setValue, readOnly = false, 
                     required
                     register={register}
                     errors={errors}
-                    readOnly={readOnly}
+                    readOnly={readOnly || loginConstraint}
                 />
                 <RadioButton
                     name="category"
