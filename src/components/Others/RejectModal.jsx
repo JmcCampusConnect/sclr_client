@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import SearchDropdown from '../../common/SearchDropdown';
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
@@ -8,7 +9,7 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
     const student = selectedStudent || {};
 
     const reasonOptions = [
-        { value: "reappear", label: "Re Appear" },
+        { value: "Re Appear", label: "Re Appear" },
         { value: "lowMarks", label: "Low Percentage of Marks" },
         { value: "missingDocs", label: "Missing Document" },
         { value: "redo", label: "Redo" },
@@ -18,35 +19,47 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
         { value: "others", label: "Others" },
     ];
 
-    const [dropdownReason, setDropdownReason] = useState("");
+    const [selectedReasons, setSelectedReasons] = useState([]); 
     const [customReason, setCustomReason] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
-        const finalReason = customReason.trim() || dropdownReason;
-        if (!finalReason) {
-            alert("Please select or enter a reason for rejection.");
+
+        const finalReasons = [
+            ...selectedReasons,
+            ...(customReason.trim() ? [customReason.trim()] : []),
+        ];
+
+        if (finalReasons.length === 0) {
+            alert("Please select or enter at least one reason for rejection.");
             return;
         }
 
-        const payload = { registerNo: student.registerNo, reason: finalReason, applicationId: student.applicationId };
+        const payload = {
+            applicationId: student.applicationId,
+            registerNo: student.registerNo,
+            reasons: finalReasons, 
+        };
 
         try {
-
             setLoading(true);
             const response = await axios.post(`${apiUrl}/api/admin/application/rejectApplications`, payload);
             if (response.data.success) {
                 alert("Student application has been rejected successfully!");
                 closeModal();
                 window.location.reload();
-            } else { alert(response.data.message || "Failed to reject application.") }
+            } else {
+                alert(response.data.message || "Failed to reject application.");
+            }
         } catch (error) {
-            console.error("Error rejecting application : ", error);
+            console.error("Error rejecting application:", error);
             alert("Something went wrong while rejecting the application.");
-        } finally { setLoading(false) }
-    }
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <>
@@ -54,7 +67,7 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-80">
                     <div className="bg-white w-[80%] max-w-6xl max-h-[80vh] rounded-2xl overflow-y-auto shadow-2xl p-8 relative hide-scrollbar">
                         <form className="space-y-8" onSubmit={handleSubmit}>
-                            {/* Header Grid */}
+                            {/* Student Info */}
                             <div className="bg-gray-100 rounded-xl p-6 shadow-inner">
                                 <h3 className="text-xl font-bold text-gray-800 mb-4 border-b border-gray-200 pb-3">
                                     Student Details
@@ -95,7 +108,7 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
                                 </div>
                             </div>
 
-                            {/* Reason */}
+                            {/* Rejection Reasons */}
                             <div className="bg-gray-50 border border-gray-200 rounded-md p-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
                                     <label className="block text-gray-700 font-semibold">
@@ -108,23 +121,20 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
                                     <SearchDropdown
                                         name="reason"
                                         options={reasonOptions}
-                                        value={dropdownReason}
-                                        onChange={(name, option) => {
-                                            setDropdownReason(option?.value || "");
-                                            setCustomReason("");
+                                        isMulti={true}
+                                        value={selectedReasons}
+                                        onChange={(name, options) => {
+                                            const selectedValues = options.map((opt) => opt.value);
+                                            setSelectedReasons(selectedValues);
                                         }}
                                     />
 
                                     <input
                                         type="text"
                                         value={customReason}
-                                        onChange={(e) => {
-                                            setCustomReason(e.target.value);
-                                            setDropdownReason("");
-                                        }}
+                                        onChange={(e) => setCustomReason(e.target.value)}
                                         className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800"
                                     />
-
                                 </div>
                             </div>
 
@@ -150,7 +160,7 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
                 </div>
             )}
         </>
-    )
+    );
 }
 
 export default RejectModal;

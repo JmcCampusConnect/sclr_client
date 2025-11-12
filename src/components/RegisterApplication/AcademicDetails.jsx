@@ -1,15 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import RadioButton from '../../common/RadioButton';
 import InputBox from '../../common/InputBox';
 import DropDown from '../../common/DropDown';
 import HeaderTag from '../../common/HeaderTag';
+import axios from 'axios';
 
 function AcademicDetails({ register, errors, watch, setValue, readOnly = false, loginConstraint = false }) {
 
+    const apiUrl = import.meta.env.VITE_API_URL;
     const graduate = watch('graduate');
+    const [departments, setDepartments] = useState([]);
     const semesterOptions = graduate === 'PG'
         ? ['I', 'II', 'III', 'IV']
         : ['I', 'II', 'III', 'IV', 'V', 'VI'];
+
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/api/tutor/departments`);
+                setDepartments(response.data?.departments);
+                console.log(response.data.departments)
+            } catch (error) {
+                console.error("Error fetching departments : ", error);
+            }
+        };
+        fetchDepartments();
+    }, []);
+
+    const depts = Object.values(departments).map((item) => ({
+        value: item.department,
+        label: `${item.department} - ${item.departmentName}`,
+    }));
+
 
     return (
         <>
@@ -91,23 +113,19 @@ function AcademicDetails({ register, errors, watch, setValue, readOnly = false, 
                         readOnly={readOnly}
                     />
 
-                    {/* ✅ Department Dropdown */}
+                    {/* Department Dropdown */}
                     <DropDown
                         name="department"
                         label="Department"
-                        options={[
-                            'MBA', 'MCA', 'PAR', 'PBO', 'PBT', 'PCO', 'PCH', 'PCS', 'PEC', 'PEN', 'PFT', 'PHS', 'PIT', 'PMA', 'PMB',
-                            'PND', 'PPH', 'PSW', 'PTA', 'PZO', 'UBA', 'UBO', 'UBT', 'UCA', 'UCC', 'UCH', 'UCO', 'UCS', 'UEC', 'UEN',
-                            'UFT', 'UHM', 'UHS', 'UIC', 'UIF', 'UIT', 'UMA', 'UMB', 'UND', 'UPH', 'UTA', 'UVC', 'UZO', 'UAI', 'UAM', 'UAR'
-                        ]}
+                        options={depts}
                         required
                         errors={errors}
-                         readOnly={readOnly || loginConstraint}
+                        readOnly={readOnly || loginConstraint}
                         setValue={setValue}
                         watch={watch}
                     />
 
-                    {/* ✅ Section Dropdown */}
+                    {/* Section Dropdown */}
                     <DropDown
                         name="section"
                         label="Section"

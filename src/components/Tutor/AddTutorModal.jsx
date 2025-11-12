@@ -58,6 +58,7 @@ function AddTutorModal({ onClose, onAddTutor }) {
 	};
 
 	const handleSubmit = async (e) => {
+
 		e.preventDefault();
 		const newErrors = validateForm();
 		if (Object.keys(newErrors).length > 0) {
@@ -98,7 +99,7 @@ function AddTutorModal({ onClose, onAddTutor }) {
 		value: v, label: v,
 	}));
 
-	const dep = Object.values(departments).map((item) => ({
+	const depts = Object.values(departments).map((item) => ({
 		value: item.department,
 		label: `${item.department} - ${item.departmentName}`,
 	}));
@@ -149,7 +150,7 @@ function AddTutorModal({ onClose, onAddTutor }) {
 								label="Department"
 								name="department"
 								value={formData.department}
-								options={dep}
+								options={depts}
 								onChange={handleSelectChange}
 								error={errors.department}
 								required

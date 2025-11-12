@@ -111,11 +111,12 @@ function LoginApplication() {
         const dataToSend = new FormData();
 
         Object.keys(formData).forEach((key) => {
-            if (key !== "tutorVerificationDetails") {
+            if (key !== "tutorVerificationDetails" && key !== "createdAt") {
                 if (key === "jamathLetter" && formData[key] instanceof FileList) {
-                    dataToSend.append(key, formData[key][0])
+                    dataToSend.append(key, formData[key][0]);
+                } else {
+                    dataToSend.append(key, formData[key]);
                 }
-                else { dataToSend.append(key, formData[key]) }
             }
         })
 

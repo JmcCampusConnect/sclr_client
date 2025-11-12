@@ -1,9 +1,11 @@
 import React from "react";
 import Select from "react-select";
 
-function SearchDropdown({ label, name,  value, options = [],  onChange,  required = false, error}) {
+function SearchDropdown({ label, name, value, options = [], onChange, required = false, error, isMulti = false, }) {
 
-    const selected = options.find((opt) => opt.value === value) || null;
+    const selected = isMulti
+        ? options.filter((opt) => value.includes(opt.value))
+        : options.find((opt) => opt.value === value) || null;
 
     return (
         <div className="space-y-1">
@@ -13,10 +15,14 @@ function SearchDropdown({ label, name,  value, options = [],  onChange,  require
                 </label>
             )}
             <Select
-                inputId={name}         
-                name={name}             
+                inputId={name}
+                name={name}
                 value={selected}
-                onChange={(option) => onChange(name, option)}
+                isMulti={isMulti}
+                onChange={(option) => {
+                    if (isMulti) { onChange(name, option ? option.map((opt) => opt) : []) }
+                    else { onChange(name, option) }
+                }}
                 options={options}
                 isSearchable
                 placeholder=""
@@ -24,7 +30,7 @@ function SearchDropdown({ label, name,  value, options = [],  onChange,  require
                     control: (base, state) => ({
                         ...base,
                         backgroundColor: "transparent",
-                        borderColor: error ? "#ef4444" : "#d1d5db", 
+                        borderColor: error ? "#ef4444" : "#d1d5db",
                         boxShadow: state.isFocused
                             ? error
                                 ? "0 0 0 1px #ef4444"
