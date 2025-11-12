@@ -29,7 +29,6 @@ function LoginHeader() {
                 className="w-24 h-24 lg:w-32 lg:h-32 ml-4"
             />
         </div>
-
     )
 }
 

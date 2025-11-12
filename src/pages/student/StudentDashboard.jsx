@@ -20,6 +20,7 @@ function StudentDashboard() {
 	const [errorMsg, setErrorMsg] = useState("");
 
 	useEffect(() => {
+
 		if (!userId) {
 			console.warn("StudentDashboard: no userId param provided");
 			setIsLoading(false);
@@ -34,8 +35,8 @@ function StudentDashboard() {
 				setErrorMsg("");
 				setShowMessage(false);
 				const resp = await axios.get(`${apiUrl}/api/student/status`, {
-					params: { registerNo: userId }, 
-					signal: controller.signal, 
+					params: { registerNo: userId },
+					signal: controller.signal,
 					timeout: 10000,
 				});
 				const fetchedStudent = resp?.data?.student ?? null;
@@ -138,7 +139,7 @@ function StudentDashboard() {
 					<p className="text-indigo-100 mt-1 text-sm">Register No: {student.registerNo}</p>
 				</div>
 				<div className="p-6 space-y-8">
-					<ApplicationStatus status={student.applicationStatus} />
+					<ApplicationStatus status={student.applicationStatus} rejectionReasons={student.rejectionReasons} />
 					<div className="grid md:grid-cols-2 gap-6">
 						<InfoCard label="Scholarship Type" value={student.sclrType} />
 						<InfoCard label="Special Category" value={student.specialCategory} />

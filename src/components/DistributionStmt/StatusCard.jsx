@@ -28,7 +28,7 @@ function StatusCard() {
                         details: [
                             { label: "Benefitted", value: data.totalBenefitted?.toLocaleString("en-IN") || "0" },
                             {
-                                label: "Pending",
+                                label: "Others",
                                 value: (data.totalApplicants - data.totalBenefitted) > 0
                                     ? (data.totalApplicants - data.totalBenefitted).toLocaleString("en-IN")
                                     : "0",
