@@ -6,6 +6,7 @@ import ActionBar from "../../components/SclrAdministration/ActionBar";
 import ApplicationTable from "../../components/SclrAdministration/ApplicationTable";
 import AcceptModal from "../../components/Others/AcceptModal";
 import RejectModal from "../../components/Others/RejectModal";
+import Loading from "../../assets/svg/Pulse.svg";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -14,35 +15,39 @@ function SclrAdministration() {
 	const [searchMode, setSearchMode] = useState("all");
 	const [students, setStudents] = useState([]);
 	const [donors, setDonors] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState(null);
 	const [showAcceptModal, setShowAcceptModal] = useState(false);
 	const [showRejectModal, setShowRejectModal] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState(null);
 	const location = useLocation();
 
-	const fetchStudents = async () => {
-		try {
-			const response = await axios.get(`${apiUrl}/api/admin/application/fetchStudents`);
-			const sortedStudents = response.data.data.sort(
-				(a, b) => a.applicationStatus - b.applicationStatus
-			)
-			setStudents(sortedStudents);
-		} catch (error) {
-			console.error("Error fetching students for admin application : ", error);
-		}
-	}
+	const fetchData = async () => {
 
-	const fetchDonors = async () => {
+		setIsLoading(true);
+		setError(null);
+
 		try {
-			const response = await axios.get(`${apiUrl}/api/admin/application/fetchDonors`);
-			setDonors(response.data.donors);
-		} catch (error) {
-			console.error("Error fetching students for admin application : ", error);
+			const [studentsRes, donorsRes] = await Promise.all([
+				axios.get(`${apiUrl}/api/admin/application/fetchStudents`),
+				axios.get(`${apiUrl}/api/admin/application/fetchDonors`),
+			]);
+
+			const sortedStudents = studentsRes.data.data.sort(
+				(a, b) => a.applicationStatus - b.applicationStatus
+			);
+			setStudents(sortedStudents);
+			setDonors(donorsRes.data.donors);
+		} catch (err) {
+			console.error("Error fetching data for admin application:", err);
+			setError("Failed to load data. Please try again later.");
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	useEffect(() => {
-		fetchStudents();
-		fetchDonors();
+		fetchData();
 	}, []);
 
 	const isViewPage = location.pathname.endsWith("/view");
@@ -51,17 +56,34 @@ function SclrAdministration() {
 		setSelectedStudent(student);
 		setShowAcceptModal(true);
 		setShowRejectModal(false);
-	}
+	};
 
 	const openRejectModal = (student) => {
+		setSelectedStudent(student);
 		setShowRejectModal(true);
 		setShowAcceptModal(false);
-		setSelectedStudent(student);
-	}
+	};
 
 	const closeModal = () => {
 		setShowAcceptModal(false);
 		setShowRejectModal(false);
+	};
+
+	if (isLoading) {
+		return (
+			<div className="flex flex-col items-center justify-center">
+				<img src={Loading} alt="Loading..." className="w-24 h-24 mb-4 animate-spin" />
+				<p className="text-gray-600 font-medium text-lg">Loading scholarship applications...</p>
+			</div>
+		)
+	}
+
+	if (error) {
+		return (
+			<div className="flex flex-col items-center justify-center min-h-screen">
+				<p className="text-red-600 font-semibold">{error}</p>
+			</div>
+		);
 	}
 
 	return (
@@ -76,9 +98,16 @@ function SclrAdministration() {
 							Scholarship Administration
 						</h1>
 					</header>
+
 					<FilterSection searchMode={searchMode} setSearchMode={setSearchMode} />
 					<ActionBar totalStudents={students.length} />
-					<ApplicationTable students={students} openAcceptModal={openAcceptModal} openRejectModal={openRejectModal} />
+					<ApplicationTable
+						students={students}
+						openAcceptModal={openAcceptModal}
+						openRejectModal={openRejectModal}
+					/>
+
+					{/* Modals */}
 					<AcceptModal
 						donors={donors}
 						selectedStudent={selectedStudent}
@@ -86,14 +115,14 @@ function SclrAdministration() {
 						closeModal={closeModal}
 					/>
 					<RejectModal
+						selectedStudent={selectedStudent}
 						showRejectModal={showRejectModal}
 						closeModal={closeModal}
-						selectedStudent={selectedStudent}
 					/>
 				</>
 			)}
 		</div>
-	)
+	);
 }
 
 export default SclrAdministration;

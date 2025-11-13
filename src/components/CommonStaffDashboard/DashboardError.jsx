@@ -7,7 +7,7 @@ const DashboardError = ({ type, message }) => {
         return (
             <div className="flex flex-col items-center justify-center">
                 <img src={Loading} alt="Loading..." className="w-24 h-24 mb-4 animate-spin" />
-                <p className="text-gray-600 font-medium text-lg">Loading datas...</p>
+                <p className="text-gray-600 font-medium text-lg">Loading dashboard...</p>
             </div>
         )
 

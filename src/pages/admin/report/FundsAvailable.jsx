@@ -8,6 +8,7 @@ import StatCard from "../../../components/FundsAvailable/StatCard";
 import DonorTable from "../../../components/FundsAvailable/DonorTable";
 import DonorSearchBar from "../../../components/FundsAvailable/DonorSearchBar";
 import ButtonsBar from "../../../components/FundsAvailable/ButtonsBar";
+import Loading from "../../../assets/svg/Pulse.svg";
 
 const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
 const secondaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600 transition";
@@ -17,11 +18,15 @@ function FundsAvailable() {
 
     const [donors, setDonors] = useState([]);
     const [data, setData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null)
     const [searchTerm, setSearchTerm] = useState("");
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoading(true);
+            setError(null);
             try {
                 const [donorResponse, dashboardResponse] = await Promise.all([
                     axios.get(`${apiUrl}/api/report/fetchDonors`),
@@ -30,7 +35,10 @@ function FundsAvailable() {
                 setDonors(donorResponse.data.donors);
                 setData(dashboardResponse.data || {});
             } catch (err) {
-                console.error("Error fetching donor and cards data : ", err);
+                console.error("Error fetching donor and cards data:", err);
+                setError("Failed to load funds data. Please try again later.");
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchData();
@@ -62,6 +70,23 @@ function FundsAvailable() {
     const openZakat = data?.zakkathAmt || 0;
     const totalGeneral = data?.generalBal || 0;
     const totalZakat = data?.zakkathBal || 0;
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center">
+                <img src={Loading} alt="Loading..." className="w-24 h-24 mb-4 animate-spin" />
+                <p className="text-gray-600 font-medium text-lg">Loading funds status...</p>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <p className="text-red-600 font-semibold">{error}</p>
+            </div>
+        );
+    }
 
     return (
         <div className="relative space-y-6">
