@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function StudentManageTable({ students: initialStudents, onSaveStudent }) {
 
@@ -34,16 +36,32 @@ function StudentManageTable({ students: initialStudents, onSaveStudent }) {
 		);
 	};
 
-	const handleSave = (student) => {
-		if (onSaveStudent) onSaveStudent(student);
-		setStudents(prevStudents =>
-			prevStudents.map(s =>
-				s.registerNo === student.registerNo
-					? { ...s, isEdited: false }
-					: s
+	const handleSave = async (student) => {
+
+		try {
+			const response = await axios.put(
+				`${apiUrl}/api/studentManage/passwordSemBasedChange/${student.registerNo}`,
+				{
+					password: student.password,
+					isSemBased: student.isSemBased,
+				}
+			);
+
+			alert(response.data?.message || "Student updated successfully!");
+
+			setStudents(prevStudents =>
+				prevStudents.map(s =>
+					s.registerNo === student.registerNo
+						? { ...s, isEdited: false }
+						: s
+				)
 			)
-		);
-	};
+			if (onSaveStudent) onSaveStudent(student);
+		} catch (error) {
+			console.error("Error updating student:", error);
+			alert("Failed to save student changes. Please try again.");
+		}
+	}
 
 	return (
 		<div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
@@ -102,7 +120,6 @@ function StudentManageTable({ students: initialStudents, onSaveStudent }) {
 												className="sr-only peer"
 											/>
 											<div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-400 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
-											
 										</label>
 									</td>
 									<td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
@@ -130,7 +147,7 @@ function StudentManageTable({ students: initialStudents, onSaveStudent }) {
 				</table>
 			</div>
 		</div>
-	);
+	)
 }
 
 export default StudentManageTable;

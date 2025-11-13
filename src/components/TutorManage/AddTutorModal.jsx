@@ -21,10 +21,9 @@ function AddTutorModal({ onClose, onAddTutor }) {
 				const response = await axios.get(`${apiUrl}/api/tutor/departments`);
 				setDepartments(response.data.departments);
 			} catch (error) {
-				console.error("Error fetching departments:", error);
+				console.error("Error fetching departments : ", error);
 			}
 		};
-
 		fetchDepartments();
 	}, []);
 

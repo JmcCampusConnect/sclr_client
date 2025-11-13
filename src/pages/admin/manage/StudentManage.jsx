@@ -1,31 +1,72 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import StudentFilterSection from '../../../components/StudentManage/StudentFilterSection';
-import StudentActionBar from '../../../components/StudentManage/StudentActionBar';
-import Loading from '../../../assets/svg/Pulse.svg';
-import StudentManageTable from '../../../components/StudentManage/StudentManageTable';
+import StudentFilterSection from "../../../components/StudentManage/StudentFilterSection";
+import StudentActionBar from "../../../components/StudentManage/StudentActionBar";
+import Loading from "../../../assets/svg/Pulse.svg";
+import StudentManageTable from "../../../components/StudentManage/StudentManageTable";
 
 function StudentManage() {
 
     const apiUrl = import.meta.env.VITE_API_URL;
     const [students, setStudents] = useState([]);
-    const [isLoading, setIsLoading] = useState(true); 
-    const [error, setError] = useState(null); 
+    const [filteredStudents, setFilteredStudents] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [departments, setDepartments] = useState([]);
+    const [filters, setFilters] = useState({ category: "All", department: "All" });
+    const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/api/tutor/departments`);
+                setDepartments(response.data.departments);
+            } catch (error) {
+                console.error("Error fetching departments : ", error);
+            }
+        };
+        fetchDepartments();
+    }, []);
 
     useEffect(() => {
         const fetchStudentData = async () => {
             try {
                 const response = await axios.get(`${apiUrl}/api/studentManage/fetchStudentData`);
                 setStudents(response.data.students);
+                setFilteredStudents(response.data.students);
             } catch (err) {
                 console.error("Error fetching student data:", err);
                 setError("Failed to load students. Please try again later.");
             } finally {
-                setIsLoading(false); 
+                setIsLoading(false);
             }
         };
         fetchStudentData();
     }, [apiUrl]);
+
+    useEffect(() => {
+
+        let filtered = [...students];
+
+        if (filters.category && filters.category !== "All") {
+            filtered = filtered.filter((s) => s.category === filters.category);
+        }
+
+        if (filters.department && filters.department !== "All") {
+            filtered = filtered.filter((s) => s.department === filters.department);
+        }
+
+        if (searchTerm.trim() !== "") {
+            const term = searchTerm.toLowerCase();
+            filtered = filtered.filter(
+                (s) =>
+                    s.name.toLowerCase().includes(term) ||
+                    s.registerNo.toLowerCase().includes(term)
+            );
+        }
+
+        setFilteredStudents(filtered);
+    }, [filters, searchTerm, students]);
 
     if (isLoading) {
         return (
@@ -51,11 +92,24 @@ function StudentManage() {
                     Student Manage
                 </h1>
             </header>
-            <StudentFilterSection />
-            <StudentActionBar />
-            <StudentManageTable students={students} />
+
+            <StudentFilterSection
+                departments={departments}
+                filters={filters}
+                setFilters={setFilters}
+            />
+
+            <StudentActionBar
+                totalCount={filteredStudents.length}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
+
+            <StudentManageTable
+                students={filteredStudents}
+            />
         </>
-    );
+    )
 }
 
 export default StudentManage;
