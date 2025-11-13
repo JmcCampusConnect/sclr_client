@@ -32,11 +32,11 @@ import AcademicYear from './pages/admin/applicationSettings/AcademicYear';
 import ApplicationDate from './pages/admin/applicationSettings/ApplicationDate';
 import SclrAdministration from './pages/admin/SclrAdministration';
 import AdminViewAppln from './pages/admin/AdminViewAppln';
-import Donor from './pages/admin/manage/Donor';
+import DonorManage from './pages/admin/manage/DonorManage';
 import DistributionStmt from './pages/admin/DistributionStmt';
-import Staff from './pages/admin/manage/Staff';
-import Student from './pages/admin/manage/Student';
-import Tutor from './pages/admin/manage/Tutor';
+import StaffManage from './pages/admin/manage/StaffManage';
+import Student from './pages/admin/manage/StudentManage';
+import Tutor from './pages/admin/manage/TutorManage';
 import Application from './pages/admin/manage/Application';
 import CheckStatus from './pages/admin/CheckStatus';
 import ProgressReport from './pages/admin/ProgressReport';
@@ -45,7 +45,7 @@ import AdminChangePassword from './pages/admin/ChangePassword';
 import GuideLines from './pages/admin/GuideLines';
 import UploadCenter from './pages/admin/UploadCenter';
 import DataDeletion from './pages/admin/DataDeletion';
-import Department from './pages/admin/manage/Department';
+import DepartmentManage from './pages/admin/manage/DepartmentManage';
 import ForgotPassword from './pages/others/ForgotPassword';
 
 function App() {
@@ -94,14 +94,14 @@ function App() {
 						<Route path="dashboard" element={<CommonStaffDashboard />} />
 						<Route path="academicYear" element={<AcademicYear />} />
 						<Route path="applicationDate" element={<ApplicationDate />} />
-						<Route path="donor" element={<Donor />} />
+						<Route path="donor" element={<DonorManage />} />
 						<Route path="checkSstatus/*" element={<CheckStatus />} />
 						<Route path="distributionStatement" element={<DistributionStmt />} />
 						<Route path="sclrAdministration/*" element={<SclrAdministration />} >
 							<Route path="view" element={<AdminViewAppln />} />
 						</Route>
-						<Route path="staffManage" element={<Staff />} />
-						<Route path="deptManage" element={<Department />} />
+						<Route path="staffManage" element={<StaffManage />} />
+						<Route path="deptManage" element={<DepartmentManage />} />
 						<Route path="studentManage" element={<Student />} />
 						<Route path="tutorManage" element={<Tutor />} />
 						<Route path="applicationManage" element={<Application />} />

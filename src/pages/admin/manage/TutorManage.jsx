@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
-import TutorFilterSection from '../../../components/Tutor/TutorFilterSection'
-import TutorActionBar from '../../../components/Tutor/TutorActionBar'
-import TutorTable from '../../../components/Tutor/TutorTable'
-import AddTutorModal from '../../../components/Tutor/AddTutorModal'
-import EditTutorModal from '../../../components/Tutor/EditTutorModal'
-import DeleteTutorModal from '../../../components/Tutor/DeleteTutorModal'
+import TutorFilterSection from '../../../components/TutorManage/TutorFilterSection'
+import TutorActionBar from '../../../components/TutorManage/TutorActionBar'
+import TutorTable from '../../../components/TutorManage/TutorTable'
+import AddTutorModal from '../../../components/TutorManage/AddTutorModal'
+import EditTutorModal from '../../../components/TutorManage/EditTutorModal'
+import DeleteTutorModal from '../../../components/TutorManage/DeleteTutorModal'
 
 function Tutor() {
 

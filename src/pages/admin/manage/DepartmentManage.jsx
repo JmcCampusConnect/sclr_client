@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import DepartmentTable from '../../../components/Department/DepartmentTable';
-import AddDepartmentModal from '../../../components/Department/AddDepartmentModal';
-import DepartmentActionBar from '../../../components/Department/DepartmentActionBar';
-import EditDepartmentModal from '../../../components/Department/EditDepartmentModal';
-import DeleteDepartmentModal from '../../../components/Department/DeleteDepartmentModal';
+import DepartmentTable from '../../../components/DepartmentManage/DepartmentTable';
+import AddDepartmentModal from '../../../components/DepartmentManage/AddDepartmentModal';
+import DepartmentActionBar from '../../../components/DepartmentManage/DepartmentActionBar';
+import EditDepartmentModal from '../../../components/DepartmentManage/EditDepartmentModal';
+import DeleteDepartmentModal from '../../../components/DepartmentManage/DeleteDepartmentModal';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 

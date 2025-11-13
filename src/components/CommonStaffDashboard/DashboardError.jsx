@@ -5,9 +5,9 @@ const DashboardError = ({ type, message }) => {
 
     if (type === 'loading')
         return (
-            <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-                <img src={Loading} alt="Loading..." className="w-16 h-16 animate-pulse" />
-                <p className="ml-4 text-lg text-gray-600">Loading dashboard...</p>
+            <div className="flex flex-col items-center justify-center">
+                <img src={Loading} alt="Loading..." className="w-24 h-24 mb-4 animate-spin" />
+                <p className="text-gray-600 font-medium text-lg">Loading datas...</p>
             </div>
         )
 

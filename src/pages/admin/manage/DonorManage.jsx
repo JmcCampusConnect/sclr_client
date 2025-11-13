@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DonorTable from "../../../components/Donor/DonorTable";
-import AddDonorModal from "../../../components/Donor/AddDonorModal";
-import EditDonorModal from "../../../components/Donor/EditDonorModal";
-import DonorActionBar from "../../../components/Donor/DonorActionBar";
-import DonorFilters from "../../../components/Donor/DonorFilters";
-import DeleteDonorModal from "../../../components/Donor/DeleteDonorModal";
-import AmtDonarModal from "../../../components/Donor/AmtDonorModal";
+import DonorTable from "../../../components/DonorManage/DonorTable";
+import AddDonorModal from "../../../components/DonorManage/AddDonorModal";
+import EditDonorModal from "../../../components/DonorManage/EditDonorModal";
+import DonorActionBar from "../../../components/DonorManage/DonorActionBar";
+import DonorFilters from "../../../components/DonorManage/DonorFilters";
+import DeleteDonorModal from "../../../components/DonorManage/DeleteDonorModal";
+import AmtDonarModal from "../../../components/DonorManage/AmtDonorModal";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function Donor() {
+function DonorManage() {
 
 	const [allDonors, setAllDonors] = useState([]);
 	const [donors, setDonors] = useState([]);
@@ -138,4 +138,4 @@ function Donor() {
 	)
 }
 
-export default Donor;
+export default DonorManage;
