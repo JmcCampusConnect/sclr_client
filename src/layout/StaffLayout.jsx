@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import JmcLogo from '../assets/logos/JmcLogo.png'
 import { Outlet, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChalkboard, faTools, faBuilding, faBook, faClipboardList, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faChalkboard, faTools, faBuilding, faBook, faClipboardList, faSignOutAlt, faFilePen } from '@fortawesome/free-solid-svg-icons';
 import '../App.css';
 import { AuthContext } from '../context/AuthContext';
 
@@ -25,14 +25,21 @@ function StaffLayout() {
         JMCMW: 'Moral Women',
     }
 
+    const sclrMap = {
+        JMCTPS: 'Tamil Pudalvan Scheme',
+        JMCPPS: 'Penmai Pudalvan Scheme',
+    }
+
     const attendanceName = attendanceMap[userId] || null;
     const subjectName = subjectMap[userId] || null;
+    const sclrName = sclrMap[userId] || null;
 
     const menus = [
         { icon: faChalkboard, name: 'Dashboard', path: `/staff/${userId}/dashboard`, show: true },
         { icon: faClipboardList, name: attendanceName, path: `/staff/${userId}/classAttendance`, show: Object.keys(attendanceMap).includes(userId) },
         { icon: faBook, name: subjectName, path: `/staff/${userId}/dmAttendance`, show: Object.keys(subjectMap).includes(userId) },
         { icon: faBuilding, name: 'COE', path: `/staff/${userId}/markEntry`, show: userId === 'JMCCOE' },
+        { icon: faFilePen, name: sclrName, path: `/staff/${userId}/markEntry`, show: Object.keys(sclrMap).includes(userId) },
         { icon: faTools, name: 'Change Password', path: `/staff/${userId}/changePassword`, show: true },
     ]
 

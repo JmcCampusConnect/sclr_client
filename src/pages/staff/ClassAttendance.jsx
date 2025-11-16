@@ -157,7 +157,7 @@ function ClassAttendance() {
 
             {/* Working Days + Student Count */}
             <div className="flex flex-wrap justify-between items-center mb-6 font-semibold text-lg">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
                     <label>Current Year Working Days :</label>
                     <input
                         type="number"
@@ -174,88 +174,126 @@ function ClassAttendance() {
                 </div>
             </div>
 
-            <div className="overflow-y-auto overflow-x-auto rounded-2xl shadow-lg ring-1 ring-black/10 max-h-[500px] bg-white">
-                <table className="min-w-full border border-gray-200 divide-y divide-gray-200">
-                    {/* Table Head */}
-                    <thead className="bg-emerald-700 text-white sticky top-0 z-20">
-                        <tr>
-                            {["S.No", "Reg No", "Name", "Department", "Prev Sem (%)", "Curr Sem Attended", "Percentage", "Remarks"].map((heading, idx) => (
-                                <th key={idx} className="px-4 py-3 text-center text-md font-semibold uppercase text-white border-r border-gray-300">
-                                    {heading}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    {/* Table Body */}
-                    <tbody className="bg-white divide-y divide-gray-100">
-                        {students.length > 0 ? (
-                            students.map((stu, index) => (
-                                <tr key={stu._id || index} className="hover:bg-gray-50 transition-colors duration-200">
-                                    <td className="px-6 py-4 text-center font-semibold text-gray-700 border-r border-gray-200">{index + 1}</td>
-                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-800 uppercase border-r border-gray-200">{stu.registerNo}</td>
-                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-800 border-r border-gray-200">{stu.name}</td>
-                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-700 border-r border-gray-200">{stu.department}</td>
+            <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
+                <div className="max-h-[700px] overflow-y-auto">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center table-auto">
 
-                                    {/* Prev Sem (%) */}
-                                    <td className="px-4 py-3 text-center border-r border-gray-200">
-                                        {studentRows[index]?.isSemOne ? (
-                                            <span className="text-gray-400 font-medium">N/A</span>
-                                        ) : (
+                        {/* Table Head */}
+                        <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10 h-15">
+                            <tr>
+                                {["S.No", "Reg No", "Name", "Department", "Prev Sem (%)", "Curr Sem Attended", "Percentage", "Remarks"].map((heading, idx) => (
+                                    <th
+                                        key={idx}
+                                        className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap"
+                                    >
+                                        {heading}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+
+                        {/* Table Body */}
+                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                            {students.length > 0 ? (
+                                students.map((stu, index) => (
+                                    <tr
+                                        key={stu._id || index}
+                                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
+                                    >
+                                        {/* S.No */}
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
+                                            {index + 1}
+                                        </td>
+
+                                        {/* Register No */}
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white uppercase">
+                                            {stu.registerNo}
+                                        </td>
+
+                                        {/* Name */}
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {stu.name}
+                                        </td>
+
+                                        {/* Department */}
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {stu.department}
+                                        </td>
+
+                                        {/* Prev Sem (%) */}
+                                        <td className="px-4 py-4">
+                                            {studentRows[index]?.isSemOne ? (
+                                                <span className="text-gray-400 dark:text-gray-500 font-medium">N/A</span>
+                                            ) : (
+                                                <input
+                                                    type="number"
+                                                    value={studentRows[index]?.prevSem ?? ""}
+                                                    onChange={(e) => handleInputChange(index, "prevSem", e.target.value)}
+                                                    onFocus={(e) =>
+                                                        e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false })
+                                                    }
+                                                    className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 
+                                                   focus:outline-none focus:ring-2 focus:ring-blue-400 transition
+                                                   dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
+                                                />
+                                            )}
+                                        </td>
+
+                                        {/* Curr Sem Attended */}
+                                        <td className="px-4 py-4">
                                             <input
                                                 type="number"
-                                                className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
-                                                value={studentRows[index]?.prevSem ?? ""}
-                                                onChange={e => handleInputChange(index, 'prevSem', e.target.value)}
-                                                onFocus={e => {
-                                                    e.target.addEventListener('wheel', (ev) => ev.preventDefault(), { passive: false });
-                                                }}
+                                                value={studentRows[index]?.currSem ?? ""}
+                                                onChange={(e) => handleInputChange(index, "currSem", e.target.value)}
+                                                onFocus={(e) =>
+                                                    e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false })
+                                                }
+                                                className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 
+                                               focus:outline-none focus:ring-2 focus:ring-blue-400 transition
+                                               dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                                             />
-                                        )}
-                                    </td>
-                                    {/* Curr Sem Attended */}
-                                    <td className="px-4 py-3 text-center border-r border-gray-200">
-                                        <input
-                                            type="number"
-                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
-                                            value={studentRows[index]?.currSem ?? ""}
-                                            onChange={e => handleInputChange(index, 'currSem', e.target.value)}
-                                            onFocus={e => {
-                                                e.target.addEventListener('wheel', (ev) => ev.preventDefault(), { passive: false });
-                                            }}
-                                        />
-                                    </td>
-                                    {/* Percentage */}
-                                    <td className="px-4 py-3 text-center border-r border-gray-200">
-                                        <input
-                                            type="number"
-                                            className="w-28 border border-gray-200 p-2 rounded-lg text-center bg-gray-50 font-semibold text-gray-600"
-                                            value={studentRows[index]?.percentage ?? ""}
-                                            readOnly
-                                            onFocus={e => {
-                                                e.target.addEventListener('wheel', (ev) => ev.preventDefault(), { passive: false });
-                                            }}
-                                        />
-                                    </td>
-                                    {/* Remarks */}
-                                    <td className="px-4 py-3 text-center border-gray-200">
-                                        <input
-                                            type="text"
-                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
-                                            value={studentRows[index]?.remark ?? ""}
-                                            onChange={e => handleInputChange(index, 'remark', e.target.value)}
-                                        />
+                                        </td>
+
+                                        {/* Percentage */}
+                                        <td className="px-4 py-4">
+                                            <input
+                                                type="number"
+                                                readOnly
+                                                value={studentRows[index]?.percentage ?? ""}
+                                                onFocus={(e) =>
+                                                    e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false })
+                                                }
+                                                className="w-28 px-3 py-1.5 border border-gray-300 bg-gray-100 font-semibold rounded-lg 
+                                               text-sm text-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-600"
+                                            />
+                                        </td>
+
+                                        {/* Remarks */}
+                                        <td className="px-4 py-4">
+                                            <input
+                                                type="text"
+                                                value={studentRows[index]?.remark ?? ""}
+                                                onChange={(e) => handleInputChange(index, "remark", e.target.value)}
+                                                className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 
+                                               focus:outline-none focus:ring-2 focus:ring-blue-400 transition
+                                               dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
+                                            />
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan="8"
+                                        className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base"
+                                    >
+                                        No student data available.
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan={8} className="text-center p-6 text-gray-500 font-medium">
-                                    No student data available.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div className="text-right">

@@ -52,10 +52,25 @@ const schema = Yup.object().shape({
     state: Yup.string().required("State is required"),
     district: Yup.string().required("District is required"),
     pinCode: Yup.string().required('Pincode is required').matches(/^[0-9]{6}$/, 'Pincode must contain 6 digits'),
-    jamathLetter: Yup.mixed().test(
-        "required", "Jamath / Self Declaration Letter is required",
-        (value) => { return value && value.length > 0 }
-    ),
+    jamathLetter: Yup
+        .mixed()
+        .test("required", "Jamath / Self Declaration Letter is required", (value) => value && value.length > 0)
+        .test("fileSize", "File size must be between 30KB and 200KB",
+            (value) => {
+                if (!value || value.length === 0) return true;
+                const file = value[0];
+                const sizeKB = file.size / 1024;
+                return sizeKB >= 30 && sizeKB <= 200;
+            }
+        )
+        .test("fileType", "Only JPEG, JPG, or PNG images are allowed",
+            (value) => {
+                if (!value || value.length === 0) return true;
+                const file = value[0];
+                const validTypes = ["image/jpeg", "image/jpg", "image/png"];
+                return validTypes.includes(file.type);
+            }
+        ),
 })
 
 function LoginApplication() {

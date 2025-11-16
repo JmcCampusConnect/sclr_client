@@ -60,7 +60,7 @@ function CoeMark() {
                 const max = Number(student.maxMark) || 0;
                 student.semesterMarkPercentage = max > 0 ? (secured / max) * 100 : -1;
             } else if (field === "arrears") {
-                student.semesterArrear = value === "" ? -1 : Number(value);
+                student.semesterArrear = value === "" ? "" : Number(value);
             } else if (field === "remarks") {
                 student.semesterGrade = value;
             }
@@ -109,106 +109,128 @@ function CoeMark() {
                 No of Students : {StudentsData.length}
             </div>
 
-            <div className="overflow-y-auto overflow-x-auto rounded-2xl shadow-lg ring-1 ring-black/10 max-h-[500px]">
-                <table className="min-w-full border border-gray-200 divide-y divide-gray-200">
-                    {/* Table Head */}
-                    <thead className="bg-emerald-700 text-white sticky top-0 z-20">
-                        <tr>
-                            {headers.map((header) => (
-                                <th
-                                    key={header.key}
-                                    className={`px-4 py-3 text-center text-md font-semibold uppercase text-white border-r border-gray-300 ${header.className || ''}`}
-                                    style={header.style}
-                                >
-                                    {header.label}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
+            <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
+                <div className="max-h-[700px] overflow-y-auto">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center table-auto">
 
-                    {/* Table Body */}
-                    <tbody className="bg-white divide-y divide-gray-100">
-                        {StudentsData.length > 0 ? (
-                            StudentsData.map((student, index) => (
-                                <tr
-                                    key={student._id}
-                                    className="hover:bg-gray-50 transition-colors duration-200"
-                                >
-                                    <td className="px-6 py-4 text-center font-semibold text-gray-700 border-r border-gray-200"> {index + 1} </td>
-                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-800 uppercase border-r border-gray-200"> {student.registerNo} </td>
-                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-800 border-r border-gray-200"> {student.name} </td>
-                                    <td className="px-6 py-4 text-center text-sm font-semibold text-gray-700 border-r border-gray-200"> {student.department} </td>
+                        <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10 h-15">
+                            <tr>
+                                {headers.map((header) => (
+                                    <th
+                                        key={header.key}
+                                        className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap"
+                                        style={header.style}
+                                    >
+                                        {header.label}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
 
-                                    {/* Max Mark */}
-                                    <td className="px-4 py-3 text-center border-r border-gray-200">
-                                        <input
-                                            type="number"
-                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
-                                            value={student.maxMark ?? ""}
-                                            onChange={(e) => handleMarkChange(index, "maxMark", e.target.value)}
-                                            onFocus={(e) => {
-                                                e.target.addEventListener('wheel', (ev) => ev.preventDefault(), { passive: false });
-                                            }}
-                                        />
-                                    </td>
+                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                            {StudentsData.length > 0 ? (
+                                StudentsData.map((student, index) => (
+                                    <tr
+                                        key={student._id}
+                                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
+                                    >
+                                        {/* S.No */}
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
+                                            {index + 1}
+                                        </td>
 
-                                    {/* Marks Secured */}
-                                    <td className="px-4 py-3 text-center border-r border-gray-200">
-                                        <input
-                                            type="number"
-                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
-                                            value={student.markSecured ?? ""}
-                                            onChange={(e) => handleMarkChange(index, "markSecured", e.target.value)}
-                                            onFocus={(e) => {
-                                                e.target.addEventListener('wheel', (ev) => ev.preventDefault(), { passive: false });
-                                            }}
-                                        />
-                                    </td>
+                                        {/* Register No */}
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white uppercase">
+                                            {student.registerNo}
+                                        </td>
 
-                                    {/* Percentage */}
-                                    <td className="px-4 py-3 text-center border-r border-gray-200">
-                                        <input
-                                            type="text"
-                                            className="w-28 border border-gray-200 p-2 rounded-lg text-center bg-gray-50 font-semibold text-gray-600"
-                                            value={student.semesterMarkPercentage && student.semesterMarkPercentage >= 0 ? student.semesterMarkPercentage.toFixed(2) : "0.00"}
+                                        {/* Name */}
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {student.name}
+                                        </td>
 
-                                            readOnly
-                                        />
-                                    </td>
+                                        {/* Department */}
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {student.department}
+                                        </td>
 
-                                    {/* Arrears */}
-                                    <td className="px-4 py-3 text-center border-r border-gray-200">
-                                        <input
-                                            type="number"
-                                            className="w-20 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
-                                            value={student.semesterArrear ?? ""}
-                                            onChange={(e) => handleMarkChange(index, "arrears", e.target.value)}
-                                            onFocus={(e) => {
-                                                e.target.addEventListener('wheel', (ev) => ev.preventDefault(), { passive: false });
-                                            }}
-                                        />
-                                    </td>
+                                        {/* Max Mark */}
+                                        <td className="px-4 py-4">
+                                            <input
+                                                type="number"
+                                                className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
+                                                value={student.maxMark ?? ""}
+                                                onChange={(e) => handleMarkChange(index, "maxMark", e.target.value)}
+                                                onFocus={(e) => {
+                                                    e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false });
+                                                }}
+                                            />
+                                        </td>
 
-                                    {/* Grade */}
-                                    <td className="px-4 py-3 text-center border-gray-200">
-                                        <input
-                                            type="text"
-                                            className="w-24 border border-gray-300 p-2 rounded-lg text-center focus:ring-2 outline-none transition"
-                                            value={student.semesterGrade ?? ""}
-                                            onChange={(e) => handleMarkChange(index, "remarks", e.target.value)}
-                                        />
+                                        {/* Marks Secured */}
+                                        <td className="px-4 py-4">
+                                            <input
+                                                type="number"
+                                                className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
+                                                value={student.markSecured ?? ""}
+                                                onChange={(e) => handleMarkChange(index, "markSecured", e.target.value)}
+                                                onFocus={(e) => {
+                                                    e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false });
+                                                }}
+                                            />
+                                        </td>
+
+                                        {/* Percentage */}
+                                        <td className="px-4 py-4">
+                                            <input
+                                                type="text"
+                                                className="w-28 px-3 py-1.5 border border-gray-300 bg-gray-100 font-semibold rounded-lg text-sm text-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-600"
+                                                value={
+                                                    student.semesterMarkPercentage >= 0
+                                                        ? student.semesterMarkPercentage.toFixed(2)
+                                                        : "0.00"
+                                                }
+                                                readOnly
+                                            />
+                                        </td>
+
+                                        {/* Arrears */}
+                                        <td className="px-4 py-4">
+                                            <input
+                                                type="number"
+                                                className="w-20 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
+                                                value={student.semesterArrear ?? ""}
+                                                onChange={(e) => handleMarkChange(index, "arrears", e.target.value)}
+                                                onFocus={(e) => {
+                                                    e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false });
+                                                }}
+                                            />
+                                        </td>
+
+                                        {/* Grade */}
+                                        <td className="px-4 py-4">
+                                            <input
+                                                type="text"
+                                                className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
+                                                value={student.semesterGrade ?? ""}
+                                                onChange={(e) => handleMarkChange(index, "remarks", e.target.value)}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan={9}
+                                        className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base"
+                                    >
+                                        No student data available.
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan={9} className="text-center p-6 text-gray-500 font-medium">
-                                    No student data available.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div className="text-right">
