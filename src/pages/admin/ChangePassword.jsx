@@ -1,94 +1,144 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
+import React, {useState} from "react";
+import {useParams} from "react-router-dom";
 import axios from "axios";
-import HeaderTag from '../../common/HeaderTag';
+import HeaderTag from "../../common/HeaderTag";
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function ChangePassword() {
 
-    const [password, setPassword] = useState({ pass: '', conpass: '' });
-    const [isConpassTyped, setIsConpassTyped] = useState(false);
-    const [error, setError] = useState('');
-    const { userId } = useParams();
+    const {userId} = useParams();
+    const [formData, setFormData] = useState({newPassword: "", confirmPassword: ""});
+    const [formErrors, setFormErrors] = useState({});
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
 
-    useEffect(() => {
-        if (isConpassTyped && password.pass !== password.conpass) {
-            setError('Passwords do not match');
-        } else { setError('') }
-    }, [password, isConpassTyped]);
+    const validateForm = () => {
+        const errors = {};
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setPassword(prev => ({ ...prev, [name]: value }));
-        if (name === 'conpass') { setIsConpassTyped(true); }
-    }
+        if (!formData.newPassword.trim()) {
+            errors.newPassword = "This field is required";
+        }
+
+        if (!formData.confirmPassword.trim()) {
+            errors.confirmPassword = "This field is required";
+        } else if (formData.confirmPassword !== formData.newPassword) {
+            errors.confirmPassword = "Passwords do not match";
+        }
+
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+        setFormData((prevData) => ({...prevData, [name]: value}));
+        setFormErrors((prevErrors) => ({...prevErrors, [name]: ""}));
+        setSuccessMessage("");
+    };
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
-        if (password.pass !== password.conpass) {
-            setError('Passwords do not match');
-            return;
-        }
+        setSuccessMessage("");
+
+        if (!validateForm()) return;
+
+        setIsUpdating(true);
         try {
-            await axios.put(`${apiUrl}/api/staff/passwordChange`, {
-                password: password.pass, staffId: userId
+            const response = await axios.post(`${apiUrl}/api/password/admin/passwordChange`, {
+                adminId: userId,
+                password: formData.newPassword,
             });
-            window.alert('Password updated successfully');
-        } catch (err) {
-            console.error('Error in updating password of staff : ', err);
-            window.alert('Failed to update Password');
-        }
-    }
+
+            if (response.status === 200) {
+                setSuccessMessage("Password updated successfully!");
+                setFormData({newPassword: "", confirmPassword: ""});
+            }
+        } catch (error) {
+            console.error("Error updating password:", error);
+            setFormErrors((prev) => ({
+                ...prev,
+                confirmPassword: "Failed to update password. Please try again.",
+            }));
+        } finally {setIsUpdating(false)}
+    };
 
     return (
         <div>
-            <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
-				<h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
-					Change Password
-				</h1>
-			</header>
-            <div className="bg-white border border-gray-300 rounded-lg shadow p-6 w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="">
+            <HeaderTag label="Change Password" />
+
+            <form
+                onSubmit={handleSubmit}
+                className="bg-white border border-gray-300 rounded-lg shadow p-6 w-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"
+            >
+                {/* New Password */}
+                <div>
                     <label className="block mb-2 font-semibold text-gray-700">
-                        Password : <span className="text-red-500 text-lg">*</span>
+                        New Password : <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="password"
-                        name="pass"
-                        value={password.pass}
-                        onChange={handleChange}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 transition"
-                        required
+                        name="newPassword"
+                        value={formData.newPassword}
+                        onChange={handleInputChange}
+                        className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 transition 
+                            ${formErrors.newPassword
+                                ? "border-red-500 focus:ring-red-300"
+                                : "border-gray-300"
+                            }`}
                     />
+                    {formErrors.newPassword && (
+                        <p className="text-red-600 text-sm mt-2">{formErrors.newPassword}</p>
+                    )}
                 </div>
-                <div className="">
+
+                {/* Confirm Password */}
+                <div>
                     <label className="block mb-2 font-semibold text-gray-700">
-                        Confirm Password : <span className="text-red-500 text-lg">*</span>
+                        Confirm Password : <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="password"
-                        name="conpass"
-                        value={password.conpass}
-                        onChange={handleChange}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 transition"
-                        required
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 transition 
+                            ${formErrors.confirmPassword
+                                ? "border-red-500 focus:ring-red-300"
+                                : "border-gray-300"
+                            }`}
                     />
+                    {formErrors.confirmPassword && (
+                        <p className="text-red-600 text-sm mt-2">
+                            {formErrors.confirmPassword}
+                        </p>
+                    )}
                 </div>
-                {isConpassTyped && error && (
-                    <p className="text-red-600 font-semibold text-sm">{error}</p>
+
+                {/* Success Message */}
+                {successMessage && (
+                    <div className="col-span-2">
+                        <p className="text-green-600 font-semibold text-sm">
+                            {successMessage}
+                        </p>
+                    </div>
                 )}
-            </div>
-            <div className="mt-6 flex justify-end">
-                <button
-                    type="button"
-                    onClick={handleSubmit}
-                    className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-md transition"
-                >
-                    Update
-                </button>
-            </div>
+
+                {/* Submit Button */}
+                <div className="col-span-2 flex justify-end mt-2">
+                    <button
+                        type="submit"
+                        disabled={isUpdating}
+                        className={`${isUpdating ? "bg-gray-400" : "bg-orange-500 hover:bg-orange-600"
+                            } text-white font-semibold px-6 py-2 rounded-md transition`}
+                    >
+                        {isUpdating ? "Updating..." : "Update"}
+                    </button>
+                </div>
+            </form>
         </div>
-    )
+    );
 }
 
-export default ChangePassword
+export default ChangePassword;
