@@ -39,7 +39,7 @@ function StaffLayout() {
         { icon: faClipboardList, name: attendanceName, path: `/staff/${userId}/classAttendance`, show: Object.keys(attendanceMap).includes(userId) },
         { icon: faBook, name: subjectName, path: `/staff/${userId}/dmAttendance`, show: Object.keys(subjectMap).includes(userId) },
         { icon: faBuilding, name: 'COE', path: `/staff/${userId}/markEntry`, show: userId === 'JMCCOE' },
-        { icon: faFilePen, name: sclrName, path: `/staff/${userId}/markEntry`, show: Object.keys(sclrMap).includes(userId) },
+        { icon: faFilePen, name: sclrName, path: `/staff/${userId}/scholarshipStaff`, show: Object.keys(sclrMap).includes(userId) },
         { icon: faTools, name: 'Change Password', path: `/staff/${userId}/changePassword`, show: true },
     ]
 
