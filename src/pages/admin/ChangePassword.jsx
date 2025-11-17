@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {useParams} from "react-router-dom";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import HeaderTag from "../../common/HeaderTag";
 
@@ -7,8 +7,8 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 function ChangePassword() {
 
-    const {userId} = useParams();
-    const [formData, setFormData] = useState({newPassword: "", confirmPassword: ""});
+    const { userId } = useParams();
+    const [formData, setFormData] = useState({ newPassword: "", confirmPassword: "" });
     const [formErrors, setFormErrors] = useState({});
     const [isUpdating, setIsUpdating] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
@@ -31,9 +31,9 @@ function ChangePassword() {
     };
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setFormData((prevData) => ({...prevData, [name]: value}));
-        setFormErrors((prevErrors) => ({...prevErrors, [name]: ""}));
+        const { name, value } = e.target;
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
+        setFormErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
         setSuccessMessage("");
     };
 
@@ -53,7 +53,7 @@ function ChangePassword() {
 
             if (response.status === 200) {
                 setSuccessMessage("Password updated successfully!");
-                setFormData({newPassword: "", confirmPassword: ""});
+                setFormData({ newPassword: "", confirmPassword: "" });
             }
         } catch (error) {
             console.error("Error updating password:", error);
@@ -61,7 +61,7 @@ function ChangePassword() {
                 ...prev,
                 confirmPassword: "Failed to update password. Please try again.",
             }));
-        } finally {setIsUpdating(false)}
+        } finally { setIsUpdating(false) }
     };
 
     return (
