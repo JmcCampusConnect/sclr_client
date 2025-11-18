@@ -17,10 +17,6 @@ function StudentManage() {
     const [filters, setFilters] = useState({ category: "All", department: "All" });
     const [searchTerm, setSearchTerm] = useState("");
 
-    const [activeFilters, setActiveFilters] = useState({ category: "All", department: "All" });
-    const [activeSearchTerm, setActiveSearchTerm] = useState("");
-
-
     useEffect(() => {
         const fetchDepartments = async () => {
             try {
@@ -31,16 +27,14 @@ function StudentManage() {
             }
         };
         fetchDepartments();
-    }, []);
+    }, [apiUrl]); 
 
     useEffect(() => {
         const fetchStudentData = async () => {
             try {
                 const response = await axios.get(`${apiUrl}/api/studentManage/fetchStudentData`);
                 setStudents(response.data.students);
-                setActiveFilters({ category: "All", department: "All" });
-                setActiveSearchTerm("");
-                setFilteredStudents(response.data.students);
+                setFilteredStudents(response.data.students); 
             } catch (err) {
                 console.error("Error fetching student data:", err);
                 setError("Failed to load students. Please try again later.");
@@ -51,25 +45,20 @@ function StudentManage() {
         fetchStudentData();
     }, [apiUrl]);
 
-    const handleApplyFilters = () => {
-        setActiveFilters(filters);
-        setActiveSearchTerm(searchTerm);
-    };
-
     useEffect(() => {
-
+        
         let filtered = [...students];
 
-        if (activeFilters.category && activeFilters.category !== "All") {
-            filtered = filtered.filter((s) => s.category === activeFilters.category);
+        if (filters.category && filters.category !== "All") {
+            filtered = filtered.filter((s) => s.category === filters.category);
         }
 
-        if (activeFilters.department && activeFilters.department !== "All") {
-            filtered = filtered.filter((s) => s.department === activeFilters.department);
+        if (filters.department && filters.department !== "All") {
+            filtered = filtered.filter((s) => s.department === filters.department);
         }
 
-        if (activeSearchTerm.trim() !== "") {
-            const term = activeSearchTerm.toLowerCase();
+        if (searchTerm.trim() !== "") {
+            const term = searchTerm.toLowerCase();
             filtered = filtered.filter(
                 (s) =>
                     s.name.toLowerCase().includes(term) ||
@@ -78,7 +67,7 @@ function StudentManage() {
         }
 
         setFilteredStudents(filtered);
-    }, [activeFilters, activeSearchTerm, students]);
+    }, [filters, searchTerm, students]); 
 
     if (isLoading) {
         return (
@@ -115,7 +104,7 @@ function StudentManage() {
                 totalCount={filteredStudents.length}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
-                onShowGrid={handleApplyFilters}
+                onShowGrid={() => console.log('Show Grid button clicked')} 
             />
 
             <StudentManageTable

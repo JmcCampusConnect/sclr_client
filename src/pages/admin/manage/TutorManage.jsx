@@ -38,12 +38,14 @@ function Tutor() {
 
         fetchData();
         fetchDepartments();
-    }, []);
+    }, [apiUrl]);
 
-    const dep = Object.values(departments).map(item => ({
-        value: item.department,
-        label: `${item.department} - ${item.departmentName}`
-    }));
+    const dep = [
+        { value: "All", label: "All" }, ...Object.values(departments).map(item => ({
+            value: item.department,
+            label: `${item.department} - ${item.departmentName}`
+        }))
+    ]
 
     const handleFilterForm = () => {
 

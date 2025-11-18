@@ -5,7 +5,7 @@ function TutorFilterSection({ depts, filterForm }) {
 
     const [filterFormData, setFilterFormData] = useState({
         category: "All",
-        department: "",
+        department: "All",
         batch: "All"
     });
 

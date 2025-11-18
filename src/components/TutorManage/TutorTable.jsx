@@ -11,7 +11,7 @@ function TutorTable({ onEditTutor, onDeleteTutor, tutors }) {
 					{/* Table Head */}
 					<thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
 						<tr>
-							{["S.No", "Staff ID", "Staff Name", "Department", "Category", "Section", "Batch", "Action"].map(
+							{["S.No", "Staff ID", "Staff Name", "Department", "Category", "Section", "Batch", "Password", "Action"].map(
 								(header) => (
 									<th
 										key={header}
@@ -52,6 +52,9 @@ function TutorTable({ onEditTutor, onDeleteTutor, tutors }) {
 									</td>
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
 										{tutor.batch}
+									</td>
+									<td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
+										{tutor.password}
 									</td>
 									<td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
 										<div className="flex justify-center gap-4">

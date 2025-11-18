@@ -15,7 +15,7 @@ const DashboardBar = ({ enrollmentData, distributedData }) => {
     const neutralText = "#374151";
 
     const enrollData = {
-        labels: ["UG 1st", "UG 2nd", "UG 3rd", "PG 1st", "PG 2nd"],
+        labels: ["I UG", "II UG", "III UG", "I PG", "II PG"],
         datasets: [
             {
                 label: "Men",
@@ -49,7 +49,7 @@ const DashboardBar = ({ enrollmentData, distributedData }) => {
     }
 
     const distributeData = {
-        labels: ["UG 1st", "UG 2nd", "UG 3rd", "PG 1st", "PG 2nd"],
+        labels: ["I UG", "II UG", "III UG", "I PG", "II PG"],
         datasets: [
             {
                 label: "Men",
@@ -89,15 +89,15 @@ const DashboardBar = ({ enrollmentData, distributedData }) => {
         plugins: {
             legend: {
                 position: "bottom",
-                align: "start",
+                align: "center",
                 labels: {
                     color: neutralText,
                     usePointStyle: true,
                     pointStyle: "rect",
-                    boxWidth: 10,
-                    boxHeight: 10,
+                    boxWidth: 12,
+                    boxHeight: 12,
                     padding: 20,
-                    font: { size: 13, weight: 400 },
+                    font: { size: 14, weight: 400 },
                 },
             },
             title: {

@@ -43,7 +43,8 @@ function Staff() {
                             {/* Table Head */}
                             <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
                                 <tr>
-                                    {["S.No", "Staff ID", "Staff Name", "Action"].map(
+                                    {["S.No", "Staff ID", "Staff Name", "Password", ].map(
+                                        // "Action"
                                         (header) => (
                                             <th
                                                 key={header}
@@ -70,10 +71,13 @@ function Staff() {
                                             <td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
                                                 {staff.staffId}
                                             </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
+                                            <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
                                                 {staff.staffName}
                                             </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
+                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
+                                                {staff.password}
+                                            </td>
+                                            {/* <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
                                                 <div className="flex justify-center gap-4">
                                                     <button
                                                         className="w-20 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
@@ -81,7 +85,7 @@ function Staff() {
                                                         Edit
                                                     </button>
                                                 </div>
-                                            </td>
+                                            </td> */}
                                         </tr>
                                     ))
                                 ) : (
