@@ -100,7 +100,7 @@ function StudentManageTable({ students: initialStudents, onSaveStudent }) {
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
 										{student?.department}
 									</td>
-									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+									<td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
 										{student?.category}
 									</td>
 									<td className="px-4 py-4">

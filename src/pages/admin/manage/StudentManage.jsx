@@ -13,8 +13,13 @@ function StudentManage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [departments, setDepartments] = useState([]);
+
     const [filters, setFilters] = useState({ category: "All", department: "All" });
     const [searchTerm, setSearchTerm] = useState("");
+
+    const [activeFilters, setActiveFilters] = useState({ category: "All", department: "All" });
+    const [activeSearchTerm, setActiveSearchTerm] = useState("");
+
 
     useEffect(() => {
         const fetchDepartments = async () => {
@@ -33,6 +38,8 @@ function StudentManage() {
             try {
                 const response = await axios.get(`${apiUrl}/api/studentManage/fetchStudentData`);
                 setStudents(response.data.students);
+                setActiveFilters({ category: "All", department: "All" });
+                setActiveSearchTerm("");
                 setFilteredStudents(response.data.students);
             } catch (err) {
                 console.error("Error fetching student data:", err);
@@ -44,20 +51,25 @@ function StudentManage() {
         fetchStudentData();
     }, [apiUrl]);
 
+    const handleApplyFilters = () => {
+        setActiveFilters(filters);
+        setActiveSearchTerm(searchTerm);
+    };
+
     useEffect(() => {
 
         let filtered = [...students];
 
-        if (filters.category && filters.category !== "All") {
-            filtered = filtered.filter((s) => s.category === filters.category);
+        if (activeFilters.category && activeFilters.category !== "All") {
+            filtered = filtered.filter((s) => s.category === activeFilters.category);
         }
 
-        if (filters.department && filters.department !== "All") {
-            filtered = filtered.filter((s) => s.department === filters.department);
+        if (activeFilters.department && activeFilters.department !== "All") {
+            filtered = filtered.filter((s) => s.department === activeFilters.department);
         }
 
-        if (searchTerm.trim() !== "") {
-            const term = searchTerm.toLowerCase();
+        if (activeSearchTerm.trim() !== "") {
+            const term = activeSearchTerm.toLowerCase();
             filtered = filtered.filter(
                 (s) =>
                     s.name.toLowerCase().includes(term) ||
@@ -66,7 +78,7 @@ function StudentManage() {
         }
 
         setFilteredStudents(filtered);
-    }, [filters, searchTerm, students]);
+    }, [activeFilters, activeSearchTerm, students]);
 
     if (isLoading) {
         return (
@@ -103,6 +115,7 @@ function StudentManage() {
                 totalCount={filteredStudents.length}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
+                onShowGrid={handleApplyFilters}
             />
 
             <StudentManageTable

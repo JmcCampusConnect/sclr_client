@@ -8,9 +8,6 @@ function DonorFilters({ onAdd, filterOptions, selectedCategories }) {
     return (
         <div className="mb-6 flex justify-between">
             <div>
-                <p className="text-md lg:text-base font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                    Donor Categories:
-                </p>
                 <div className="flex gap-4 flex-wrap">
                     {categories.map((cat) => (
                         <label
