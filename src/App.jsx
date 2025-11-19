@@ -48,6 +48,7 @@ import DataDeletion from './pages/admin/DataDeletion';
 import DepartmentManage from './pages/admin/manage/DepartmentManage';
 import ForgotPassword from './pages/others/ForgotPassword';
 import ScholarshipStaff from './pages/staff/ScholarshipStaff';
+import TutorVerify from './pages/staff/TutorVerify';
 
 function App() {
 
@@ -129,6 +130,8 @@ function App() {
 						<Route path="dashboard" element={<CommonStaffDashboard />} />
 						<Route path="changePassword" element={<StaffChangePassword />} />
 						<Route path="scholarshipStaff" element={<ScholarshipStaff />} />
+						<Route path="scholarshipStaff" element={<ScholarshipStaff />} />
+						<Route path="tutorVerification" element={<TutorVerify />} />
 					</Route>
 
 				</Routes>

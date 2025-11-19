@@ -30,6 +30,12 @@ function StaffLayout() {
         JMCPPS: 'Penmai Pudalvan Scheme',
     }
 
+    const restrictedUsers = [
+        ...Object.keys(attendanceMap),
+        ...Object.keys(subjectMap),
+        ...Object.keys(sclrMap)
+    ]
+
     const attendanceName = attendanceMap[userId] || null;
     const subjectName = subjectMap[userId] || null;
     const sclrName = sclrMap[userId] || null;
@@ -40,6 +46,7 @@ function StaffLayout() {
         { icon: faBook, name: subjectName, path: `/staff/${userId}/dmAttendance`, show: Object.keys(subjectMap).includes(userId) },
         { icon: faBuilding, name: 'COE', path: `/staff/${userId}/markEntry`, show: userId === 'JMCCOE' },
         { icon: faFilePen, name: sclrName, path: `/staff/${userId}/scholarshipStaff`, show: Object.keys(sclrMap).includes(userId) },
+        { icon: faFilePen, name: 'Student Verification', path: `/staff/${userId}/tutorVerification`, show: !restrictedUsers.includes(userId), },
         { icon: faTools, name: 'Change Password', path: `/staff/${userId}/changePassword`, show: true },
     ]
 

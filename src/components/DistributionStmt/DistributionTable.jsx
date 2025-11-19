@@ -1,9 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom"; 
+import React from "react"; 
 
 function DistributionTable({ distribution }) {
-
-	const navigate = useNavigate();
 
 	return (
 		<div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
