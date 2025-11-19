@@ -26,8 +26,8 @@ function StaffLayout() {
     }
 
     const sclrMap = {
-        JMCTPS: 'Tamil Pudalvan Scheme',
-        JMCPPS: 'Penmai Pudalvan Scheme',
+        JMCTPS: 'Tamil Puthalvan Scheme',
+        JMCPPS: 'Pudhumai Penn Scheme',
     }
 
     const restrictedUsers = [

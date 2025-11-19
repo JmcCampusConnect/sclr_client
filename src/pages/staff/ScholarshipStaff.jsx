@@ -138,7 +138,7 @@ function ScholarshipStaff() {
 
     return (
         <div>
-            <HeaderTag label={`${userId === 'JMCTPS' ? 'Tamil Pudalvan Scheme' : 'Penmai Pudalvan Scheme'}`} />
+            <HeaderTag label={`${userId === 'JMCTPS' ? 'Tamil Puthalvan Scheme' : 'Pudhumai Penn Scheme'}`} />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-lg font-semibold">
                 <div className="bg-white border-l-4 border-blue-600 p-4 rounded shadow-md">
                     Total Applicants : <span className="float-right">{complete + pending}</span>
