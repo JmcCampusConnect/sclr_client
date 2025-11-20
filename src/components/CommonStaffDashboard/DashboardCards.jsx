@@ -13,7 +13,14 @@ const DASHBOARD_CARDS = [
 const DashboardCards = ({ cardData }) => {
 
     const formatCurrency = (amount) =>
-        typeof amount === 'number' ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(amount) : 'N/A';
+        typeof amount === 'number'
+            ? new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount)
+            : 'N/A';
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">

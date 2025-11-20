@@ -54,7 +54,7 @@ function LoginForm({ register, errors, registerSubmit, handleSubmit }) {
                         type="submit"
                         className="w-1/2 rounded-lg px-3 py-2 bg-orange-500 hover:bg-orange-600 transition-colors duration-300 text-white font-bold"
                     >
-                        Log In
+                        Login
                     </button>
                 </div>
             </div>

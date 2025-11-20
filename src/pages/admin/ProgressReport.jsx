@@ -1,38 +1,64 @@
-import React from 'react'
-import { Hammer } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import ProgressReportTable from "../../components/ProgressReport/ProgressReportTable";
+import Loading from "../../assets/svg/Pulse.svg";
 
 function ProgressReport() {
 
-    return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-center px-6">
-            <div className="bg-white shadow-xl rounded-2xl p-10 max-w-md w-full border border-gray-200">
-                <div className="flex justify-center mb-6">
-                    <div className="p-4 bg-indigo-100 rounded-full">
-                        <Hammer size={48} className="text-indigo-600" />
-                    </div>
-                </div>
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-                <h1 className="text-3xl font-bold text-gray-800 mb-3">
-                    Under Construction
-                </h1>
+    const fetchCounts = async () => {
+        try {
+            const response = await axios.get(`${apiUrl}/api/progressReport/fetchCounts`);
+            setData(response.data);
+        } catch (err) {
+            console.error("Error fetching report : ", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-                <p className="text-gray-600 mb-6">
-                    This section is currently being built. We’re working to bring this feature to you soon.
-                </p>
+    useEffect(() => {
+        fetchCounts();
+    }, []);
 
-                <button
-                    onClick={() => window.location.reload()}
-                    className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold shadow hover:bg-indigo-700 transition-all duration-200"
-                >
-                    Refresh Later
-                </button>
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center">
+                <img src={Loading} alt="Loading..." className="w-24 h-24 mb-4 animate-spin" />
+                <p className="text-gray-600 font-medium text-lg">Loading distribution statement...</p>
             </div>
+        );
+    }
 
-            <p className="text-sm text-gray-500 mt-8">
-                © {new Date().getFullYear()} Data Management Portal
-            </p>
+    if (!data) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <p className="text-red-600 font-semibold">Failed to load progress report.</p>
+            </div>
+        )
+    }
+
+    const rows = [
+        { type: "COE Report", ...data.coe },
+        { type: "Class Attendance", ...data.attendance },
+        { type: "Deeniyath & Moral", ...data.deeniyath },
+        { type: "Govt. Scholarship", ...data.sclr },
+        { type: "Tutor Verification", ...data.tutor },
+    ];
+
+    return (
+        <div className="">
+            <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
+                    Progress Report Overview
+                </h1>
+            </header>
+            <ProgressReportTable rows={rows} />
         </div>
     )
 }
 
-export default ProgressReport
+export default ProgressReport;
