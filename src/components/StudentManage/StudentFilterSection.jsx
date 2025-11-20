@@ -25,16 +25,21 @@ function StudentFilterSection({ departments, filters, setFilters }) {
         })),
     ];
 
+    const semBasedOptions = [
+        { value: "All", label: "All" },
+        { value: "1", label: "Yes" },
+        { value: "0", label: "No" },
+    ];
+
     return (
         <div className="w-full space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <SearchDropdown
                     label="Category"
                     name="category"
                     options={categoryOptions}
                     value={filters.category}
                     onChange={handleSelectChange}
-                    required
                 />
 
                 <SearchDropdown
@@ -42,6 +47,14 @@ function StudentFilterSection({ departments, filters, setFilters }) {
                     name="department"
                     options={depts}
                     value={filters.department}
+                    onChange={handleSelectChange}
+                />
+
+                <SearchDropdown
+                    label="Semester Based"
+                    name="semBased"
+                    options={semBasedOptions}
+                    value={filters.semBased}
                     onChange={handleSelectChange}
                     required
                 />

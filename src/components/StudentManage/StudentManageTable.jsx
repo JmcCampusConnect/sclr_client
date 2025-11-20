@@ -85,7 +85,7 @@ function StudentManageTable({ students: initialStudents, onSaveStudent }) {
 						{students.length > 0 ? (
 							students.map((student, index) => (
 								<tr
-									key={student?.registerNo}
+									key={student?._id}
 									className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200 ${student.isEdited ? 'bg-blue-50/50 dark:bg-blue-900/50' : ''}`}
 								>
 									<td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">

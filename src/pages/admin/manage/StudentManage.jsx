@@ -14,7 +14,7 @@ function StudentManage() {
     const [error, setError] = useState(null);
     const [departments, setDepartments] = useState([]);
 
-    const [filters, setFilters] = useState({ category: "All", department: "All" });
+    const [filters, setFilters] = useState({ category: "All", department: "All", semBased: "All" });
     const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
@@ -27,14 +27,14 @@ function StudentManage() {
             }
         };
         fetchDepartments();
-    }, [apiUrl]); 
+    }, [apiUrl]);
 
     useEffect(() => {
         const fetchStudentData = async () => {
             try {
                 const response = await axios.get(`${apiUrl}/api/studentManage/fetchStudentData`);
                 setStudents(response.data.students);
-                setFilteredStudents(response.data.students); 
+                setFilteredStudents(response.data.students);
             } catch (err) {
                 console.error("Error fetching student data:", err);
                 setError("Failed to load students. Please try again later.");
@@ -46,28 +46,34 @@ function StudentManage() {
     }, [apiUrl]);
 
     useEffect(() => {
-        
         let filtered = [...students];
 
         if (filters.category && filters.category !== "All") {
             filtered = filtered.filter((s) => s.category === filters.category);
         }
-
         if (filters.department && filters.department !== "All") {
             filtered = filtered.filter((s) => s.department === filters.department);
         }
-
-        if (searchTerm.trim() !== "") {
-            const term = searchTerm.toLowerCase();
+        if (filters.semBased !== "All") {
             filtered = filtered.filter(
-                (s) =>
-                    s.name.toLowerCase().includes(term) ||
-                    s.registerNo.toLowerCase().includes(term)
+                s => String(s.isSemBased) === String(filters.semBased)
             );
         }
+        if (searchTerm.trim() !== "") {
+            const term = searchTerm.toLowerCase();
+            filtered = filtered.filter((s) => {
+                const nameMatches = s.name
+                    ? s.name.toLowerCase().includes(term)
+                    : false;
+                const regNoMatches = s.registerNo
+                    ? s.registerNo.toLowerCase().includes(term)
+                    : false;
 
+                return nameMatches || regNoMatches;
+            });
+        }
         setFilteredStudents(filtered);
-    }, [filters, searchTerm, students]); 
+    }, [filters, searchTerm, students]);
 
     if (isLoading) {
         return (
@@ -104,7 +110,6 @@ function StudentManage() {
                 totalCount={filteredStudents.length}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
-                onShowGrid={() => console.log('Show Grid button clicked')} 
             />
 
             <StudentManageTable
