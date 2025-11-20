@@ -7,7 +7,7 @@ function HeroSection() {
 
     return (
         <>
-            <div className='flex flex-col justify-center w-full h-[80%] items-center'>
+            <div className='flex flex-col justify-center w-full h-[75%] items-center'>
                 <img
                     src={JmcLogo}
                     alt="Jamal Logo"
@@ -22,7 +22,7 @@ function HeroSection() {
                     Show Us The Right Path
                 </h1>
             </div>
-            <div className="w-full flex h-[20%] items-center justify-center">
+            <div className="w-full flex h-[25%] items-center justify-center">
                 <img
                     src={ManMoving}
                     alt="Man"

@@ -1,19 +1,27 @@
 import React from 'react';
-import Map from '../../assets/gifs/Map.gif'
+import Map from '../../assets/gifs/Map.gif';
 
 function LoginIllustration() {
-    
+
     return (
-        <div className="lg:w-2/3 flex flex-col items-center justify-center">
-            <img src={Map} alt="World Map" className="h-32 md:h-72 px-10 object-contain" />
-            <p className="text-lg lg:text-2xl font-bold text-white animate-pulse mt-4">
+        <div className="lg:w-1/2 flex flex-col items-center justify-center">
+            <img
+                src={Map}
+                alt="World Map"
+                className="h-40 md:h-60 object-contain drop-shadow-lg"
+            />
+
+            <p className="text-xl lg:text-xl font-extrabold text-amber-300 animate-pulse mt-6 tracking-wider">
                 Jamalians Around The World
             </p>
-            <h2 className="text-sm lg:text-xl font-semibold text-white text-center mt-1">
+
+            <div className="h-0.5 w-1/4 bg-amber-400 mt-2 mb-4"></div>
+
+            <h2 className="text-md lg:text-md 2xl:text-lg font-medium text-gray-200 text-center">
                 "Elevating the Next Generation Through Alumni & Well-Wishers"
             </h2>
         </div>
-    )
+    );
 }
 
-export default LoginIllustration
+export default LoginIllustration;

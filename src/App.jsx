@@ -4,7 +4,6 @@ import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./routes/PrivateRoute";
 
 // Public Pages
-import LandingPage from "./pages/others/LandingPage";
 import LoginPage from "./pages/others/LoginPage";
 import StudentHome from "./pages/student/StudentHome";
 
@@ -59,10 +58,9 @@ function App() {
 			<BrowserRouter>
 				<Routes>
 					{/* Public Routes */}
-					<Route path="/" element={<LandingPage />} />
 					<Route path="/forgotPassword" element={<ForgotPassword />} />
 					<Route path="/login" element={<LoginPage />} />
-					<Route path="/student" element={<StudentHome />} />
+					<Route path="/" element={<StudentHome />} />
 
 					{/* Student Register */}
 					<Route path="/student/register/*" element={<RegisterLayout />}>
