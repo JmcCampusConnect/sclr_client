@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
+
 import TutorFilterSection from '../../../components/TutorManage/TutorFilterSection'
 import TutorActionBar from '../../../components/TutorManage/TutorActionBar'
 import TutorTable from '../../../components/TutorManage/TutorTable'
@@ -14,12 +15,13 @@ function Tutor() {
     const [editTutor, setEditTutor] = useState(null);
     const [deleteTutor, setDeleteTutor] = useState(null);
     const [departments, setDepartments] = useState([]);
-    const [filterFormData, setFilterFormData] = useState()
+    const [filterFormData, setFilterFormData] = useState();
     const [tutors, setTutors] = useState([]);
     const [allTutors, setAllTutors] = useState([]);
     const [filteredTutors, setFilteredTutors] = useState([]);
 
     useEffect(() => {
+        
         const fetchData = async () => {
             const response = await axios.get(`${apiUrl}/api/tutor/fetchTutors`);
             setTutors(response.data.tutors);
@@ -41,39 +43,51 @@ function Tutor() {
     }, [apiUrl]);
 
     const dep = [
-        { value: "All", label: "All" }, ...Object.values(departments).map(item => ({
+        { value: "All", label: "All" },
+        ...Object.values(departments).map(item => ({
             value: item.department,
             label: `${item.department} - ${item.departmentName}`
         }))
-    ]
+    ];
+
+    useEffect(() => {
+        if (!filterFormData) return;
+        handleFilterForm();
+    }, [filterFormData]);
 
     const handleFilterForm = () => {
-
         if (!filterFormData) return;
+
         const filtered = allTutors.filter(tutor => {
             const matchesCategory =
                 filterFormData.category === "All" || tutor.category === filterFormData.category;
+
             const matchesDepartment =
                 filterFormData.department === "All" || tutor.department === filterFormData.department;
+
             const matchesBatch =
                 filterFormData.batch === "All" || tutor.batch === filterFormData.batch;
+
             return matchesCategory && matchesDepartment && matchesBatch;
-        })
+        });
+
         setFilteredTutors(filtered);
         setTutors(filtered);
-    }
+    };
 
     const handleSearch = (searchTerm) => {
         if (!searchTerm) {
             setTutors(filteredTutors);
             return;
         }
+
         const searched = filteredTutors.filter(tutor =>
             tutor.staffName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             tutor.staffId.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+        );
+
         setTutors(searched);
-    }
+    };
 
     return (
         <>
@@ -83,22 +97,29 @@ function Tutor() {
                     Tutor Management
                 </h1>
             </header>
+
+            {/* Filter Section */}
             <TutorFilterSection
                 depts={dep}
                 filterForm={(e) => setFilterFormData(e)}
             />
+
+            {/* Action Bar (Show Grid button removed) */}
             <TutorActionBar
                 tutors={tutors}
                 onClose={() => setAddTutor(null)}
                 onAddTutor={() => setAddTutor({})}
-                filterDropdownData={handleFilterForm}
                 handleSearch={(e) => handleSearch(e)}
             />
+
+            {/* Table */}
             <TutorTable
                 onEditTutor={setEditTutor}
                 onDeleteTutor={setDeleteTutor}
                 tutors={tutors}
             />
+
+            {/* Modals */}
             {addTutor && (
                 <AddTutorModal
                     tutor={addTutor}
