@@ -63,7 +63,6 @@ function Tutor() {
         setTutors(filtered);
     }
 
-    // Search filter
     const handleSearch = (searchTerm) => {
         if (!searchTerm) {
             setTutors(filteredTutors);
