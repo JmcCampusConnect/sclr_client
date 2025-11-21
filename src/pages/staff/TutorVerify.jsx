@@ -297,11 +297,19 @@ function TutorVerify() {
 const Info = ({ label, value }) => (
     <div>
         <p className="font-semibold text-gray-700 dark:text-gray-200 mb-2">{label} :</p>
-        <p className="text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-2">
+        <p
+            className=
+            {`
+                w-full p-2 border border-gray-300 rounded-lg text-gray-900
+                bg-gray-100 cursor-not-allowed
+                dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600
+            `}
+        >
             {value || "—"}
         </p>
     </div>
 );
+
 
 const RadioGroup = ({ label, name, checkedValue, onChange, dataKey }) => (
     <div className="flex flex-col">
