@@ -15,7 +15,7 @@ function FooterCredit({ isDarkMode = false }) {
 
     return (
         <div className="text-center w-full pt-3 select-none">
-            <div className="flex justify-center mb-3">
+            <div className="flex justify-center mb-3.5">
                 <span className="block w-16 h-[1px] bg-gray-300" />
             </div>
             <p className={`text-xs ${baseText} font-light tracking-wide leading-relaxed`}>
@@ -25,7 +25,6 @@ function FooterCredit({ isDarkMode = false }) {
                 <span className={`${emphasis} font-normal`}>
                     {developers.join(", ")}
                 </span>
-
             </p>
             <div className="my-3" />
             <p className={`text-xs ${baseText} font-light tracking-wide`}>

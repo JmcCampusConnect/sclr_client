@@ -49,7 +49,7 @@ function LoginPage() {
         <div className="min-h-screen flex flex-col items-center justify-center p-6">
             <LoginHeader />
             <div className="w-full flex justify-center mt-4">
-                <div className="bg-white/10 backdrop-blur-sm bg-gradient-to-br from-orange-600 to-orange-400 rounded-2xl w-full max-w-6xl px-3.5 py-6 shadow-2xl flex flex-col lg:flex-row border border-white/20">
+                <div className="bg-white/10 backdrop-blur-sm bg-gradient-to-br from-orange-600 to-orange-400 rounded-2xl w-full max-w-6xl px-3 py-6 shadow-2xl flex flex-col lg:flex-row border border-white/20">
                     <LoginIllustration />
                     <LoginForm
                         register={register}

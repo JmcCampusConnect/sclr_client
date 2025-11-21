@@ -127,7 +127,7 @@ function RegisterApplication() {
                 setNewStudent(true)
             } else {
                 const confirmed = window.confirm('You already registered with this Register Number \nDo you want go to Login Page');
-                if (confirmed) { navigate('/student') }
+                if (confirmed) { navigate('/') }
             }
         } catch (err) {
             console.error('Error checking register number : ', err);

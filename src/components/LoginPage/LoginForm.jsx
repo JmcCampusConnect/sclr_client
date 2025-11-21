@@ -46,13 +46,13 @@ function LoginForm({ register, errors, registerSubmit, handleSubmit }) {
                     <button
                         type="button"
                         onClick={() => navigate('/')}
-                        className="w-1/2 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 transition font-bold text-white"
+                        className="w-1/2 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 transition font-bold text-white"
                     >
                         Back
                     </button>
                     <button
                         type="submit"
-                        className="w-1/2 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold transition"
+                        className="w-1/2 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold transition"
                     >
                         Login
                     </button>

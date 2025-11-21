@@ -24,7 +24,15 @@ function StudentButtons({ applnEndDate }) {
 
 	const navigate = useNavigate();
 	const isApplicationClosed = applnEndDate ? new Date().setHours(0, 0, 0, 0) > new Date(applnEndDate).setHours(0, 0, 0, 0) : false;
-	const formattedDate = applnEndDate ? new Date(applnEndDate).toLocaleDateString() : "N/A";
+	const formattedDate = applnEndDate
+		? (() => {
+			const d = new Date(applnEndDate);
+			const day = String(d.getDate()).padStart(2, "0");
+			const month = String(d.getMonth() + 1).padStart(2, "0");
+			const year = d.getFullYear();
+			return `${day}-${month}-${year}`;
+		})()
+		: "N/A";
 
 	return (
 		<div

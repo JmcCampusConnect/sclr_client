@@ -135,7 +135,7 @@ function LoginApplication() {
             const response = await addData(`${apiUrl}/api/student/loginApplication`, dataToSend);
             if (response.data.status === 201) {
                 alert(response.data?.message || 'Application submitted successfully');
-                navigate(`/student/${userId}/dashboard`);
+                navigate(`/student/${userId}/dashboard`); 
             } else { alert('Error in saving Application') }
         } catch (error) {
             console.error('Error in saving Login Application : ', error);
