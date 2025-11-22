@@ -74,10 +74,27 @@ function DonorManage() {
 
 	const handleCategoryChange = (category) => {
 		setSelectedCategories((prevSelected) => {
-			if (prevSelected.includes(category)) {
-				return prevSelected.filter((item) => item !== category);
+			// If "All" is clicked
+			if (category === "All") {
+				// If "All" is already checked, uncheck it along with others
+				if (prevSelected.includes("All")) {
+					return [];
+				} else {
+					// If "All" is not checked, check only "All" and uncheck others
+					return ["All"];
+				}
 			} else {
-				return [...prevSelected, category];
+				// If "Well Wishers" or "Alumini" is clicked
+				let newSelected = prevSelected.includes(category)
+					? prevSelected.filter((item) => item !== category)
+					: [...prevSelected, category];
+
+				// If "All" was selected, remove it when selecting specific categories
+				if (newSelected.includes("All")) {
+					newSelected = newSelected.filter((item) => item !== "All");
+				}
+
+				return newSelected;
 			}
 		});
 	};
