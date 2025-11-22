@@ -36,7 +36,7 @@ import DistributionStmt from './pages/admin/DistributionStmt';
 import StaffManage from './pages/admin/manage/StaffManage';
 import Student from './pages/admin/manage/StudentManage';
 import Tutor from './pages/admin/manage/TutorManage';
-import Application from './pages/admin/manage/Application';
+import ApplicationManage from './pages/admin/manage/ApplicationManage';
 import CheckStatus from './pages/admin/CheckStatus';
 import ProgressReport from './pages/admin/ProgressReport';
 import FundsAvailable from './pages/admin/report/FundsAvailable';
@@ -104,7 +104,7 @@ function App() {
 						<Route path="deptManage" element={<DepartmentManage />} />
 						<Route path="studentManage" element={<Student />} />
 						<Route path="tutorManage" element={<Tutor />} />
-						<Route path="applicationManage" element={<Application />} />
+						<Route path="applicationManage" element={<ApplicationManage />} />
 						<Route path="progressReport" element={<ProgressReport />} />
 						<Route path="fundsAvailable" element={<FundsAvailable />} />
 						<Route path="changePassword" element={<AdminChangePassword />} />
