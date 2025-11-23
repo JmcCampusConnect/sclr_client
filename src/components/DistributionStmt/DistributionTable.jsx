@@ -1,6 +1,6 @@
-import React from "react"; 
+import React from "react";
 
-function DistributionTable({ distribution }) {
+function DistributionTable({distribution}) {
 
 	return (
 		<div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
@@ -9,7 +9,7 @@ function DistributionTable({ distribution }) {
 					{/* Table Head */}
 					<thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
 						<tr>
-							{["S.No", "Register No", "Name", "Department", "Category", "Sclr Type", "Donor Name", "Donor Type", "Amount"].map(
+							{["S.No", "Register No", "Name", "Department", "Category", "Sclr Type", "Donor Name", "Donor Type", "Date", "Amount"].map(
 								(header) => (
 									<th
 										key={header}
@@ -24,48 +24,64 @@ function DistributionTable({ distribution }) {
 
 					{/* Table Body */}
 					<tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-						{distribution.length > 0 ? (
-							distribution.map((dist, index) => (
-								<tr
-									key={dist.registerNo}
-									className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
-								>
-									<td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
-										{index + 1}
-									</td>
-									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-										{dist.registerNo}
-									</td>
-									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-										{dist.name}
-									</td>
-									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-										{dist.department}
-									</td>
-									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-										{dist.category}
-									</td>
-									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-										{dist.sclrType}
-									</td>
-									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-										{dist.donorName}
-									</td>
-									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-										{dist.donorType}
-									</td>
-									<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-										{`₹ ${dist.givenAmt.toLocaleString("en-IN")}`}
+						{
+							distribution.length > 0 ? (
+								distribution.map((dist, index) => {
+									const key = dist._id || dist.registerNo || index;
+									const pad = (n) => (n < 10 ? `0${n}` : n);
+									const formatDate = (d) => {
+										if (!d) return "";
+										const dt = new Date(d);
+										if (isNaN(dt.getTime())) return "";
+										return `${pad(dt.getDate())}-${pad(dt.getMonth() + 1)}-${dt.getFullYear()}`;
+									};
+
+									return (
+										<tr
+											key={key}
+											className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
+										>
+											<td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
+												{index + 1}
+											</td>
+											<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+												{dist.registerNo}
+											</td>
+											<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+												{dist.name}
+											</td>
+											<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+												{dist.department}
+											</td>
+											<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+												{dist.category}
+											</td>
+											<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+												{dist.sclrType}
+											</td>
+											<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+												{dist.donorName}
+											</td>
+											<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+												{dist.donorType}
+											</td>
+											<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+												{formatDate(dist.createdAt)}
+											</td>
+											<td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+												{`₹ ${dist.givenAmt.toLocaleString("en-IN")}`}
+											</td>
+										</tr>
+									);
+								})
+							) : (
+								<tr>
+									<td colSpan="10" className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+										No distribution statements found.
 									</td>
 								</tr>
-							))
-						) : (
-							<tr>
-								<td colSpan="9" className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
-									No distribution statements found.
-								</td>
-							</tr>
-						)}
+							)
+						}
 					</tbody>
 				</table>
 			</div>

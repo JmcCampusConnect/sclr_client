@@ -1,6 +1,7 @@
 import React from "react";
+import SearchDropdown from "../../common/SearchDropDown";
 
-function FilterSection({ }) {
+function FilterSection({filters, setFilters, departments = []}) {
 
     const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
 
@@ -16,29 +17,27 @@ function FilterSection({ }) {
                     >
                         Donar Name or ID :
                     </label>
-                    <select
+                    <input
+                        type="text"
+                        placeholder="Donor name or id"
+                        value={filters.donor}
+                        onChange={(e) => setFilters(prev => ({...prev, donor: e.target.value}))}
                         className={formControlClass}
-                    >
-                        <option value="all">All</option>
-                        <option value="donor1">Donor 1</option>
-                        <option value="donor2">Donor 2</option>
-                        <option value="donor3">Donor 3</option>
-                    </select>
+                    />
                 </div>
 
                 {/* Conditional Dropdown */}
                 <div className="space-y-2.5">
-                    <label
-                        htmlFor="progress-type"
-                        className="block text-md lg:text-base font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Department ID :
-                    </label>
-                    <select id="progress-type" className={formControlClass}>
-                        <option value="all">All</option>
-                        <option value="cs">Computer Science</option>
-                        <option value="it">Information Technology</option>
-                    </select>
+                    <SearchDropdown
+                        label="Department ID"
+                        name="department"
+                        value={filters.department}
+                        options={[
+                            {value: "all", label: "All"},
+                            ...departments.map((d) => ({value: d.department, label: `${d.department} - ${d.departmentName}`})),
+                        ]}
+                        onChange={(name, option) => setFilters(prev => ({...prev, [name]: option ? option.value : "all"}))}
+                    />
                 </div>
 
                 {/* Verification Status */}
@@ -49,11 +48,11 @@ function FilterSection({ }) {
                     >
                         Catergory :
                     </label>
-                    <select id="verification-status" className={formControlClass}>
+                    <select id="verification-status" className={formControlClass} value={filters.category} onChange={(e) => setFilters(prev => ({...prev, category: e.target.value}))}>
                         <option value="all">All</option>
-                        <option value="aided">AIDED</option>
-                        <option value="sfm">SFM</option>
-                        <option value="sfw">SFW</option>
+                        <option value="Aided">AIDED</option>
+                        <option value="SFM">SFM</option>
+                        <option value="SFW">SFW</option>
                     </select>
                 </div>
 
@@ -65,10 +64,10 @@ function FilterSection({ }) {
                     >
                         Semester :
                     </label>
-                    <select id="semester" className={formControlClass}>
+                    <select id="semester" className={formControlClass} value={filters.semester} onChange={(e) => setFilters(prev => ({...prev, semester: e.target.value}))}>
                         <option value="all">All</option>
-                        <option value="evemSem">Even Semster</option>
-                        <option value="oddSem">Odd Semester</option>
+                        <option value="even">Even Semester</option>
+                        <option value="odd">Odd Semester</option>
                     </select>
                 </div>
 
@@ -83,6 +82,8 @@ function FilterSection({ }) {
                     <input
                         type="date"
                         id="from-date"
+                        value={filters.fromDate}
+                        onChange={(e) => setFilters(prev => ({...prev, fromDate: e.target.value}))}
                         className={formControlClass}
                     />
                 </div>
@@ -98,6 +99,8 @@ function FilterSection({ }) {
                     <input
                         type="date"
                         id="to-date"
+                        value={filters.toDate}
+                        onChange={(e) => setFilters(prev => ({...prev, toDate: e.target.value}))}
                         className={formControlClass}
                     />
                 </div>
