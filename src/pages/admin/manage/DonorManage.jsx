@@ -12,13 +12,17 @@ import Loading from "../../../assets/svg/Pulse.svg";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function DonorManage() {
+
 	const [allDonors, setAllDonors] = useState([]);
 	const [donors, setDonors] = useState([]);
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [editDonor, setEditDonor] = useState(null);
 	const [deleteDonor, setDeleteDonor] = useState(null);
 	const [amtDonarModal, setAmtDonarModal] = useState(null);
-	const [selectedCategories, setSelectedCategories] = useState([]);
+	const [selectedCategories, setSelectedCategories] = useState([
+		"All", "Well Wishers", "Alumini"
+	]);
+
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -34,15 +38,12 @@ function DonorManage() {
 				const idB = parseInt(b.donorId, 10);
 				return idA - idB;
 			});
-
 			setAllDonors(sortedDonors);
 			setDonors(sortedDonors);
 		} catch (error) {
 			console.error("Error fetching donor data:", error);
 			setError("Failed to load donor data. Please try again later.");
-		} finally {
-			setIsLoading(false);
-		}
+		} finally { setIsLoading(false) }
 	};
 
 	useEffect(() => {
@@ -73,29 +74,30 @@ function DonorManage() {
 	};
 
 	const handleCategoryChange = (category) => {
-		setSelectedCategories((prevSelected) => {
-			// If "All" is clicked
+		setSelectedCategories((prev) => {
 			if (category === "All") {
-				// If "All" is already checked, uncheck it along with others
-				if (prevSelected.includes("All")) {
-					return [];
-				} else {
-					// If "All" is not checked, check only "All" and uncheck others
-					return ["All"];
+				if (!prev.includes("All")) {
+					return ["All", "Well Wishers", "Alumini"];
 				}
-			} else {
-				// If "Well Wishers" or "Alumini" is clicked
-				let newSelected = prevSelected.includes(category)
-					? prevSelected.filter((item) => item !== category)
-					: [...prevSelected, category];
-
-				// If "All" was selected, remove it when selecting specific categories
-				if (newSelected.includes("All")) {
-					newSelected = newSelected.filter((item) => item !== "All");
-				}
-
-				return newSelected;
+				return [];
 			}
+			let updated = prev.includes(category)
+				? prev.filter((c) => c !== category)
+				: [...prev, category];
+			if (updated.length === 0) return [];
+			if (
+				!updated.includes("Well Wishers") ||
+				!updated.includes("Alumini")
+			) {
+				updated = updated.filter((x) => x !== "All");
+			}
+			if (
+				updated.includes("Well Wishers") &&
+				updated.includes("Alumini")
+			) {
+				updated = ["All", "Well Wishers", "Alumini"];
+			}
+			return updated;
 		});
 	};
 
@@ -103,12 +105,12 @@ function DonorManage() {
 
 		let filtered = [...allDonors];
 
-		if (selectedCategories.length > 0 && !selectedCategories.includes("All")) {
+		if (selectedCategories.length === 0) { filtered = [] }
+		else if (!selectedCategories.includes("All")) {
 			filtered = filtered.filter((donor) =>
 				selectedCategories.includes(donor.donorType)
 			);
 		}
-
 		if (searchTerm.trim() !== "") {
 			filtered = filtered.filter(
 				(donor) =>
@@ -117,7 +119,6 @@ function DonorManage() {
 					donor.donorType?.toLowerCase().includes(searchTerm.toLowerCase())
 			);
 		}
-
 		setDonors(filtered);
 	}, [selectedCategories, allDonors, searchTerm]);
 
@@ -200,7 +201,7 @@ function DonorManage() {
 				/>
 			)}
 		</div>
-	);
+	)
 }
 
 export default DonorManage;
