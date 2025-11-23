@@ -37,6 +37,7 @@ function FilterSection({filters, setFilters}) {
     };
 
     const handleCheckboxChange = (label) => {
+        
         setFilters((prev) => {
             const updated = prev.specialCategories || [];
             if (label === "All") {

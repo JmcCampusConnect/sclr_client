@@ -48,6 +48,7 @@ import DepartmentManage from './pages/admin/manage/DepartmentManage';
 import ForgotPassword from './pages/others/ForgotPassword';
 import ScholarshipStaff from './pages/staff/ScholarshipStaff';
 import TutorVerify from './pages/staff/TutorVerify';
+import QuickRejection from './pages/admin/QuickRejection';
 
 function App() {
 
@@ -111,6 +112,7 @@ function App() {
 						<Route path="guidelines" element={<GuideLines />} />
 						<Route path="dataDeletion" element={<DataDeletion />} />
 						<Route path="uploadCenter" element={<UploadCenter />} />
+						<Route path="quickRejection" element={<QuickRejection />} />
 					</Route>
 
 					{/* Staff */}

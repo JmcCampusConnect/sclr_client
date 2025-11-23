@@ -23,16 +23,17 @@ function ApplicationStatusForm() {
     return (
         <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6">
 
-            <h3 className="text-lg sm:text-xl font-semibold bg-gray-100 dark:bg-gray-900 
-						   text-gray-800 dark:text-gray-200 p-3 rounded-lg mb-6 border 
-						   border-gray-200 dark:border-gray-700">
-                Application Status
-            </h3>
+            <header className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
+                    Application Status
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                </h1>
+            </header>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label className="block mb-2 text-md font-semibold text-gray-700 dark:text-gray-300">
-                        Register No. :
+                    <label className="block mb-3.5 text-md font-semibold text-gray-700 dark:text-gray-300">
+                        Register Number :
                     </label>
                     <input type="text" className={formControlClass} />
                 </div>
