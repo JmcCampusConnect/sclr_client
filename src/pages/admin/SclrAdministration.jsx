@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {Outlet, useLocation} from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import FilterSection from "../../components/SclrAdministration/FilterSection";
 import ActionBar from "../../components/SclrAdministration/ActionBar";
 import ApplicationTable from "../../components/SclrAdministration/ApplicationTable";
@@ -22,9 +22,7 @@ function SclrAdministration() {
 	const [showRejectModal, setShowRejectModal] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState(null);
 	const [filters, setFilters] = useState({
-		applicationStatus: "0",
-		sclrType: "all",
-		tutorVerification: "all",
+		applicationStatus: "0", sclrType: "all", tutorVerification: "all",
 		specialCategories: ["All", "General", "Mu-addin", "Hazrath", "Father Mother Separated", "Father Expired", "Single Parent", "Orphan"]
 	});
 	const [searchTerm, setSearchTerm] = useState("");
@@ -50,17 +48,15 @@ function SclrAdministration() {
 		} catch (err) {
 			console.error("Error fetching data for admin application:", err);
 			setError("Failed to load data. Please try again later.");
-		} finally {
-			setIsLoading(false);
-		}
-	};
+		} finally { setIsLoading(false) }
+	}
 
-	useEffect(() => {
-		fetchData();
-	}, []);
+	useEffect(() => { fetchData() }, []);
 
 	// Apply filters with AND gate logic
+
 	useEffect(() => {
+
 		let filtered = [...students];
 
 		// Filter by application status (AND gate)
@@ -85,27 +81,15 @@ function SclrAdministration() {
 		}
 
 		// Filter by special categories
-		// If no categories are selected, show no data
-		// If categories are selected, filter by them (AND gate)
 		if (filters.specialCategories && filters.specialCategories.length > 0) {
-			// Remove "All" from the categories for filtering (it's just a selector)
 			const categoriesToFilter = filters.specialCategories.filter(cat => cat !== "All");
-
-			if (categoriesToFilter.length === 0) {
-				// If only "All" was selected, show all data (no category filtering)
-				// This handles the case where "All" checkbox is checked
-				// Do nothing, filtered remains as is
-			} else {
-				// If specific categories are selected, filter by them
-				// Check against the specialCategory field directly
+			if (categoriesToFilter.length === 0) { }
+			else {
 				filtered = filtered.filter(student => {
 					return categoriesToFilter.includes(student.specialCategory);
 				});
 			}
-		} else {
-			// If no categories are selected at all, show no data
-			filtered = [];
-		}
+		} else { filtered = [] }
 
 		setFilteredStudents(filtered);
 	}, [filters, students]);
@@ -174,23 +158,30 @@ function SclrAdministration() {
 						</h1>
 					</header>
 
-					<FilterSection filters={filters} setFilters={setFilters} />
+					<FilterSection
+						filters={filters}
+						setFilters={setFilters}
+					/>
+
 					<ActionBar
 						totalStudents={searchedStudents.length}
 						searchTerm={searchTerm}
 						setSearchTerm={setSearchTerm}
 					/>
+
 					<ApplicationTable
 						students={searchedStudents}
 						openAcceptModal={openAcceptModal}
 						openRejectModal={openRejectModal}
-					/>					{/* Modals */}
+					/>
+
 					<AcceptModal
 						donors={donors}
 						selectedStudent={selectedStudent}
 						showAcceptModal={showAcceptModal}
 						closeModal={closeModal}
 					/>
+
 					<RejectModal
 						selectedStudent={selectedStudent}
 						showRejectModal={showRejectModal}
@@ -199,7 +190,7 @@ function SclrAdministration() {
 				</>
 			)}
 		</div>
-	);
+	)
 }
 
 export default SclrAdministration;

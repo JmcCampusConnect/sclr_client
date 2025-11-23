@@ -28,7 +28,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 							<tr key={app.applicationId} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200">
 								<td className="px-4 py-4">{index + 1}</td>
 								<td className="px-4 py-4">{app.registerNo}</td>
-								<td className="px-4 py-4">{app.name}</td>
+								<td className="px-4 py-4" style={{minWidth: '300px'}}>{app.name}</td>
 								<td className="px-4 py-4">{app.department}</td>
 								<td className="px-4 py-4 font-semibold text-indigo-600 dark:text-indigo-400">
 									{typeof app.lastYearCreditedAmount === 'number'
@@ -86,8 +86,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
 				</tbody>
 			</table>
 		</div>
-	);
-
-}
+	)
+x``}
 
 export default ApplicationTable;

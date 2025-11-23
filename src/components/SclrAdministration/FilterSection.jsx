@@ -39,24 +39,17 @@ function FilterSection({filters, setFilters}) {
     const handleCheckboxChange = (label) => {
         setFilters((prev) => {
             const updated = prev.specialCategories || [];
-
-            // If "All" checkbox is clicked
             if (label === "All") {
-                // If "All" is already checked, uncheck all
                 if (updated.includes("All")) {
                     return {...prev, specialCategories: []};
                 } else {
-                    // If "All" is not checked, select all checkboxes including "All"
                     return {...prev, specialCategories: ["All", ...checkboxes]};
                 }
             }
-
             // If any specific checkbox is clicked
             const isChecked = updated.includes(label);
             let newCategories;
-
             if (isChecked) {
-                // Uncheck the checkbox
                 newCategories = updated.filter((i) => i !== label);
             } else {
                 // Check the checkbox and remove "All" if any specific category is selected
@@ -91,8 +84,6 @@ function FilterSection({filters, setFilters}) {
     return (
         <div className="w-full space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                {/* === DROPDOWN SECTION === */}
 
                 {/* Application Status */}
                 <SearchDropdown
@@ -130,7 +121,7 @@ function FilterSection({filters, setFilters}) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     {/* All Checkbox */}
                     <label
-                        className="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer shadow-sm font-semibold"
+                        className="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer shadow-sm"
                     >
                         <input
                             type="checkbox"
