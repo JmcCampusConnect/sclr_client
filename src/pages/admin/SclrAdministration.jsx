@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
-import { Outlet, useLocation } from "react-router-dom";
+import {Outlet, useLocation} from "react-router-dom";
 import FilterSection from "../../components/SclrAdministration/FilterSection";
 import ActionBar from "../../components/SclrAdministration/ActionBar";
 import ApplicationTable from "../../components/SclrAdministration/ApplicationTable";
@@ -14,12 +14,21 @@ function SclrAdministration() {
 
 	const [searchMode, setSearchMode] = useState("all");
 	const [students, setStudents] = useState([]);
+	const [filteredStudents, setFilteredStudents] = useState([]);
 	const [donors, setDonors] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [showAcceptModal, setShowAcceptModal] = useState(false);
 	const [showRejectModal, setShowRejectModal] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState(null);
+	const [filters, setFilters] = useState({
+		applicationStatus: "0",
+		sclrType: "all",
+		tutorVerification: "all",
+		specialCategories: ["All", "General", "Mu-addin", "Hazrath", "Father Mother Separated", "Father Expired", "Single Parent", "Orphan"]
+	});
+	const [searchTerm, setSearchTerm] = useState("");
+	const [searchedStudents, setSearchedStudents] = useState([]);
 	const location = useLocation();
 
 	const fetchData = async () => {
@@ -49,6 +58,72 @@ function SclrAdministration() {
 	useEffect(() => {
 		fetchData();
 	}, []);
+
+	// Apply filters with AND gate logic
+	useEffect(() => {
+		let filtered = [...students];
+
+		// Filter by application status (AND gate)
+		if (filters.applicationStatus !== "all") {
+			filtered = filtered.filter(student =>
+				String(student.applicationStatus) === filters.applicationStatus
+			);
+		}
+
+		// Filter by scholarship type (AND gate)
+		if (filters.sclrType !== "all") {
+			filtered = filtered.filter(student =>
+				student.sclrType === filters.sclrType
+			);
+		}
+
+		// Filter by tutor verification (AND gate)
+		if (filters.tutorVerification !== "all") {
+			filtered = filtered.filter(student =>
+				String(student.tutorVerification) === filters.tutorVerification
+			);
+		}
+
+		// Filter by special categories
+		// If no categories are selected, show no data
+		// If categories are selected, filter by them (AND gate)
+		if (filters.specialCategories && filters.specialCategories.length > 0) {
+			// Remove "All" from the categories for filtering (it's just a selector)
+			const categoriesToFilter = filters.specialCategories.filter(cat => cat !== "All");
+
+			if (categoriesToFilter.length === 0) {
+				// If only "All" was selected, show all data (no category filtering)
+				// This handles the case where "All" checkbox is checked
+				// Do nothing, filtered remains as is
+			} else {
+				// If specific categories are selected, filter by them
+				// Check against the specialCategory field directly
+				filtered = filtered.filter(student => {
+					return categoriesToFilter.includes(student.specialCategory);
+				});
+			}
+		} else {
+			// If no categories are selected at all, show no data
+			filtered = [];
+		}
+
+		setFilteredStudents(filtered);
+	}, [filters, students]);
+
+	// Apply search to filtered students only
+	useEffect(() => {
+		if (searchTerm.trim() === "") {
+			setSearchedStudents(filteredStudents);
+		} else {
+			const lower = searchTerm.toLowerCase();
+			const searched = filteredStudents.filter(student =>
+				student.name?.toLowerCase().includes(lower) ||
+				student.registerNo?.toLowerCase().includes(lower) ||
+				student.department?.toLowerCase().includes(lower)
+			);
+			setSearchedStudents(searched);
+		}
+	}, [searchTerm, filteredStudents]);
 
 	const isViewPage = location.pathname.endsWith("/view");
 
@@ -99,15 +174,17 @@ function SclrAdministration() {
 						</h1>
 					</header>
 
-					<FilterSection searchMode={searchMode} setSearchMode={setSearchMode} />
-					<ActionBar totalStudents={students.length} />
+					<FilterSection filters={filters} setFilters={setFilters} />
+					<ActionBar
+						totalStudents={searchedStudents.length}
+						searchTerm={searchTerm}
+						setSearchTerm={setSearchTerm}
+					/>
 					<ApplicationTable
-						students={students}
+						students={searchedStudents}
 						openAcceptModal={openAcceptModal}
 						openRejectModal={openRejectModal}
-					/>
-
-					{/* Modals */}
+					/>					{/* Modals */}
 					<AcceptModal
 						donors={donors}
 						selectedStudent={selectedStudent}
