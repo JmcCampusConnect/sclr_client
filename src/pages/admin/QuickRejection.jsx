@@ -97,7 +97,7 @@ function QuickRejection() {
 
     const submitAllRejections = async () => {
         if (!filteredApps || filteredApps.length === 0) {
-            console.log('No filtered applications to reject.');
+            // console.log('No filtered applications to reject.');
             return;
         }
 
@@ -139,7 +139,7 @@ function QuickRejection() {
 
                 // Skip if no reason determined
                 if (reasons.length === 0) {
-                    console.log(`No automatic reasons for ${app.registerNo}, skipping.`);
+                    // console.log(`No automatic reasons for ${app.registerNo}, skipping.`);
                     continue;
                 }
 
@@ -151,22 +151,22 @@ function QuickRejection() {
             }
 
             if (applicationsToReject.length === 0) {
-                console.log('No applications with determined reasons to reject.');
+                // console.log('No applications with determined reasons to reject.');
                 setIsSubmitting(false);
                 return;
             }
 
             // Send bulk rejection request to server
-            console.log('Sending bulk rejection for', applicationsToReject.length, 'applications');
+            // console.log('Sending bulk rejection for', applicationsToReject.length, 'applications');
             const resp = await axios.post(`${apiUrl}/api/admin/application/quickRejectApplications`, {
                 applications: applicationsToReject
             });
 
-            console.log('Bulk rejection response:', resp.data);
+            // console.log('Bulk rejection response:', resp.data);
 
             if (resp.data.success) {
                 const succeeded = resp.data.results.filter(r => r.success).map(r => r.registerNo);
-                console.log(`✓ Successfully rejected ${succeeded.length} applications`);
+                // console.log(`✓ Successfully rejected ${succeeded.length} applications`);
 
                 // Remove successfully rejected from UI
                 if (succeeded.length > 0) {
@@ -174,10 +174,12 @@ function QuickRejection() {
                 }
 
                 alert(`Bulk rejection completed! Succeeded: ${succeeded.length}/${applicationsToReject.length}`);
+                window.location.reload();
+
             }
 
         } catch (err) {
-            console.error('Bulk rejection failed:', err?.response?.data || err.message);
+            // console.error('Bulk rejection failed:', err?.response?.data || err.message);
             alert(`Error during bulk rejection: ${err?.response?.data?.message || err.message}`);
         } finally {
             setIsSubmitting(false);
