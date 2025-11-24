@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {useForm} from 'react-hook-form';
+import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import HeaderTag from '../../common/HeaderTag';
 import InstructionModal from '../../components/RegisterApplication/InstructionModal';
@@ -12,7 +12,7 @@ import ParentSection from '../../components/RegisterApplication/ParentSection';
 import AddressSection from '../../components/RegisterApplication/AddressSection';
 import LastInstitution from '../../components/RegisterApplication/LastInstitution';
 import Button from '../../common/Button';
-import { useAdd } from '../../hook/useAdd';
+import {useAdd} from '../../hook/useAdd';
 import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -105,17 +105,17 @@ const schema = Yup.object().shape({
 function RegisterApplication() {
 
     const [instructionModal, setInstructionModal] = useState(true);
-    const { register, handleSubmit, formState: { errors, isSubmitting }, watch, setValue } = useForm({
+    const {register, handleSubmit, formState: {errors, isSubmitting}, watch, setValue} = useForm({
         resolver: yupResolver(schema), shouldUnregister: true
     });
     const navigate = useNavigate();
-    const { addData, addError } = useAdd();
+    const {addData, addError} = useAdd();
     const [newStudent, setNewStudent] = useState(false);
     const [registerNo, setRegisterNo] = useState('');
 
     const checkRegisterNumber = async () => {
 
-        if (registerNo === '') { return alert('Please enter Register Number') }
+        if (registerNo === '') {return alert('Please enter Register Number')}
 
         try {
             const response = await axios.get(
@@ -127,7 +127,7 @@ function RegisterApplication() {
                 setNewStudent(true)
             } else {
                 const confirmed = window.confirm('You already registered with this Register Number \nDo you want go to Login Page');
-                if (confirmed) { navigate('/') }
+                if (confirmed) {navigate('/')}
             }
         } catch (err) {
             console.error('Error checking register number : ', err);
@@ -155,9 +155,9 @@ function RegisterApplication() {
             const response = await addData(`${apiUrl}/api/student/registerApplication`, dataToSend);
             if (response.data.status === 201) {
                 alert(response.data?.message || 'Application submitted successfully')
-                navigate('/student')
+                navigate('/')
             }
-            else { alert('Error in saving Application') }
+            else {alert('Error in saving Application')}
         } catch (error) {
             console.error('Error in saving Register Application : ', error);
         }

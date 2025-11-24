@@ -1,8 +1,8 @@
 import React from 'react'
 import JmcLogo from '../assets/logos/JmcLogo.png'
-import { Outlet, NavLink, useNavigate, useParams } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClipboard, faUndo } from '@fortawesome/free-solid-svg-icons';
+import {Outlet, NavLink, useNavigate, useParams} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faClipboard, faUndo} from '@fortawesome/free-solid-svg-icons';
 
 function RegisterLayout() {
 
@@ -40,7 +40,7 @@ function RegisterLayout() {
                         <NavLink
                             key={index}
                             to={item.path}
-                            className={({ isActive }) =>
+                            className={({isActive}) =>
                                 `group flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium
                                          hover:bg-emerald-900 hover:bg-opacity-30 ${isActive
                                     ? "bg-emerald-900 bg-opacity-30 border-l-2 border-white" : ""
@@ -57,7 +57,7 @@ function RegisterLayout() {
 
                     {/* Back Button */}
                     <button
-                        onClick={() => navigate("/student")}
+                        onClick={() => navigate("/")}
                         className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-300 hover:bg-emerald-900 hover:bg-opacity-30"
                     >
                         <FontAwesomeIcon
