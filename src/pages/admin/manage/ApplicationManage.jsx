@@ -7,6 +7,7 @@ import ApplnManageTable from '../../../components/ApplnManage/ApplnManageTable';
 import ApplnManageFilters from '../../../components/ApplnManage/ApplnManageFilters';
 import ApplnManageActionBar from '../../../components/ApplnManage/ApplnManageActionBar';
 import ApplnDeleteModal from '../../../components/ApplnManage/ApplnDeleteModal';
+import ApplnEditModal from '../../../components/ApplnManage/ApplnEditModal';
 
 const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
 
@@ -16,17 +17,14 @@ function ApplicationManage() {
     const navigate = useNavigate();
     const [applications, setApplications] = useState([]);
     const [filteredApplications, setFilteredApplications] = useState([]);
-
-    const [filters, setFilters] = useState({
-        category: "All",
-        department: "All",
-        batch: "All",
-    });
-
+    const [filters, setFilters] = useState({ category: "All", department: "All", batch: "All" });
     const [searchTerm, setSearchTerm] = useState("");
 
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editingAppln, setEditingAppln] = useState(null);
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedAppln, setSelectedAppln] = useState(null);
@@ -76,6 +74,16 @@ function ApplicationManage() {
     const handleDeleteApp = (id) => {
         setApplications(prev => prev.filter(app => app._id !== id));
         setFilteredApplications(prev => prev.filter(app => app._id !== id));
+    };
+
+    const handleRowClick = (app) => {
+        setEditingAppln(app);
+        setShowEditModal(true);
+    };
+
+    const handleUpdateApplication = (updated) => {
+        setApplications(prev => prev.map(a => a._id === updated._id ? ({ ...a, ...updated }) : a));
+        setFilteredApplications(prev => prev.map(a => a._id === updated._id ? ({ ...a, ...updated }) : a));
     };
 
     if (isLoading) {
@@ -128,6 +136,7 @@ function ApplicationManage() {
 
             {/* Table */}
             <ApplnManageTable
+                onRowClick={handleRowClick}
                 applications={filteredApplications}
                 onDeleteClick={(app) => {
                     setSelectedAppln(app);
@@ -135,8 +144,17 @@ function ApplicationManage() {
                 }}
             />
 
-            {/* Delete Modal */}
+            {/* Edit Modal */}
+            {showEditModal && editingAppln && (
+                <ApplnEditModal
+                    onRowClick={handleRowClick}
+                    application={editingAppln}
+                    onClose={() => setShowEditModal(false)}
+                    onUpdate={(updated) => handleUpdateApplication(updated)}
+                />
+            )}
 
+            {/* Delete Modal */}
             {showDeleteModal && selectedAppln && (
                 <ApplnDeleteModal
                     application={selectedAppln}
