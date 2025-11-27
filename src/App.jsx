@@ -49,6 +49,8 @@ import ForgotPassword from './pages/others/ForgotPassword';
 import ScholarshipStaff from './pages/staff/ScholarshipStaff';
 import TutorVerify from './pages/staff/TutorVerify';
 import QuickRejection from './pages/admin/QuickRejection';
+import AdminRegisterAppln from './pages/admin/AdminRegisterAppln';
+import AdminLoginAppln from './pages/admin/AdminLoginAppln';
 
 function App() {
 
@@ -96,7 +98,7 @@ function App() {
 						<Route path="academicYear" element={<AcademicYear />} />
 						<Route path="applicationDate" element={<ApplicationDate />} />
 						<Route path="donor" element={<DonorManage />} />
-						<Route path="checkSstatus/*" element={<CheckStatus />} />
+						<Route path="checkStatus" element={<CheckStatus />} />
 						<Route path="distributionStatement" element={<DistributionStmt />} />
 						<Route path="sclrAdministration/*" element={<SclrAdministration />} >
 							<Route path="view" element={<AdminViewAppln />} />
@@ -113,6 +115,8 @@ function App() {
 						<Route path="dataDeletion" element={<DataDeletion />} />
 						<Route path="uploadCenter" element={<UploadCenter />} />
 						<Route path="quickRejection" element={<QuickRejection />} />
+						<Route path="adminRegisterApplication" element={<AdminRegisterAppln />} />
+						<Route path=":registerNo/adminLoginApplication" element={<AdminLoginAppln />} />
 					</Route>
 
 					{/* Staff */}

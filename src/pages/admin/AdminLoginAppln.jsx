@@ -1,0 +1,209 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+import SpecialCategory from '../../components/RegisterApplication/SpecialCategory';
+import AcademicDetails from '../../components/RegisterApplication/AcademicDetails';
+import StudentSection from '../../components/RegisterApplication/StudentSection';
+import ParentSection from '../../components/RegisterApplication/ParentSection';
+import AddressSection from '../../components/RegisterApplication/AddressSection';
+import HeaderTag from '../../common/HeaderTag';
+import Button from '../../common/Button';
+import { useAdd } from '../../hook/useAdd';
+const apiUrl = import.meta.env.VITE_API_URL;
+
+const schema = Yup.object().shape({
+    specialCategory: Yup.string().required('Special Category is required'),
+    hasAppliedOtherScholarships: Yup.string().required('Applied Scholarship is required'),
+    graduate: Yup.string().required('Graduate is required'),
+    category: Yup.string().required('Category is required'),
+    semester: Yup.string().required('Semester is required'),
+    hostelStatus: Yup.string().required('Hostel Status is required'),
+    registerNo: Yup.string().required('Register Number is required'),
+    name: Yup.string().required('Name is required'),
+    yearOfAdmission: Yup.number().required('Year of Admission is required').typeError('Must be a number'),
+    department: Yup.string().required('Department is required'),
+    section: Yup.string().required('Section is required'),
+    religion: Yup.string().required('Religion is required'),
+    mobileNo: Yup.string().required('Mobile Number is required').matches(/^[0-9]{10}$/, 'Mobile Number must contain 10 digits'),
+    aadharNo: Yup.string().required('Aadhar Number is required').matches(/^[0-9]{12}$/, 'Aadhar Number must contain 12 digits'),
+    parentName: Yup.string().required("Parent / Guardian Name is required"),
+    parentNo: Yup.string().required("Parent / Guardian No. is required"),
+    parentOccupation: Yup.string().required("Parent Occupation is required"),
+    parentAnnualIncome: Yup.number().required("Parent Annual Income is required").typeError("Must be a number"),
+    siblingsStatus: Yup.string().required("Siblings status is required"),
+    siblingsCount: Yup.number().when("siblingsStatus", {
+        is: "Yes",
+        then: (schema) => schema.required("Number of Siblings is required").typeError("Must be a number"),
+        otherwise: (schema) => schema.notRequired(),
+    }),
+    siblingsOccupation: Yup.string().when('siblingsStatus', {
+        is: 'Yes', then: (schema) => schema.required('Siblings Occupation is required'),
+        otherwise: (schema) => schema.notRequired()
+    }),
+    siblingsIncome: Yup.number().when('siblingsStatus', {
+        is: 'Yes',
+        then: (schema) => schema.required('Siblings Income is required').typeError('Must be a number'),
+        otherwise: (schema) => schema.notRequired()
+    }),
+    address: Yup.string().required("Permanent Address is required"),
+    state: Yup.string().required("State is required"),
+    district: Yup.string().required("District is required"),
+    pinCode: Yup.string().required('Pincode is required').matches(/^[0-9]{6}$/, 'Pincode must contain 6 digits'),
+    jamathLetter: Yup
+        .mixed()
+        .test("required", "Jamath / Self Declaration Letter is required", (value) => value && value.length > 0)
+        .test("fileSize", "File size must be between 30KB and 200KB",
+            (value) => {
+                if (!value || value.length === 0) return true;
+                const file = value[0];
+                const sizeKB = file.size / 1024;
+                return sizeKB >= 30 && sizeKB <= 200;
+            }
+        )
+        .test("fileType", "Only JPEG, JPG, or PNG images are allowed",
+            (value) => {
+                if (!value || value.length === 0) return true;
+                const file = value[0];
+                const validTypes = ["image/jpeg", "image/jpg", "image/png"];
+                return validTypes.includes(file.type);
+            }
+        ),
+})
+
+function AdminLoginAppln() {
+
+    const { registerNo } = useParams();
+    const [studentData, setStudentData] = useState(null);
+    const [adminCanApply, setAdminCanApply] = useState(true);
+    const [sclrType, setSclrType] = useState(null);
+
+    const { register, handleSubmit, formState: { errors, isSubmitting }, watch, setValue,
+    } = useForm({ resolver: yupResolver(schema), shouldUnregister: true })
+
+    const navigate = useNavigate();
+    const { addData } = useAdd();
+
+    useEffect(() => {
+ 
+        const fetchData = async () => {
+
+            if (!registerNo) return;
+
+            try {
+                const response = await axios.get(`${apiUrl}/api/student/fetchStudentData`, { params: { registerNo: registerNo.toUpperCase() } });
+                const { student, adminCanApply } = response.data;
+                const { lastYearCreditedAmount, currentYearCreditedAmount } = student
+                setStudentData(student);
+                setAdminCanApply(adminCanApply);
+                const type = lastYearCreditedAmount && currentYearCreditedAmount === 0 ? "Fresher" : "Renewal";
+                setSclrType(type);
+                setValue('sclrType', type);
+                Object.keys(student).forEach((key) => { if (key in student) setValue(key, student[key]) });
+            } catch (error) {
+                console.error('Error in fetching student data : ', error.response ? error.response.data : error);
+                alert('Failed to load data.');
+            }
+        };
+        fetchData();
+    }, [registerNo, apiUrl, setValue]);
+
+    useEffect(() => {
+        if (studentData) {
+            Object.keys(studentData).forEach((key) => setValue(key, studentData[key]));
+            setValue('sclrType', sclrType)
+        }
+    }, [studentData, setValue, sclrType]);
+
+
+    const loginFormSubmit = async (formData) => {
+
+        if (!adminCanApply) return;
+        const dataToSend = new FormData();
+
+        Object.keys(formData).forEach((key) => {
+            if (key === "jamathLetter" && formData[key] instanceof FileList) {
+                dataToSend.append(key, formData[key][0]);
+            } else {
+                dataToSend.append(key, formData[key]);
+            }
+        })
+
+        try {
+            const response = await addData(`${apiUrl}/api/student/loginApplication`, dataToSend);
+            if (response.data.status === 201) {
+                alert(response.data?.message || 'Application submitted successfully');
+                navigate(`/admin/applicationManage`);
+            } else { alert('Error in saving Application') }
+        } catch (error) {
+            console.error('Error in saving Login Application : ', error);
+        }
+    }
+
+    return (
+        <form className="space-y-7" onSubmit={handleSubmit(loginFormSubmit)}>
+
+            <HeaderTag label={`${sclrType} Application`} />
+            <SpecialCategory
+                register={register}
+                errors={errors}
+                watch={watch}
+                setValue={setValue}
+                readOnly={!adminCanApply}
+                sclrType={sclrType}
+            />
+
+            <AcademicDetails
+                register={register}
+                errors={errors}
+                watch={watch}
+                setValue={setValue}
+                readOnly={!adminCanApply}
+                loginConstraint={true}
+            />
+
+            <StudentSection
+                register={register}
+                errors={errors}
+                watch={watch}
+                setValue={setValue}
+                addtionalInfo={true}
+                readOnly={!adminCanApply}
+                sclrType={sclrType}
+                lastYearCreditedAmount={studentData?.lastYearCreditedAmount}
+            />
+
+            <ParentSection
+                register={register}
+                errors={errors}
+                watch={watch}
+                setValue={setValue}
+                readOnly={!adminCanApply}
+            />
+
+            <AddressSection
+                register={register}
+                errors={errors}
+                watch={watch}
+                setValue={setValue}
+                notRequiredInfo={false}
+                readOnly={!adminCanApply}
+            />
+
+            {adminCanApply &&
+                <div className="flex justify-end">
+                    <Button
+                        type="submit"
+                        label={isSubmitting ? "Submitting..." : adminCanApply ? "Submit" : "Application Closed"}
+                        customBtnStyle={`bg-blue-500 hover:bg-blue-700 ${isSubmitting || !adminCanApply ? "opacity-50 cursor-not-allowed" : ""}`}
+                        disabled={!adminCanApply}
+                    />
+                </div>
+            }
+        </form>
+    )
+}
+
+export default AdminLoginAppln;

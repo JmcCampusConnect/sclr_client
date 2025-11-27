@@ -1,6 +1,6 @@
 import React from "react";
 
-function ApplnManageTable({ applications, onDeleteClick }) {
+function ApplnManageTable({ applications, onDeleteClick, onRowClick }) {
 
     return (
         <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
@@ -43,6 +43,8 @@ function ApplnManageTable({ applications, onDeleteClick }) {
                                     <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
                                         <div className="flex justify-center gap-2">
                                             <button
+                                                key={applications?._id}
+                                                onClick={() => onRowClick?.(applications)}
                                                 className="w-20 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
                                             >
                                                 Edit

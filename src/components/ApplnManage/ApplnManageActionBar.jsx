@@ -7,7 +7,7 @@ function ApplnManageActionBar({ totalCount, searchTerm, setSearchTerm }) {
         "rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
 
     return (
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 mt-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
             <input
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
