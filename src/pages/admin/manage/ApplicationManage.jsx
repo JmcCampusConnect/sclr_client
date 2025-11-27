@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Loading from "../../../assets/svg/Pulse.svg";
 
@@ -7,9 +8,12 @@ import ApplnManageFilters from '../../../components/ApplnManage/ApplnManageFilte
 import ApplnManageActionBar from '../../../components/ApplnManage/ApplnManageActionBar';
 import ApplnDeleteModal from '../../../components/ApplnManage/ApplnDeleteModal';
 
+const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
+
 function ApplicationManage() {
 
     const apiUrl = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
     const [applications, setApplications] = useState([]);
     const [filteredApplications, setFilteredApplications] = useState([]);
 
@@ -100,6 +104,21 @@ function ApplicationManage() {
             </header>
 
             <ApplnManageFilters filters={filters} setFilters={setFilters} />
+
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 my-6">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
+                    <div className="flex justify-end gap-4 w-full">
+                        <div className="flex items-center">
+                            <button
+                                className={primaryButtonClass}
+                                onClick={() => navigate("/admin/adminRegisterApplication")}
+                            >
+                                Add Application
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <ApplnManageActionBar
                 totalCount={filteredApplications.length}

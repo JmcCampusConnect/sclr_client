@@ -44,7 +44,7 @@ function ApplnDeleteModal({ application, onClose, onDelete }) {
                         Confirm Deletion
                     </h2>
                     <p className="text-gray-600 dark:text-gray-300 text-md leading-relaxed max-w-sm">
-                        This action <span className="font-semibold text-red-500">cannot be undone.</span>
+                        This action <span className="font-semibold text-red-500">cannot be undone. </span>
                         Are you sure you want to permanently remove this application?
                     </p>
                 </div>

@@ -8,6 +8,7 @@ import TutorTable from '../../../components/TutorManage/TutorTable'
 import AddTutorModal from '../../../components/TutorManage/AddTutorModal'
 import EditTutorModal from '../../../components/TutorManage/EditTutorModal'
 import DeleteTutorModal from '../../../components/TutorManage/DeleteTutorModal'
+import Loading from '../../../assets/svg/Pulse.svg'
 
 function Tutor() {
 
