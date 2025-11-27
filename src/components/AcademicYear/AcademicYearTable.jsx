@@ -1,6 +1,6 @@
 import React from 'react'
 
-function AcademicYearTable({acYears, onEdit, onDelete}) {
+function AcademicYearTable({ acYears, onEdit, onDelete }) {
 
     const formatDate = (isoDate) => {
         const date = new Date(isoDate);
@@ -72,7 +72,7 @@ function AcademicYearTable({acYears, onEdit, onDelete}) {
                 </table>
             </div>
         </div>
-    );
+    )
 }
 
 

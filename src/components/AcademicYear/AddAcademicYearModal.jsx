@@ -1,10 +1,10 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "../../App.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AddAcademicYearModal({onClose, onAdded}) {
+function AddAcademicYearModal({ onClose, onAdded }) {
 
     const [formData, setFormData] = useState({
         academicYear: "",
@@ -16,68 +16,48 @@ function AddAcademicYearModal({onClose, onAdded}) {
     const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
-        const {name, value, type, checked} = e.target;
+        const { name, value, type, checked } = e.target;
         setFormData((prev) => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
-        setErrors((prev) => ({...prev, [name]: ""}));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
     };
 
     const validateForm = () => {
         const newErrors = {};
 
-        if (!formData.academicYear.trim()) {
-            newErrors.academicYear = "Academic Year is required.";
-        }
-        if (!formData.startDate) {
-            newErrors.startDate = "Start date is required.";
-        }
-        if (!formData.endDate) {
-            newErrors.endDate = "End date is required.";
-        }
+        if (!formData.academicYear.trim()) { newErrors.academicYear = "Academic Year is required." }
+        if (!formData.startDate) { newErrors.startDate = "Start date is required." }
+        if (!formData.endDate) { newErrors.endDate = "End date is required." }
         if (formData.startDate && formData.endDate) {
             if (new Date(formData.startDate) > new Date(formData.endDate)) {
                 newErrors.endDate = "End date must be after start date.";
             }
         }
-
         setErrors(newErrors);
         return newErrors;
     };
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
-        // console.log(formData)
 
         const newErrors = validateForm();
         if (Object.keys(newErrors).length > 0) return;
 
         try {
-            const response = await axios.post(
-                `${apiUrl}/api/application/settings/addAcademicYear`,
-                formData
-            );
-
+            const response = await axios.post(`${apiUrl}/api/application/settings/addAcademicYear`, formData)
             if (response.status == 200) {
                 alert(`${response.data.message}`);
-                if (response.data.addedData) {
-                    onAdded(response.data.addedData);
-                }
+                if (response.data.addedData) { onAdded(response.data.addedData) }
             }
-            // alert("Academic year added successfully!");
-            // onAdded(response.data.academic);
             onClose();
-
         } catch (error) {
-
-            if (error.status == 409) {
-                alert(`Academic Year already Exists`);
-
-            }
-            console.error("Error adding academic:", error);
+            if (error.status == 409) { alert(`Academic Year already Exists`) }
+            console.error("Error adding academic : ", error);
         }
-    };
+    }
 
     return (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
@@ -99,13 +79,11 @@ function AddAcademicYearModal({onClose, onAdded}) {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} noValidate className="p-6 space-y-6">
-
                     {/* Academic Section */}
                     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
                             📘 Academic Details
                         </h2>
-
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <Input
                                 label="Academic Year"
@@ -116,9 +94,6 @@ function AddAcademicYearModal({onClose, onAdded}) {
                                 error={errors.academicYear}
                                 onChange={handleChange}
                             />
-
-
-
                             <Input
                                 label="Start Date"
                                 name="startDate"
@@ -128,7 +103,6 @@ function AddAcademicYearModal({onClose, onAdded}) {
                                 error={errors.startDate}
                                 onChange={handleChange}
                             />
-
                             <Input
                                 label="End Date"
                                 name="endDate"
@@ -177,7 +151,7 @@ function AddAcademicYearModal({onClose, onAdded}) {
     );
 }
 
-const Input = ({label, name, type = "text", value, onChange, error, ...props}) => (
+const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
     <div className="space-y-2">
         <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
             {label} : {props.required && <span className="text-red-500">*</span>}
@@ -193,6 +167,6 @@ const Input = ({label, name, type = "text", value, onChange, error, ...props}) =
         />
         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
-);
+)
 
-export default AddAcademicYearModal;
+export default AddAcademicYearModal

@@ -1,53 +1,40 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "../../App.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function EditAcademicYearModal({academicData, onClose, onUpdateAcademic}) {
+function EditAcademicYearModal({ academicData, onClose, onUpdateAcademic }) {
 
-	const [formData, setFormData] = useState({...academicData});
+	const [formData, setFormData] = useState({ ...academicData });
 	const [errors, setErrors] = useState({});
 
 	const handleChange = (e) => {
-		// console.log("first")
-		const {name, value, type, checked} = e.target;
+		const { name, value, type, checked } = e.target;
 		setFormData((prev) => ({
 			...prev,
 			[name]: type === "checkbox" ? (checked ? true : false) : value,
 		}));
-		setErrors((prev) => ({...prev, [name]: ""}));
+		setErrors((prev) => ({ ...prev, [name]: "" }));
 	};
-
-	// console.log(formData)
-
 
 	const validateForm = () => {
 		const newErrors = {};
 
-		if (!formData.academicYear.trim()) {
-			newErrors.academicYear = "Academic Year is required.";
-		}
-		if (!formData.applnStartDate) {
-			newErrors.applnStartDate = "Start date is required.";
-		}
-		if (!formData.applnEndDate) {
-			newErrors.applnEndDate = "End date is required.";
-		}
+		if (!formData.academicYear.trim()) { newErrors.academicYear = "Academic Year is required." }
+		if (!formData.applnStartDate) { newErrors.applnStartDate = "Start date is required." }
+		if (!formData.applnEndDate) { newErrors.applnEndDate = "End date is required." }
 		if (formData.applnStartDate && formData.applnEndDate) {
 			if (new Date(formData.applnStartDate) > new Date(formData.applnEndDate)) {
 				newErrors.applnEndDate = "End date must be after start date.";
 			}
 		}
-
 		setErrors(newErrors);
 		return newErrors;
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		// validateForm();
-		// console.log(formData)
 		const newErrors = validateForm();
 		if (Object.keys(newErrors).length > 0) {
 			const firstError = Object.keys(newErrors)[0];
@@ -55,29 +42,18 @@ function EditAcademicYearModal({academicData, onClose, onUpdateAcademic}) {
 			if (el) el.focus();
 			return;
 		}
-
 		try {
-			const response = await axios.put(`${apiUrl}/api/application/settings/updateAcademicYear`,
-				{formData}
-			);
+			const response = await axios.put(`${apiUrl}/api/application/settings/updateAcademicYear`, { formData })
 			if (response.status == 200) {
-				// console.log(response.data)
 				onUpdateAcademic(formData);
 				alert(`${response.data.message}`)
 				onClose();
-				// window.location.reload()
 			}
 		} catch (error) {
-			if (error.status == 409) {
-				alert(`Academic Year Already Exist`)
-			}
-			else {
-				alert(`${error.data.message}`)
-			}
+			if (error.status == 409) { lert(`Academic Year Already Exist`) }
+			else { alert(`${error.data.message}`) }
 		}
-	};
-
-	// console.log("first", formData)
+	}
 
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
@@ -177,7 +153,7 @@ function EditAcademicYearModal({academicData, onClose, onUpdateAcademic}) {
 	);
 }
 
-const Input = ({label, name, type = "text", value, onChange, error, ...props}) => (
+const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
 	<div className="space-y-2">
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {props.required && <span className="text-red-500">*</span>}
