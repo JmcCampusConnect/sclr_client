@@ -1,22 +1,26 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import "../../App.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function EditAcademicYearModal({ academicData, onClose, onUpdateAcademic }) {
+function EditAcademicYearModal({academicData, onClose, onUpdateAcademic}) {
 
-	const [formData, setFormData] = useState({ ...academicData });
+	const [formData, setFormData] = useState({...academicData});
 	const [errors, setErrors] = useState({});
 
 	const handleChange = (e) => {
-		const { name, value, type, checked } = e.target;
+		// console.log("first")
+		const {name, value, type, checked} = e.target;
 		setFormData((prev) => ({
 			...prev,
-			[name]: type === "checkbox" ? checked : value,
+			[name]: type === "checkbox" ? (checked ? true : false) : value,
 		}));
-		setErrors((prev) => ({ ...prev, [name]: "" }));
+		setErrors((prev) => ({...prev, [name]: ""}));
 	};
+
+	// console.log(formData)
+
 
 	const validateForm = () => {
 		const newErrors = {};
@@ -24,15 +28,15 @@ function EditAcademicYearModal({ academicData, onClose, onUpdateAcademic }) {
 		if (!formData.academicYear.trim()) {
 			newErrors.academicYear = "Academic Year is required.";
 		}
-		if (!formData.startDate) {
-			newErrors.startDate = "Start date is required.";
+		if (!formData.applnStartDate) {
+			newErrors.applnStartDate = "Start date is required.";
 		}
-		if (!formData.endDate) {
-			newErrors.endDate = "End date is required.";
+		if (!formData.applnEndDate) {
+			newErrors.applnEndDate = "End date is required.";
 		}
-		if (formData.startDate && formData.endDate) {
-			if (new Date(formData.startDate) > new Date(formData.endDate)) {
-				newErrors.endDate = "End date must be after start date.";
+		if (formData.applnStartDate && formData.applnEndDate) {
+			if (new Date(formData.applnStartDate) > new Date(formData.applnEndDate)) {
+				newErrors.applnEndDate = "End date must be after start date.";
 			}
 		}
 
@@ -42,7 +46,8 @@ function EditAcademicYearModal({ academicData, onClose, onUpdateAcademic }) {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
+		// validateForm();
+		// console.log(formData)
 		const newErrors = validateForm();
 		if (Object.keys(newErrors).length > 0) {
 			const firstError = Object.keys(newErrors)[0];
@@ -52,18 +57,27 @@ function EditAcademicYearModal({ academicData, onClose, onUpdateAcademic }) {
 		}
 
 		try {
-			const response = await axios.put(
-				`${apiUrl}/api/application/settings/updateAcademicYear/${formData._id}`,
-				formData
+			const response = await axios.put(`${apiUrl}/api/application/settings/updateAcademicYear`,
+				{formData}
 			);
-
-			onUpdateAcademic(response.data.updatedAcademic);
-			onClose();
+			if (response.status == 200) {
+				// console.log(response.data)
+				onUpdateAcademic(formData);
+				alert(`${response.data.message}`)
+				onClose();
+				// window.location.reload()
+			}
 		} catch (error) {
-			console.error("Error updating academic:", error);
-			alert(error?.response?.data?.message || "Something went wrong.");
+			if (error.status == 409) {
+				alert(`Academic Year Already Exist`)
+			}
+			else {
+				alert(`${error.data.message}`)
+			}
 		}
 	};
+
+	// console.log("first", formData)
 
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
@@ -105,29 +119,29 @@ function EditAcademicYearModal({ academicData, onClose, onUpdateAcademic }) {
 
 							<Input
 								label="Start Date"
-								name="startDate"
+								name="applnStartDate"
 								type="date"
-								value={formData.startDate}
+								value={formData.applnStartDate ? formData.applnStartDate.split("T")[0] : ""}
 								onChange={handleChange}
 								required
-								error={errors.startDate}
+								error={errors.applnStartDate}
 							/>
 
 							<Input
 								label="End Date"
-								name="endDate"
+								name="applnEndDate"
 								type="date"
-								value={formData.endDate}
+								value={formData.applnEndDate ? formData.applnEndDate.split("T")[0] : ""}
 								onChange={handleChange}
 								required
-								error={errors.endDate}
+								error={errors.applnEndDate}
 							/>
 
 							<div className="flex items-center gap-3">
 								<input
 									type="checkbox"
-									name="isActive"
-									checked={formData.isActive}
+									name="active"
+									checked={formData.active == 1 ? true : false}
 									onChange={handleChange}
 									className="w-5 h-5"
 								/>
@@ -163,7 +177,7 @@ function EditAcademicYearModal({ academicData, onClose, onUpdateAcademic }) {
 	);
 }
 
-const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
+const Input = ({label, name, type = "text", value, onChange, error, ...props}) => (
 	<div className="space-y-2">
 		<label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
 			{label} : {props.required && <span className="text-red-500">*</span>}

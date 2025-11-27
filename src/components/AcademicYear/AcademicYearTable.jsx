@@ -1,8 +1,18 @@
 import React from 'react'
 
-function AcademicYearTable({ acYears, onEdit, onDelete }) {
+function AcademicYearTable({acYears, onEdit, onDelete}) {
+
+    const formatDate = (isoDate) => {
+        const date = new Date(isoDate);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+    };
+
     return (
-        <div className="overflow-x-auto bg-white border border-gray-200 rounded-xl shadow-lg">
+        <div className="overflow-x-auto border border-gray-200 rounded-xl shadow-lg bg-white/10 dark:bg-gray-800/40 backdrop-blur-md">
+
             <div className="max-h-[700px] overflow-y-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center table-auto">
                     <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
@@ -27,11 +37,16 @@ function AcademicYearTable({ acYears, onEdit, onDelete }) {
 
                         {acYears.map((ac) => (
                             <tr key={ac._id} className="hover:bg-gray-50 transition">
-                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac._id}</td>
+                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.academicId}</td>
                                 <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.academicYear}</td>
-                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.isActive ? "Active" : "Inactive"}</td>
-                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.startDate}</td>
-                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.endDate}</td>
+                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.active == 1 ? "Active" : "Inactive"}</td>
+                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
+                                    {ac.applnStartDate ? formatDate(ac.applnStartDate) : ""}
+                                </td>
+
+                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
+                                    {ac.applnEndDate ? formatDate(ac.applnEndDate) : ""}
+                                </td>
 
 
                                 <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">

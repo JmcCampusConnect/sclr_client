@@ -1,26 +1,29 @@
 import React from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function DeleteAcademicYearModal({ academic, onClose, onDelete }) {
+function DeleteAcademicYearModal({academic, onClose, onDelete}) {
 
     const handleDelete = async () => {
         try {
             const response = await axios.delete(
-                `${apiUrl}/api/application/settings/deleteAcademicYear/${academic._id}`
+                `${apiUrl}/api/application/settings/deleteAcademicYear/${academic.academicId}`
             );
 
             if (response.status === 200) {
                 alert("Academic year deleted successfully!");
-                onDelete(academic._id);
+                onDelete(academic.academicId);
                 onClose();
             }
         } catch (error) {
+            if (error.status == 403) {
+                alert(`${error.response.data.message}`)
+            }
             console.error("Error deleting academic year:", error);
-            alert("Failed to delete academic year.");
+            // alert("Failed to delete academic year.");
         }
     };
 
@@ -49,7 +52,7 @@ function DeleteAcademicYearModal({ academic, onClose, onDelete }) {
                     <div className="rounded-xl bg-gray-50 dark:bg-gray-800/70 p-4 border border-gray-200 dark:border-gray-700 shadow-sm text-center">
 
                         <p className="text-md text-gray-500 dark:text-gray-400 font-mono">
-                            Academic ID : {academic._id}
+                            Academic ID : {academic.academicId}
                         </p>
 
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
@@ -57,10 +60,10 @@ function DeleteAcademicYearModal({ academic, onClose, onDelete }) {
                         </h3>
 
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Start Date : <span className="font-medium">{academic.startDate}</span>
+                            Start Date : <span className="font-medium">{academic.applnStartDate ? academic.applnStartDate.split("T")[0] : ""}</span>
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                            End Date : <span className="font-medium">{academic.endDate}</span>
+                            End Date : <span className="font-medium">{academic.applnEndDate ? academic.applnEndDate.split("T")[0] : ""}</span>
                         </p>
 
                         {academic.isActive && (

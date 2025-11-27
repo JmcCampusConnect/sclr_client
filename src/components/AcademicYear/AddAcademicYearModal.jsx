@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import "../../App.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AddAcademicYearModal({ onClose, onAdded }) {
+function AddAcademicYearModal({onClose, onAdded}) {
 
     const [formData, setFormData] = useState({
         academicYear: "",
@@ -16,12 +16,12 @@ function AddAcademicYearModal({ onClose, onAdded }) {
     const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
+        const {name, value, type, checked} = e.target;
         setFormData((prev) => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
-        setErrors((prev) => ({ ...prev, [name]: "" }));
+        setErrors((prev) => ({...prev, [name]: ""}));
     };
 
     const validateForm = () => {
@@ -48,6 +48,7 @@ function AddAcademicYearModal({ onClose, onAdded }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // console.log(formData)
 
         const newErrors = validateForm();
         if (Object.keys(newErrors).length > 0) return;
@@ -58,18 +59,29 @@ function AddAcademicYearModal({ onClose, onAdded }) {
                 formData
             );
 
-            alert("Academic year added successfully!");
-            onAdded(response.data.academic);
+            if (response.status == 200) {
+                alert(`${response.data.message}`);
+                if (response.data.addedData) {
+                    onAdded(response.data.addedData);
+                }
+            }
+            // alert("Academic year added successfully!");
+            // onAdded(response.data.academic);
             onClose();
 
         } catch (error) {
+
+            if (error.status == 409) {
+                alert(`Academic Year already Exists`);
+
+            }
             console.error("Error adding academic:", error);
-            alert(error?.response?.data?.message || "Something went wrong.");
         }
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-6xl hide-scrollbar overflow-y-auto max-h-[80vh]">
 
                 {/* Header */}
@@ -165,7 +177,7 @@ function AddAcademicYearModal({ onClose, onAdded }) {
     );
 }
 
-const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
+const Input = ({label, name, type = "text", value, onChange, error, ...props}) => (
     <div className="space-y-2">
         <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
             {label} : {props.required && <span className="text-red-500">*</span>}

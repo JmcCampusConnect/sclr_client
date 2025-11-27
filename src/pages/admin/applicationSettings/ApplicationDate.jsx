@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import HeaderTag from '../../../common/HeaderTag'
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -14,25 +14,32 @@ function ApplicationDate() {
             alert("Please fill in both Start Date and End Date."); return;
         }
         try {
-            await axios.post(`${apiUrl}/api/application/settings/updateDates`, {
+            const response = await axios.post(`${apiUrl}/api/application/settings/updateDates`, {
                 applnStartDate, applnEndDate
             })
-            alert('Application date saved successfully.');
+            // if (response.status == 200) {
+            //     alert(`${response.data.message}`);
+            // }
         } catch (error) {
             console.error('Error saving dates : ', error);
-            alert('Failed to save dates.');
+            // if (error.status == 409) {
+            //     alert(`${error.response.data.message}`);
+            // }
+            // else {
+            //     alert(`${error.response.data.message}`);
+            // }
         }
     };
 
     useEffect(() => {
         const fetchDates = async () => {
             try {
-                const response = await axios.get(`${apiUrl}/api/application/settings/fetchDates`);
-                const { applnStartDate, applnEndDate } = response.data || {};
+                const response = await axios.post(`${apiUrl}/api/application/settings/fetchDates`, {});
+                const {applnStartDate, applnEndDate} = response.data || {};
                 setDate(response.data);
                 if (applnStartDate) setStartDate(applnStartDate.slice(0, 10));
                 if (applnEndDate) setEndDate(applnEndDate.slice(0, 10));
-            } catch (error) { console.error('Error fetching dates:', error) }
+            } catch (error) {console.error('Error fetching dates:', error)}
         };
         fetchDates();
     }, [apiUrl]);
@@ -41,7 +48,7 @@ function ApplicationDate() {
         <div>
             <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
-                   Application Date Settings
+                    Application Date Settings
                 </h1>
             </header>
             <div className="bg-white border border-gray-300 rounded-lg shadow p-6 flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-start">

@@ -1,35 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, {useState, useEffect} from "react";
+import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-// Replace with your loading gif path
 import Loading from "../../../assets/svg/Pulse.svg";
-import AcademicYearTable from '../../../components/AcademicYear/AcademicYearTable';
-import AddAcademicYearModal from '../../../components/AcademicYear/AddAcademicYearModal';
-import EditAcademicYearModal from '../../../components/AcademicYear/EditAcademicYearModal';
-import DeleteAcademicYearModal from '../../../components/AcademicYear/DeleteAcademicYearModal';
+import AcademicYearTable from "../../../components/AcademicYear/AcademicYearTable";
+import AddAcademicYearModal from "../../../components/AcademicYear/AddAcademicYearModal";
+import EditAcademicYearModal from "../../../components/AcademicYear/EditAcademicYearModal";
+import DeleteAcademicYearModal from "../../../components/AcademicYear/DeleteAcademicYearModal";
 
-const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
+const primaryButtonClass =
+    "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none";
 
-const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500";
+const formControlClass =
+    "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500";
 
 function AcademicYear() {
-
     const [acYears, setAcYears] = useState([]);
-    const [currAcYear, setCurrAcYear] = useState('');
+    const [currAcYear, setCurrAcYear] = useState("");
 
-    const [isLoading, setIsLoading] = useState(true);  // FIX
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [editData, setEditData] = useState(null);
     const [deleteData, setDeleteData] = useState(null);
-
-
-    // FIX
+    const [allAcademicYears, setAllAcademicYears] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filteredAcademicYears, setFilteredAcademicYears] = useState([]);
 
     useEffect(() => {
         fetchAcademicYear();
     }, []);
+
+    // update filtered list when allAcademicYears or search term changes
+    useEffect(() => {
+        if (!searchTerm || searchTerm.trim() === "") {
+            setFilteredAcademicYears(allAcademicYears || []);
+            return;
+        }
+
+        const q = String(searchTerm).trim().toLowerCase();
+        const filtered = (allAcademicYears || []).filter((item) => {
+            // item likely has fields: academicId, academicYear
+            const idMatch = String(item.academicId || "").toLowerCase().includes(q);
+            const yearMatch = String(item.academicYear || "").toLowerCase().includes(q);
+            return idMatch || yearMatch;
+        });
+
+        setFilteredAcademicYears(filtered);
+    }, [allAcademicYears, searchTerm]);
 
     const fetchAcademicYear = async () => {
         try {
@@ -42,7 +60,7 @@ function AcademicYear() {
 
             setAcYears(response.data.academicYears);
             setCurrAcYear(response.data.currAcYear);
-
+            setAllAcademicYears(response.data.getAllAcademicYears);
         } catch (err) {
             setError("Failed to load academic years.");
         } finally {
@@ -52,22 +70,19 @@ function AcademicYear() {
 
     const academicSave = async (e) => {
         e.preventDefault();
-
         try {
             await axios.post(
                 `${apiUrl}/api/application/settings/academicYearSet`,
-                { currAcYear }
+                {currAcYear}
             );
 
             alert("Academic year changed successfully.");
-            window.location.reload();
-
+            fetchAcademicYear(); // Update UI without reload
         } catch (error) {
             alert("Something went wrong while setting the academic year.");
         }
     };
 
-    // ---------------------- LOADING UI ----------------------
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center mt-20">
@@ -77,7 +92,6 @@ function AcademicYear() {
         );
     }
 
-    // ---------------------- ERROR UI ------------------------
     if (error) {
         return (
             <div className="flex flex-col items-center justify-center mt-20">
@@ -95,12 +109,12 @@ function AcademicYear() {
     return (
         <div>
             <header className="mb-8 border-b border-gray-200 pb-4">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900">
+                <h1 className="text-2xl font-extrabold text-center text-gray-900">
                     Academic Year Settings
                 </h1>
             </header>
 
-            <form onSubmit={academicSave} className="bg-white border border-gray-300 rounded-lg shadow p-6">
+            <form onSubmit={academicSave} className="bg-white border rounded-lg shadow p-6">
                 <label className="block text-lg font-semibold mb-4 text-gray-700 w-[50%]">
                     Select Academic Year :
                 </label>
@@ -109,18 +123,20 @@ function AcademicYear() {
                     <select
                         value={currAcYear}
                         onChange={(e) => setCurrAcYear(e.target.value)}
-                        className="flex-grow border border-gray-400 rounded-md px-3 py-2 text-gray-800 focus:outline-none"
+                        className="flex-grow border border-gray-400 rounded-md px-3 py-2"
                         required
                     >
                         <option value="">-- Select --</option>
-                        {acYears.map((year) => (
-                            <option key={year} value={year}>{year}</option>
+                        {acYears.map((year, index) => (
+                            <option key={index} value={year}>
+                                {year}
+                            </option>
                         ))}
                     </select>
 
                     <button
                         type="submit"
-                        className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2 rounded-md transition"
+                        className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2 rounded-md"
                     >
                         Set
                     </button>
@@ -130,31 +146,29 @@ function AcademicYear() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 my-6">
                 <input
                     type="text"
-                    placeholder="🔍 Search Academic..."
+                    placeholder="🔍 Search by ID or Year..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     className={`w-full md:w-1/2 ${formControlClass}`}
                 />
 
-                <button
-                    className={primaryButtonClass}
-                    onClick={() => setShowModal(true)}
-                >
+                <button className={primaryButtonClass} onClick={() => setShowModal(true)}>
                     Add Academic
                 </button>
-
             </div>
 
             <AcademicYearTable
-                acYears={acYears}
+                acYears={filteredAcademicYears}
                 onEdit={(data) => setEditData(data)}
                 onDelete={(data) => setDeleteData(data)}
             />
-
 
             {showModal && (
                 <AddAcademicYearModal
                     onClose={() => setShowModal(false)}
                     onAdded={(newAcademic) => {
-                        setAcYears((prev) => [...prev, newAcademic]);
+                        setAllAcademicYears((prev) => [...prev, newAcademic]);
+                        setShowModal(false);
                     }}
                 />
             )}
@@ -164,9 +178,12 @@ function AcademicYear() {
                     academicData={editData}
                     onClose={() => setEditData(null)}
                     onUpdateAcademic={(updated) => {
-                        setAcYears((prev) =>
-                            prev.map((ac) => (ac._id === updated._id ? updated : ac))
+                        setAllAcademicYears((prev) =>
+                            prev.map((ac) =>
+                                ac.academicId === updated.academicId ? updated : ac
+                            )
                         );
+                        setEditData(null);
                     }}
                 />
             )}
@@ -176,13 +193,13 @@ function AcademicYear() {
                     academic={deleteData}
                     onClose={() => setDeleteData(null)}
                     onDelete={(id) => {
-                        setAcYears(prev => prev.filter(ac => ac._id !== id));
+                        setAllAcademicYears((prev) =>
+                            prev.filter((ac) => ac.academicId !== id)
+                        );
+                        setDeleteData(null);
                     }}
                 />
             )}
-
-
-
         </div>
     );
 }
