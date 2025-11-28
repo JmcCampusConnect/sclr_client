@@ -64,7 +64,7 @@ function AdminLayout() {
     const navItems = [
         { icon: faChalkboard, name: 'Dashboard', path: `/admin/dashboard`, show: true },
         { icon: faHandHoldingUsd, name: 'Scholarship Administration', path: '/admin/sclrAdministration', show: true },
-        { icon: faIdCard, name: 'Check Status', path: '/admin/checkSstatus', show: true },
+        { icon: faIdCard, name: 'Check Status', path: '/admin/checkStatus', show: true },
         { icon: faChartLine, name: 'Work Progress Report', path: '/admin/progressReport', show: true },
         { icon: faFileAlt, name: 'Distribution Statement', path: '/admin/distributionStatement', show: true },
         {

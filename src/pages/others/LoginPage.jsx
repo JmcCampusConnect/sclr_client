@@ -58,7 +58,6 @@ function LoginPage() {
                         registerSubmit={onSubmit}
                         isSubmitting={isSubmitting}
                     />
-
                 </div>
             </div>
         </div>

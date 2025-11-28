@@ -23,6 +23,7 @@ import ClassAttendance from "./pages/staff/ClassAttendance";
 import DmAttendance from "./pages/staff/DmAttendance";
 import CoeMark from "./pages/staff/CoeMark";
 import StaffChangePassword from "./pages/staff/ChangePassword";
+import StaffUploadCenter from "./pages/staff/UploadCenter";
 
 // Admin Pages
 import AdminLayout from "./layout/AdminLayout";
@@ -42,7 +43,7 @@ import ProgressReport from './pages/admin/ProgressReport';
 import FundsAvailable from './pages/admin/report/FundsAvailable';
 import AdminChangePassword from './pages/admin/ChangePassword';
 import GuideLines from './pages/admin/GuideLines';
-import UploadCenter from './pages/admin/UploadCenter';
+import AdminUploadCenter from './pages/admin/UploadCenter';
 import DataDeletion from './pages/admin/DataDeletion';
 import DepartmentManage from './pages/admin/manage/DepartmentManage';
 import ForgotPassword from './pages/others/ForgotPassword';
@@ -113,7 +114,7 @@ function App() {
 						<Route path="changePassword" element={<AdminChangePassword />} />
 						<Route path="guidelines" element={<GuideLines />} />
 						<Route path="dataDeletion" element={<DataDeletion />} />
-						<Route path="uploadCenter" element={<UploadCenter />} />
+						<Route path="uploadCenter" element={<AdminUploadCenter />} />
 						<Route path="quickRejection" element={<QuickRejection />} />
 						<Route path="adminRegisterApplication" element={<AdminRegisterAppln />} />
 						<Route path=":registerNo/adminLoginApplication" element={<AdminLoginAppln />} />
@@ -136,6 +137,7 @@ function App() {
 						<Route path="scholarshipStaff" element={<ScholarshipStaff />} />
 						<Route path="scholarshipStaff" element={<ScholarshipStaff />} />
 						<Route path="tutorVerification" element={<TutorVerify />} />
+						<Route path="uploadCenter" element={<StaffUploadCenter />} />
 					</Route>
 
 				</Routes>

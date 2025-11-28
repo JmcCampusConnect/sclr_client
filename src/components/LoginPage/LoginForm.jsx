@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InputBox from '../../common/InputBox';
 
-function LoginForm({ register, errors, registerSubmit, handleSubmit }) {
+function LoginForm({ register, errors, registerSubmit, handleSubmit, isSubmitting }) {
 
     const navigate = useNavigate();
     const usernameRef = useRef(null);
@@ -54,7 +54,7 @@ function LoginForm({ register, errors, registerSubmit, handleSubmit }) {
                         type="submit"
                         className="w-1/2 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold transition"
                     >
-                        Login
+                        {isSubmitting ? 'Logging in...' : 'Login'}
                     </button>
                 </div>
             </div>
