@@ -111,7 +111,7 @@ function StaffLayout() {
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 bg-gray-100 p-6 2xl:p-10 overflow-auto">
+            <div className="flex-1 bg-gray-100 p-6 overflow-auto">
                 <div className="bg-white shadow-md rounded-xl p-6 min-h-full">
                     <Outlet />
                 </div>
