@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -49,18 +49,22 @@ function Staff() {
     };
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({...formData, [e.target.name]: e.target.value});
     };
 
     const handleSubmit = async (e) => {
 
+        if (!formData.staffName || !formData.password || !formData.staffId) {
+            alert("All Feild Shoud be Required")
+            return;
+        }
         e.preventDefault();
 
         try {
             await axios.put(`${apiUrl}/api/staffManage/updateStaff`, formData);
             setStaffs((prev) =>
                 prev.map((x) =>
-                    x.staffId === formData.staffId ? { ...x, ...formData } : x
+                    x.staffId === formData.staffId ? {...x, ...formData} : x
                 )
             );
             onClose();
