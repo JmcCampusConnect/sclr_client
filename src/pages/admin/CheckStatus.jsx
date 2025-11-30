@@ -1,6 +1,59 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import StatusModal from "../../components/Others/StatusModal";
+import AcceptModal from "../../components/Others/AcceptModal";
 
-function ApplicationStatusForm() {
+function CheckStatus() {
+
+    const [registerNo, setRegisterNo] = useState("");
+    const [modalData, setModalData] = useState(null);
+    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [showAcceptModal, setShowAcceptModal] = useState(false);
+    const [donors, setDonors] = useState([]);
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+    useEffect(() => {
+        const fetchDonors = async () => {
+            try {
+                const res = await axios.get(`${apiUrl}/api/admin/application/fetchDonors`);
+                setDonors(res.data.donors);
+            } catch (err) {
+                console.error("Error fetching donors:", err);
+            }
+        };
+        fetchDonors();
+    }, []);
+
+
+    const checkStatus = async () => {
+
+        if (!registerNo) {
+            alert("Please enter a register number.");
+            return;
+        }
+
+        try {
+            const response = await axios.get(`${apiUrl}/api/student/status`, { params: { registerNo } });
+            if (response.status === 200) {
+                setModalData(response.data.student);
+            } else {
+                alert("Failed to fetch application status.");
+            }
+        } catch (error) {
+            alert("An error occurred while fetching the application status.");
+            console.error("Error:", error);
+        }
+    };
+
+    const handleRelease = (student) => {
+        setSelectedStudent(student);
+        setShowAcceptModal(true);
+    };
+
+    const closeAcceptModal = () => {
+        setShowAcceptModal(false);
+        setSelectedStudent(null);
+    }
 
     const formControlClass =
         "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white " +
@@ -12,21 +65,30 @@ function ApplicationStatusForm() {
         "bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none " +
         "focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
 
-    const warningButtonClass =
-        "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white " +
-        "bg-amber-500 rounded-lg hover:bg-amber-600 transition shadow-md";
-
-    const successButtonClass =
-        "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white " +
-        "bg-green-600 rounded-lg hover:bg-green-700 transition shadow-md";
-
     return (
-        <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6">
+        <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 
+            rounded-xl shadow-lg p-6">
+
+            {/* Status Modal */}
+            {modalData && (
+                <StatusModal
+                    data={modalData}
+                    onClose={() => setModalData(null)}
+                    onRelease={handleRelease} 
+                />
+            )}
+
+            {/* Accept Modal */}
+            <AcceptModal
+                showAcceptModal={showAcceptModal}
+                closeModal={closeAcceptModal}
+                selectedStudent={selectedStudent}
+                donors={donors}
+            />
 
             <header className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
                     Application Status
-
                 </h1>
             </header>
 
@@ -35,75 +97,24 @@ function ApplicationStatusForm() {
                     <label className="block mb-3.5 text-md font-semibold text-gray-700 dark:text-gray-300">
                         Register Number :
                     </label>
-                    <input type="text" className={formControlClass} />
+                    <input
+                        type="text"
+                        name="registerNo"
+                        autoComplete="on"
+                        className={formControlClass}
+                        value={registerNo}
+                        onChange={(e) => setRegisterNo(e.target.value.toUpperCase())}
+                    />
                 </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                <button className={primaryButtonClass}>Check Status</button>
+                <button className={primaryButtonClass} onClick={checkStatus}>
+                    Check Status
+                </button>
             </div>
-
         </div>
     );
 }
 
-export default ApplicationStatusForm;
-
-
-
-// import React, { useState } from 'react'
-
-// function CheckStatus() {
-
-
-//     const [userId, setUserId] = useState('');
-//     const [userPassword, setUserPassword] = useState('');
-
-
-//     const handleUserIdChange = (e) => {
-//         // console.log(e)
-//         setUserId(e.target.value);
-//         // console.log(userId)
-//     }
-
-//     const handleUserPasswordChange = (e) => {
-//         // console.log(e)
-//         setUserPassword(e.target.value);
-//         // console.log(userPassword)
-//     }
-
-
-//     const handleSubmit = () => {
-//         console.log(userId)
-//         console.log(userPassword)
-//     }
-
-//     return (
-//         <div>
-
-//             <input
-//                 type="text"
-//                 className='bg-red-200'
-//                 onChange={handleUserIdChange}
-//                 value={userId}
-
-//             />
-
-//             <input
-//                 type="text"
-//                 className='bg-red-200'
-//                 onChange={handleUserPasswordChange}
-//                 value={userPassword}
-
-//             />
-
-//             <button
-//             onClick={handleSubmit}
-//             >Check Status</button>
-
-
-//         </div>
-//     )
-// }
-
-// export default CheckStatus
+export default CheckStatus;

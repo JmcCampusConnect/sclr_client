@@ -22,7 +22,7 @@ function StudentDashboard() {
 	useEffect(() => {
 
 		if (!userId) {
-			console.warn("StudentDashboard: no userId param provided");
+			console.warn("StudentDashboard : no userId param provided");
 			setIsLoading(false);
 			setStudent(null);
 			return;
