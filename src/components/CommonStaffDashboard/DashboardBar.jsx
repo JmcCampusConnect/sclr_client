@@ -147,7 +147,7 @@ const DashboardBar = ({ enrollmentData, distributedData }) => {
             {/* Summary Card (Right Side) */}
             <div className="p-6 bg-white rounded-xl border border-gray-200 shadow-lg transition-all duration-300">
                 <h2 className="text-lg font-semibold text-gray-800 mb-6 border-b pb-3">
-                   Applicants by Year and Gender
+                   Applications by Year and Gender
                 </h2>
                 <div className="flex flex-col gap-6">
                     {enrollData.labels.map((label, i) => {

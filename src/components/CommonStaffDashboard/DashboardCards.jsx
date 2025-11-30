@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faGraduationCap, faMoneyCheckAlt, faHandsHelping } from '@fortawesome/free-solid-svg-icons';
 
 const DASHBOARD_CARDS = [
-    { icon: faUsers, label: 'Total Applicants', key: 'totalApplicants', iconColor: 'text-blue-700', gradient: 'from-blue-200 to-blue-100' },
+    { icon: faUsers, label: 'Total Applications', key: 'totalApplicants', iconColor: 'text-blue-700', gradient: 'from-blue-200 to-blue-100' },
     { icon: faGraduationCap, label: 'Students Benefitted', key: 'totalBenefitedStudents', iconColor: 'text-emerald-700', gradient: 'from-emerald-200 to-emerald-100' },
     { icon: faMoneyCheckAlt, label: 'Scholarship Awarded', key: 'totalScholarshipAwarded', iconColor: 'text-amber-700', gradient: 'from-amber-200 to-amber-100' },
     { icon: faHandsHelping, label: 'Generous Donors', key: 'totalDonors', iconColor: 'text-indigo-700', gradient: 'from-indigo-200 to-indigo-100' },
