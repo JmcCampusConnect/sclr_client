@@ -145,7 +145,7 @@ function CoeMark() {
                                         </td>
 
                                         {/* Name */}
-                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                        <td className="min-w-74 px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                             {student.name}
                                         </td>
 

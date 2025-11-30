@@ -221,7 +221,12 @@ function DistributionStmt() {
                 </h1>
             </header>
             <FilterSection filters={filters} setFilters={setFilters} departments={departments} />
-            <ActionBar total={searchedDistribution.length} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <ActionBar
+                data={searchedDistribution}
+                total={searchedDistribution.length}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
             <DistributionTable distribution={searchedDistribution} />
             <StatusCard />
         </>
