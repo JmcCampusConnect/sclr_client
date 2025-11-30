@@ -21,7 +21,7 @@ function LandingPage() {
             <HeroSection />
         </div>
             <div className="w-[40%] flex flex-col justify-center items-center rounded-lg h-full">
-                <LandingPage applnEndDate={dates?.applnEndDate} />
+                <LoginButtions applnEndDate={dates?.applnEndDate} />
             </div>
         </div>
     )
