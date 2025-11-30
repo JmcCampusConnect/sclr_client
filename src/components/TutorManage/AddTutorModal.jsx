@@ -5,7 +5,7 @@ import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AddTutorModal({ onClose, onAddTutor }) {
+function AddTutorModal({ onClose, onAddTutor,batchs }) {
 
 	const [departments, setDepartments] = useState([]);
 	const [formData, setFormData] = useState({
@@ -90,8 +90,8 @@ function AddTutorModal({ onClose, onAddTutor }) {
 		value: v, label: v,
 	}));
 
-	const batchOptions = ["2020", "2021", "2022", "2023", "2024"].map((v) => ({
-		value: v, label: v,
+	const batchOptions = batchs.map((v) => ({
+		value: String(v), label: String(v),
 	}));
 
 	const sectionOptions = ["A", "B", "C", "D", "E", "F", "G", "H"].map((v) => ({
