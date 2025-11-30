@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
 import "../../App.css";
 import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function EditTutorModal({ tutor, onClose, onUpdateTutor }) {
+function EditTutorModal({tutor, onClose, onUpdateTutor, batchs}) {
 
-    const [formData, setFormData] = useState({ ...tutor });
+    const [formData, setFormData] = useState({...tutor});
     const [departments, setDepartments] = useState([]);
     const [errors, setErrors] = useState({});
 
@@ -29,9 +29,9 @@ function EditTutorModal({ tutor, onClose, onUpdateTutor }) {
     }));
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        setErrors((prev) => ({ ...prev, [name]: "" }));
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
+        setErrors((prev) => ({...prev, [name]: ""}));
     };
 
     const handleSelectChange = (name, option) => {
@@ -39,7 +39,7 @@ function EditTutorModal({ tutor, onClose, onUpdateTutor }) {
             ...prev,
             [name]: option ? option.value : "",
         }));
-        setErrors((prev) => ({ ...prev, [name]: "" }));
+        setErrors((prev) => ({...prev, [name]: ""}));
     };
 
     const validateForm = () => {
@@ -88,10 +88,10 @@ function EditTutorModal({ tutor, onClose, onUpdateTutor }) {
         label: v,
     }));
 
-    const batchOptions = ["2020", "2021", "2022", "2023", "2024"].map((v) => ({
-        value: v,
-        label: v,
+    const batchOptions = batchs.map((v) => ({
+        value: String(v), label: String(v),
     }));
+
 
     const sectionOptions = ["A", "B", "C", "D", "E", "F", "G", "H"].map((v) => ({
         value: v,
@@ -201,7 +201,7 @@ function EditTutorModal({ tutor, onClose, onUpdateTutor }) {
     );
 }
 
-const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
+const Input = ({label, name, type = "text", value, onChange, error, ...props}) => (
     <div className="space-y-2">
         <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
             {label} : {props.required && <span className="text-red-500">*</span>}

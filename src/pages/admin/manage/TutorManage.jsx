@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -22,6 +22,7 @@ function Tutor() {
     const [filteredTutors, setFilteredTutors] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [batchs, setBatchs] = useState([])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,7 +34,7 @@ function Tutor() {
             } catch (err) {
                 setError("Failed to fetch tutors");
                 console.error(err);
-            } finally { setIsLoading(false) }
+            } finally {setIsLoading(false)}
         }
 
         const fetchDepartments = async () => {
@@ -45,12 +46,26 @@ function Tutor() {
                 console.error(err);
             }
         }
+
+
+        const fetchBatch = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/api/common/fetchDropdownData`);
+                console.log("Batchs", response.data.batches)
+                setBatchs(response.data.batches)
+            }
+            catch (e) {
+                console.log("Error fetching error", e)
+            }
+        }
+
+        fetchBatch();
         fetchData();
         fetchDepartments();
     }, [apiUrl]);
 
     const dep = [
-        { value: "All", label: "All" },
+        {value: "All", label: "All"},
         ...Object.values(departments).map(item => ({
             value: item.department,
             label: `${item.department} - ${item.departmentName}`
@@ -119,6 +134,7 @@ function Tutor() {
             <TutorFilterSection
                 depts={dep}
                 filterForm={(e) => setFilterFormData(e)}
+                batchs={batchs}
             />
 
             {/* Action Bar (Show Grid button removed) */}
@@ -141,12 +157,14 @@ function Tutor() {
                 <AddTutorModal
                     tutor={addTutor}
                     onClose={() => setAddTutor(null)}
+                    batchs={batchs}
                 />
             )}
             {editTutor && (
                 <EditTutorModal
                     tutor={editTutor}
                     onClose={() => setEditTutor(null)}
+                    batchs={batchs}
                 />
             )}
             {deleteTutor && (

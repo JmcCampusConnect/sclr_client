@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import SearchDropdown from "../../common/SearchDropDown";
 
-function TutorFilterSection({ depts, filterForm }) {
+function TutorFilterSection({depts, filterForm, batchs}) {
 
     const [filterFormData, setFilterFormData] = useState({
         category: "All",
@@ -9,9 +9,13 @@ function TutorFilterSection({ depts, filterForm }) {
         batch: "All"
     });
 
-    const batchOptions = ["All", "2020", "2021", "2022", "2023", "2024", "2025"].map((v) => ({
-        value: v, label: v,
+    console.log("Fikter", batchs)
+
+    const batchOptions = ["All", ...batchs].map((v) => ({
+        value: String(v),
+        label: String(v),
     }));
+
 
     const categoryOptions = ["All", "AIDED", "SFM", "SFW"].map((v) => ({
         value: v, label: v,
@@ -20,7 +24,7 @@ function TutorFilterSection({ depts, filterForm }) {
     const handleSelectChange = (name, option) => {
         const updatedForm = {
             ...filterFormData,
-            [name]: option ? option.value : "",
+            [name]: option ? String(option.value) : "",
         };
         setFilterFormData(updatedForm);
         filterForm(updatedForm);
