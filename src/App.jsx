@@ -5,7 +5,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 
 // Public Pages
 import LoginPage from "./pages/others/LoginPage";
-import StudentHome from "./pages/student/StudentHome";
+import LandingPage from "./pages/others/LandingPage";
 
 // Student Pages
 import RegisterLayout from "./layout/RegisterLayout";
@@ -55,95 +55,95 @@ import AdminLoginAppln from './pages/admin/AdminLoginAppln';
 
 function App() {
 
-	const ROLES = { student: 0, admin: 1, staff: 2 };
+    const ROLES = { student: 0, admin: 1, staff: 2 };
 
-	return (
-		<AuthProvider>
-			<BrowserRouter>
-				<Routes>
-					{/* Public Routes */}
-					<Route path="/forgotPassword" element={<ForgotPassword />} />
-					<Route path="/login" element={<LoginPage />} />
-					<Route path="/" element={<StudentHome />} />
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    {/* Public Routes */}
+                    <Route path="/forgotPassword" element={<ForgotPassword />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/" element={<LandingPage />} />
 
-					{/* Student Register */}
-					<Route path="/student/register/*" element={<RegisterLayout />}>
-						<Route path="application" element={<RegisterApplication />} />
-					</Route>
+                    {/* Student Register */}
+                    <Route path="/student/register/*" element={<RegisterLayout />}>
+                        <Route path="application" element={<RegisterApplication />} />
+                    </Route>
 
-					{/* Student */}
-					<Route
-						path="/student/:userId/*"
-						element={
-							<PrivateRoute role="student">
-								<StudentLayout />
-							</PrivateRoute>
-						}
-					>
-						<Route path="dashboard" element={<StudentDashboard />} />
-						<Route path="application" element={<LoginApplication />} />
-						<Route path="guidelines" element={<StudentGuidelines />} />
-						<Route path="changePassword" element={<StudentChangePassword />} />
-					</Route>
+                    {/* Student */}
+                    <Route
+                        path="/student/:userId/*"
+                        element={
+                            <PrivateRoute role="student">
+                                <StudentLayout />
+                            </PrivateRoute>
+                        }
+                    >
+                        <Route path="dashboard" element={<StudentDashboard />} />
+                        <Route path="application" element={<LoginApplication />} />
+                        <Route path="guidelines" element={<StudentGuidelines />} />
+                        <Route path="changePassword" element={<StudentChangePassword />} />
+                    </Route>
 
-					{/* Admin */}
-					<Route
-						path="/admin/*"
-						element={
-							<PrivateRoute role={ROLES.admin}>
-								<AdminLayout />
-							</PrivateRoute>
-						}
-					>
-						<Route path="dashboard" element={<CommonStaffDashboard />} />
-						<Route path="academicYear" element={<AcademicYear />} />
-						<Route path="applicationDate" element={<ApplicationDate />} />
-						<Route path="donor" element={<DonorManage />} />
-						<Route path="checkStatus" element={<CheckStatus />} />
-						<Route path="distributionStatement" element={<DistributionStmt />} />
-						<Route path="sclrAdministration/*" element={<SclrAdministration />} >
-							<Route path="view" element={<AdminViewAppln />} />
-						</Route>
-						<Route path="staffManage" element={<StaffManage />} />
-						<Route path="deptManage" element={<DepartmentManage />} />
-						<Route path="studentManage" element={<Student />} />
-						<Route path="tutorManage" element={<Tutor />} />
-						<Route path="applicationManage" element={<ApplicationManage />} />
-						<Route path="progressReport" element={<ProgressReport />} />
-						<Route path="fundsAvailable" element={<FundsAvailable />} />
-						<Route path="changePassword" element={<AdminChangePassword />} />
-						<Route path="guidelines" element={<GuideLines />} />
-						<Route path="dataDeletion" element={<DataDeletion />} />
-						<Route path="uploadCenter" element={<AdminUploadCenter />} />
-						<Route path="quickRejection" element={<QuickRejection />} />
-						<Route path="adminRegisterApplication" element={<AdminRegisterAppln />} />
-						<Route path=":registerNo/adminLoginApplication" element={<AdminLoginAppln />} />
-					</Route>
+                    {/* Admin */}
+                    <Route
+                        path="/admin/*"
+                        element={
+                            <PrivateRoute role={ROLES.admin}>
+                                <AdminLayout />
+                            </PrivateRoute>
+                        }
+                    >
+                        <Route path="dashboard" element={<CommonStaffDashboard />} />
+                        <Route path="academicYear" element={<AcademicYear />} />
+                        <Route path="applicationDate" element={<ApplicationDate />} />
+                        <Route path="donor" element={<DonorManage />} />
+                        <Route path="checkStatus" element={<CheckStatus />} />
+                        <Route path="distributionStatement" element={<DistributionStmt />} />
+                        <Route path="sclrAdministration/*" element={<SclrAdministration />} >
+                            <Route path="view" element={<AdminViewAppln />} />
+                        </Route>
+                        <Route path="staffManage" element={<StaffManage />} />
+                        <Route path="deptManage" element={<DepartmentManage />} />
+                        <Route path="studentManage" element={<Student />} />
+                        <Route path="tutorManage" element={<Tutor />} />
+                        <Route path="applicationManage" element={<ApplicationManage />} />
+                        <Route path="progressReport" element={<ProgressReport />} />
+                        <Route path="fundsAvailable" element={<FundsAvailable />} />
+                        <Route path="changePassword" element={<AdminChangePassword />} />
+                        <Route path="guidelines" element={<GuideLines />} />
+                        <Route path="dataDeletion" element={<DataDeletion />} />
+                        <Route path="uploadCenter" element={<AdminUploadCenter />} />
+                        <Route path="quickRejection" element={<QuickRejection />} />
+                        <Route path="adminRegisterApplication" element={<AdminRegisterAppln />} />
+                        <Route path=":registerNo/adminLoginApplication" element={<AdminLoginAppln />} />
+                    </Route>
 
-					{/* Staff */}
-					<Route
-						path="/staff/:userId/*"
-						element={
-							<PrivateRoute role="staff">
-								<StaffLayout />
-							</PrivateRoute>
-						}
-					>
-						<Route path="classAttendance" element={<ClassAttendance />} />
-						<Route path="dmAttendance" element={<DmAttendance />} />
-						<Route path="markEntry" element={<CoeMark />} />
-						<Route path="dashboard" element={<CommonStaffDashboard />} />
-						<Route path="changePassword" element={<StaffChangePassword />} />
-						<Route path="scholarshipStaff" element={<ScholarshipStaff />} />
-						<Route path="scholarshipStaff" element={<ScholarshipStaff />} />
-						<Route path="tutorVerification" element={<TutorVerify />} />
-						<Route path="uploadCenter" element={<StaffUploadCenter />} />
-					</Route>
+                    {/* Staff */}
+                    <Route
+                        path="/staff/:userId/*"
+                        element={
+                            <PrivateRoute role="staff">
+                                <StaffLayout />
+                            </PrivateRoute>
+                        }
+                    >
+                        <Route path="classAttendance" element={<ClassAttendance />} />
+                        <Route path="dmAttendance" element={<DmAttendance />} />
+                        <Route path="markEntry" element={<CoeMark />} />
+                        <Route path="dashboard" element={<CommonStaffDashboard />} />
+                        <Route path="changePassword" element={<StaffChangePassword />} />
+                        <Route path="scholarshipStaff" element={<ScholarshipStaff />} />
+                        <Route path="scholarshipStaff" element={<ScholarshipStaff />} />
+                        <Route path="tutorVerification" element={<TutorVerify />} />
+                        <Route path="uploadCenter" element={<StaffUploadCenter />} />
+                    </Route>
 
-				</Routes>
-			</BrowserRouter>
-		</AuthProvider>
-	)
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
+    )
 }
 
 export default App;

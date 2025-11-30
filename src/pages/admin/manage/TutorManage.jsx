@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -25,6 +25,7 @@ function Tutor() {
     const [batchs, setBatchs] = useState([])
 
     useEffect(() => {
+
         const fetchData = async () => {
             try {
                 const response = await axios.get(`${apiUrl}/api/tutor/fetchTutors`);
@@ -33,8 +34,8 @@ function Tutor() {
                 setFilteredTutors(response.data.tutors);
             } catch (err) {
                 setError("Failed to fetch tutors");
-                console.error(err);
-            } finally {setIsLoading(false)}
+                console.error('Error in fetching tutors', err);
+            } finally { setIsLoading(false) }
         }
 
         const fetchDepartments = async () => {
@@ -47,15 +48,13 @@ function Tutor() {
             }
         }
 
-
         const fetchBatch = async () => {
             try {
                 const response = await axios.get(`${apiUrl}/api/common/fetchDropdownData`);
-                console.log("Batchs", response.data.batches)
                 setBatchs(response.data.batches)
             }
             catch (e) {
-                console.log("Error fetching error", e)
+                console.log("Error in feching batches : ", e)
             }
         }
 
@@ -65,7 +64,7 @@ function Tutor() {
     }, [apiUrl]);
 
     const dep = [
-        {value: "All", label: "All"},
+        { value: "All", label: "All" },
         ...Object.values(departments).map(item => ({
             value: item.department,
             label: `${item.department} - ${item.departmentName}`

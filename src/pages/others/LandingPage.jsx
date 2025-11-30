@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import HeroSection from '../../components/LandingPage/HeroSection'
-import StudentButtons from '../../components/StudentHome/StudentButtons'
+import LoginButtions from '../../components/LandingPage/LoginButtons'
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function StudentHome() {
+function LandingPage() {
 
     const [dates, setDates] = useState(null);
 
@@ -21,10 +21,10 @@ function StudentHome() {
             <HeroSection />
         </div>
             <div className="w-[40%] flex flex-col justify-center items-center rounded-lg h-full">
-                <StudentButtons applnEndDate={dates?.applnEndDate} />
+                <LandingPage applnEndDate={dates?.applnEndDate} />
             </div>
         </div>
     )
 }
 
-export default StudentHome;
+export default LandingPage;
