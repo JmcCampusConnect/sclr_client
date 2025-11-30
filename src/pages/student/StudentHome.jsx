@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import HeroSection from '../../components/LandingPage/HeroSection'
 import StudentButtons from '../../components/StudentHome/StudentButtons'
-const apiUrl = import.meta.env.VITE_API_URL;    
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function StudentHome() {
 
@@ -11,7 +11,7 @@ function StudentHome() {
     useEffect(() => {
         const fetchDates = async () => {
             const response = await axios.get(`${apiUrl}/api/application/settings/fetchDates`);
-           setDates(response.data);
+            setDates(response.data.dateRange);
         }
         fetchDates();
     }, [])
