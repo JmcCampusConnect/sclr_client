@@ -9,20 +9,31 @@ function AddDepartmentModal({ onClose, onAddDepartment }) {
     const [formData, setFormData] = useState({ department: "", departmentName: "" });
     const [errors, setErrors] = useState({});
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        setErrors((prev) => ({ ...prev, [name]: "" }));
-    };
-
-    const handleUppercaseChange = (e) => {
+    const handleDepartmentChange = (e) => {
         const { value } = e.target;
         setFormData((prev) => ({
             ...prev,
-            departmentName: value.toUpperCase(),
+            department: value.toUpperCase(),
+        }));
+        setErrors((prev) => ({ ...prev, department: "" }));
+    };
+
+    const handleDepartmentNameChange = (e) => {
+        const { value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            departmentName: value,
         }));
         setErrors((prev) => ({ ...prev, departmentName: "" }));
     };
+
+    const toTitleCase = (str) =>
+        str
+            .toLowerCase()
+            .split(" ")
+            .filter(Boolean)
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
 
     const validateForm = () => {
         const newErrors = {};
@@ -45,8 +56,14 @@ function AddDepartmentModal({ onClose, onAddDepartment }) {
             return;
         }
 
+        const payload = {
+            ...formData,
+            department: formData.department.toUpperCase(),
+            departmentName: toTitleCase(formData.departmentName),
+        };
+
         try {
-            const response = await axios.post(`${apiUrl}/api/dept/addDepartment`, formData);
+            const response = await axios.post(`${apiUrl}/api/dept/addDepartment`, payload);
             if (response.data.success) {
                 alert(response.data.message);
                 onAddDepartment?.(response.data.department);
@@ -95,7 +112,7 @@ function AddDepartmentModal({ onClose, onAddDepartment }) {
                                 label="Department ID"
                                 name="department"
                                 value={formData.department}
-                                onChange={handleChange}
+                                onChange={handleDepartmentChange}
                                 required
                                 error={errors.department}
                             />
@@ -103,7 +120,7 @@ function AddDepartmentModal({ onClose, onAddDepartment }) {
                                 label="Department Name"
                                 name="departmentName"
                                 value={formData.departmentName}
-                                onChange={handleUppercaseChange}
+                                onChange={handleDepartmentNameChange}
                                 required
                                 error={errors.departmentName}
                             />

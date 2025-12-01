@@ -51,7 +51,7 @@ function AcademicYear() {
             setCurrAcYear(response.data.currAcYear);
             setAllAcademicYears(response.data.getAllAcademicYears);
         } catch (err) {
-            setError("Failed to load academic years.");
+            setError("Failed to load academic years : ", err);
         } finally { setIsLoading(false) }
     }
 
@@ -62,7 +62,7 @@ function AcademicYear() {
             alert("Academic year changed successfully.");
             fetchAcademicYear();
         } catch (error) {
-            alert("Something went wrong while setting the academic year.");
+            alert("Something went wrong while setting the academic year : ", error);
         }
     };
 
@@ -98,16 +98,15 @@ function AcademicYear() {
                 </h1>
             </header>
 
-            <form onSubmit={academicSave} className="bg-white border rounded-lg shadow p-6">
+            <form onSubmit={academicSave} className="bg-white border border-gray-200 rounded-lg shadow p-6">
                 <label className="block text-lg font-semibold mb-4 text-gray-700 w-[50%]">
                     Select Academic Year :
                 </label>
-
                 <div className="flex items-center space-x-4 w-[50%]">
                     <select
                         value={currAcYear}
                         onChange={(e) => setCurrAcYear(e.target.value)}
-                        className="flex-grow border border-gray-400 rounded-md px-3 py-2"
+                        className="flex-grow border border-gray-200 rounded-md px-3 py-2"
                         required
                     >
                         <option value="">-- Select --</option>

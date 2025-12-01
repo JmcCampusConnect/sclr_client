@@ -44,7 +44,7 @@ function ApplicationManage() {
         };
 
         fetchApplicationData();
-    }, []);
+    }, [apiUrl]);
 
     useEffect(() => {
 

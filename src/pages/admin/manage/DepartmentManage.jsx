@@ -14,7 +14,6 @@ function Department() {
     const [editDepartment, setEditDepartment] = useState(null);
     const [deleteDepartments, setDeleteDepartments] = useState(null);
     const [depts, setDepts] = useState([]);
-    const [allDepts, setAllDepts] = useState([]);
     const [filteredDepts, setFilteredDepts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -26,7 +25,6 @@ function Department() {
             const response = await axios.get(`${apiUrl}/api/dept/fetchDepts`);
             const data = response.data.depts || [];
             setDepts(data);
-            setAllDepts(data);
             setFilteredDepts(data);
         } catch (error) {
             console.error("Error fetching departments:", error);

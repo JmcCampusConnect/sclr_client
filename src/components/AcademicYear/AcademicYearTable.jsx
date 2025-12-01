@@ -12,43 +12,36 @@ function AcademicYearTable({ acYears, onEdit, onDelete }) {
 
     return (
         <div className="overflow-x-auto border border-gray-200 rounded-xl shadow-lg bg-white/10 dark:bg-gray-800/40 backdrop-blur-md">
-
             <div className="max-h-[700px] overflow-y-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center table-auto">
+                <table className="min-w-full divide-y divide-gray-200 text-center table-auto">
                     <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
                         <tr>
-                            <th className="px-4 py-3">Academic Id</th>
-                            <th className="px-4 py-3">Academic Year</th>
-                            <th className="px-4 py-3">Active Status</th>
-                            <th className="px-4 py-3">Application Start</th>
-                            <th className="px-4 py-3">Application End</th>
-                            <th className="px-4 py-3">Actions</th>
+                            <th className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Academic Id</th>
+                            <th className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Academic Year</th>
+                            <th className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Active Status</th>
+                            <th className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Application Start</th>
+                            <th className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Application End</th>
+                            <th className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">Actions</th>
                         </tr>
                     </thead>
 
                     <tbody className="divide-y divide-gray-200">
                         {acYears.length === 0 && (
                             <tr>
-                                <td colSpan="6" className="px-4 py-4 text-gray-700">
-                                    No academics found.
-                                </td>
+                                <td colSpan="6" className="px-4 py-4 text-gray-700">No academics found.</td>
                             </tr>
                         )}
-
                         {acYears.map((ac) => (
                             <tr key={ac._id} className="hover:bg-gray-50 transition">
-                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.academicId}</td>
-                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.academicYear}</td>
-                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.active == 1 ? "Active" : "Inactive"}</td>
-                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
+                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.academicId}</td>
+                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.academicYear}</td>
+                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">{ac.active == 1 ? "Active" : "Inactive"}</td>
+                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base text-gray-700 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
                                     {ac.applnStartDate ? formatDate(ac.applnStartDate) : ""}
                                 </td>
-
-                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
+                                <td className="px-4 py-3 text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
                                     {ac.applnEndDate ? formatDate(ac.applnEndDate) : ""}
                                 </td>
-
-
                                 <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
                                     <div className="flex justify-center gap-2">
                                         <button
@@ -63,7 +56,6 @@ function AcademicYearTable({ acYears, onEdit, onDelete }) {
                                         >
                                             Delete
                                         </button>
-
                                     </div>
                                 </td>
                             </tr>
