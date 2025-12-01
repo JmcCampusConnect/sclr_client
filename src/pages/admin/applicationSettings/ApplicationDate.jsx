@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import HeaderTag from '../../../common/HeaderTag'
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -7,7 +7,6 @@ function ApplicationDate() {
 
     const [applnStartDate, setStartDate] = useState('');
     const [applnEndDate, setEndDate] = useState('');
-    const [date, setDate] = useState({});
 
     const handleSaveDates = async () => {
         if (!applnStartDate || !applnEndDate) {
@@ -17,32 +16,38 @@ function ApplicationDate() {
             const response = await axios.post(`${apiUrl}/api/application/settings/updateDates`, {
                 applnStartDate, applnEndDate
             })
-            // if (response.status == 200) {
-            //     alert(`${response.data.message}`);
-            // }
+            if (response.status == 200) {
+                alert(`${response.data.message}`);
+            }
         } catch (error) {
             console.error('Error saving dates : ', error);
-            // if (error.status == 409) {
-            //     alert(`${error.response.data.message}`);
-            // }
-            // else {
-            //     alert(`${error.response.data.message}`);
-            // }
+            if (error.status == 409) {
+                alert(`${error.response.data.message}`);
+            }
+            else {
+                alert(`${error.response.data.message}`);
+            }
         }
     };
 
     useEffect(() => {
         const fetchDates = async () => {
             try {
-                const response = await axios.post(`${apiUrl}/api/application/settings/fetchDates`, {});
-                const {applnStartDate, applnEndDate} = response.data || {};
-                setDate(response.data);
-                if (applnStartDate) setStartDate(applnStartDate.slice(0, 10));
-                if (applnEndDate) setEndDate(applnEndDate.slice(0, 10));
-            } catch (error) {console.error('Error fetching dates:', error)}
+                const response = await axios.get(`${apiUrl}/api/application/settings/fetchDates`);
+                const dateRange = response.data?.dateRange;
+                if (!dateRange) return;
+                if (dateRange.applnStartDate) {
+                    setStartDate(dateRange.applnStartDate.slice(0, 10));
+                }
+                if (dateRange.applnEndDate) {
+                    setEndDate(dateRange.applnEndDate.slice(0, 10));
+                }
+            } catch (error) {
+                console.error("Error fetching dates:", error);
+            }
         };
         fetchDates();
-    }, [apiUrl]);
+    }, []);
 
     return (
         <div>

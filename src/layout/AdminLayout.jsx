@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import JmcLogo from "../assets/logos/JmcLogo.png";
-import { Outlet, NavLink, useNavigate, useParams } from "react-router-dom";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChalkboard, faExclamationTriangle, faFileAlt, faIdCard, faTools, faSignOutAlt,
@@ -58,7 +58,6 @@ function RecursiveMenu({ items }) {
 function AdminLayout() {
 
     const navigate = useNavigate();
-    const { userId } = useParams();
     const { handleLogout } = useContext(AuthContext);
 
     const navItems = [

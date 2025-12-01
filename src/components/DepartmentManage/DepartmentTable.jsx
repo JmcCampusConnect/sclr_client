@@ -28,7 +28,7 @@ function DepartmentTable({ depts, onEdit, onDelete }) {
                                     <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
                                         {depts?.department}
                                     </td>
-                                    <td className="uppercase px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
+                                    <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                         {depts?.departmentName}
                                     </td>
                                     <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">

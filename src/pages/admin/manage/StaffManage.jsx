@@ -254,7 +254,7 @@ const Input = ({
                 }
                 focus:outline-none focus:ring-1`
             }
-        />
+        /> 
 
         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
