@@ -3,16 +3,19 @@ import StaffStatus from '../../components/Others/StaffStatus';
 import Button from '../../common/Button';
 import HeaderTag from '../../common/HeaderTag';
 import { useFetch } from '../../hook/useFetch';
-import { useAdd } from '../../hook/useAdd'
+import { useAdd } from '../../hook/useAdd';
+import Loading from '../../assets/svg/Pulse.svg';
 
 function CoeMark() {
 
     const apiUrl = import.meta.env.VITE_API_URL;
-    const { fetchError, fetchData } = useFetch();
+    const { fetchData } = useFetch();
     const [StudentsData, setStudentsData] = useState([]);
     const [changedStudents, setChangedStudents] = useState([]);
     const [statusCount, setStatusCount] = useState({});
-    const { addError, addData } = useAdd()
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const { addData } = useAdd()
 
     const headers = [
         { key: 'sno', label: 'S.No', className: 'w-[6%]' },
@@ -30,21 +33,22 @@ function CoeMark() {
 
     useEffect(() => {
         const fetchStudents = async () => {
+            setIsLoading(true);
+            setError(null);
             try {
                 const Students = await fetchData(`${apiUrl}/api/staff/coe/students`, {});
                 setStudentsData(Students.data?.data || []);
                 setStatusCount(Students.data.counts)
             } catch (err) {
                 if (err.response && err.response.status === 404) {
-                    fetchError && fetchError(err.response.data.message || 'No students found');
+                    setError(err.response?.data?.message || "Server error");
                 } else {
                     console.error('Something error on fetch student for coe:', err);
-                    fetchError && fetchError('Server error: unable to fetch student data');
                 }
-            }
+            } finally { setIsLoading(false) }
         }
         fetchStudents()
-    }, [])
+    }, [apiUrl]);
 
     // FOR HANDLE INPUT CHANGE FOR PERCENTAGE
 
@@ -94,10 +98,26 @@ function CoeMark() {
                 alert("Mark saved successfully")
                 window.location.reload();
             }
-        } catch (err) {
-            console.log('Something error in saving mark in COE : ');
-            fetchError && erroAdd('Failed to save student marks');
+        } catch (error) {
+            console.log('Something error in saving mark in COE : ', error);
         }
+    }
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center">
+                <img src={Loading} alt="Loading..." className="w-24 h-24 mb-4 animate-spin" />
+                <p className="text-gray-600 font-medium text-lg">Loading students...</p>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <p className="text-red-600 font-semibold">{error}</p>
+            </div>
+        )
     }
 
     return (

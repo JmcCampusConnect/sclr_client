@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom";
 import { useAdd } from '../../hook/useAdd';
 import HeaderTag from '../../common/HeaderTag';
 import StaffStatus from '../../components/Others/StaffStatus';
-import Button from '../../common/Button'
+import Button from '../../common/Button';
+import Loading from '../../assets/svg/Pulse.svg';
 
 function ClassAttendance() {
 
@@ -18,11 +19,15 @@ function ClassAttendance() {
     const [studentRows, setStudentRows] = useState([]);
     const [count, setCount] = useState()
     const prevSemWorkingDays = 100;
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     // FETCH STUDENT DATA
 
     useEffect(() => {
         const fetchStudents = async () => {
+            setIsLoading(true);
+            setError(null);
             try {
                 const response = await fetchData(`${apiUrl}/api/staff/class/students`, { userId });
                 if (response.status === 200) {
@@ -39,7 +44,10 @@ function ClassAttendance() {
                         isSemOne: stu.semester === "I"
                     })));
                 }
-            } catch (error) { console.log("Something error in fetch student : ", error) }
+            } catch (error) {
+                setError("Failed to load student data. Please try again later.");
+                console.log("Something error in fetch student : ", error)
+            } finally { setIsLoading(false) }
         }
         fetchStudents()
     }, [])
@@ -148,6 +156,23 @@ function ClassAttendance() {
             console.error("Something error to add attendance : ", err);
             alert("Something error to add attendance");
         }
+    }
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center">
+                <img src={Loading} alt="Loading..." className="w-24 h-24 mb-4 animate-spin" />
+                <p className="text-gray-600 font-medium text-lg">Loading students...</p>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <p className="text-red-600 font-semibold">{error}</p>
+            </div>
+        )
     }
 
     return (

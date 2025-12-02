@@ -9,39 +9,31 @@ function ScholarshipStaff() {
 
     const { userId } = useParams();
     const apiUrl = import.meta.env.VITE_API_URL;
-
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [pending, setPending] = useState(0);
     const [complete, setComplete] = useState(0);
-
     const [formData, setFormData] = useState({});
     const [initialFormData, setInitialFormData] = useState({});
 
     useEffect(() => {
         const fetchStudents = async () => {
+
             try {
                 setLoading(true);
                 setError(null);
-
                 const response = await axios.get(`${apiUrl}/api/staff/sclr/students?staffId=${userId}`);
-
                 const fetchedStudents = response.data.data || [];
                 setStudents(fetchedStudents);
                 setPending(response.data.pending || 0);
                 setComplete(response.data.complete || 0);
-
                 const initial = {};
-                fetchedStudents.forEach(stu => {
-                    initial[stu._id] = stu.governmentScholarship || "";
-                });
-
+                fetchedStudents.forEach(stu => { initial[stu._id] = stu.governmentScholarship || "" });
                 setFormData(initial);
                 setInitialFormData(initial);
-
             } catch (err) {
-                setError("Failed to fetch student data.");
+                setError("Failed to fetch student data : ", err)
             } finally { setLoading(false) }
         }
         fetchStudents();
@@ -65,7 +57,9 @@ function ScholarshipStaff() {
                 appliedList: changed
             });
             alert("Data submitted successfully!");
+            window.location.reload();
         } catch (err) {
+            console.log('Error in submitting data : ', err)
             alert("Submit failed!");
         }
     };

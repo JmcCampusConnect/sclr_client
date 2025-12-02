@@ -30,10 +30,15 @@ function StaffLayout() {
         JMCPPS: 'Pudhumai Penn Scheme',
     }
 
+    const coeMap = {
+        JMCCOE: 'Controller of Examinations'
+    }
+
     const restrictedUsers = [
         ...Object.keys(attendanceMap),
         ...Object.keys(subjectMap),
-        ...Object.keys(sclrMap)
+        ...Object.keys(sclrMap),
+        ...Object.keys(coeMap)
     ]
 
     const attendanceName = attendanceMap[userId] || null;

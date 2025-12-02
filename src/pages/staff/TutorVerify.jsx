@@ -27,7 +27,6 @@ function TutorVerify() {
     const openModal = (student) => {
         setSelectedStudent(student);
         const details = student.tutorVerificationDetails;
-
         setVerificationData({
             orphanOrSingleParent: details?.orphanOrSingleParent || false,
             hazrathOrMuaddin: details?.hazrathOrMuaddin || false,
@@ -83,6 +82,7 @@ function TutorVerify() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const submitVerification = async () => {
+
         if (!selectedStudent) return;
 
         setIsSubmitting(true);
@@ -105,11 +105,12 @@ function TutorVerify() {
                     tutorVerification: 1
                 }
             );
-            alert(`Verification successful!\nStudent: ${selectedStudent.name}`);
+            alert(`Verification successful for ${selectedStudent.name}`);
             closeModal();
             fetchStudents();
         } catch (err) {
             alert("Verification failed!\nPlease try again.");
+            console.error('Error in verfiying student : ', err);
         } finally { setIsSubmitting(false) }
     }
 

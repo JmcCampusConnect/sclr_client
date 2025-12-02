@@ -6,6 +6,7 @@ import { useAdd } from '../../hook/useAdd';
 import StaffStatus from '../../components/Others/StaffStatus';
 import HeaderTag from '../../common/HeaderTag';
 import Button from '../../common/Button';
+import Loading from '../../assets/svg/Pulse.svg';
 
 function DmAttendance() {
 
@@ -19,17 +20,22 @@ function DmAttendance() {
     const [editedStudents, setEditedStudents] = useState({});
     const [count, setCount] = useState();
     const [staffData, setStaffData] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const getStudents = async () => {
+            setIsLoading(true);
+            setError(null);
             try {
                 const response = await fetchData(`${apiUrl}/api/staff/dm/studentsDM`, { userId });
                 setStudents(response.data.students || []);
                 setCount(response.data.counts);
                 setStaffData(response.data.StaffData[0])
             } catch (error) {
+                setError("Failed to load student data. Please try again later.");
                 console.log("Error while fetching students : ", error);
-            }
+            } finally { setIsLoading(false) }
         };
         getStudents();
     }, []);
@@ -128,13 +134,30 @@ function DmAttendance() {
         })
 
         try {
-            const saveStudents = await addData(`${apiUrl}/api/staff/dm/saveStdutntDM`, submissionArray);
+            await addData(`${apiUrl}/api/staff/dm/saveStdutntDM`, submissionArray);
             alert("Attendance saved successfully");
             window.location.reload();
         } catch (e) {
             console.log("Something went wrong while saving attendance DM", e);
             addError && addError(e);
         }
+    }
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center">
+                <img src={Loading} alt="Loading..." className="w-24 h-24 mb-4 animate-spin" />
+                <p className="text-gray-600 font-medium text-lg">Loading students...</p>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <p className="text-red-600 font-semibold">{error}</p>
+            </div>
+        )
     }
 
     return (
