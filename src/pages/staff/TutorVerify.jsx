@@ -12,12 +12,13 @@ function TutorVerify() {
     const [studentData, setStudentData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [formErrors, setFormErrors] = useState({});
 
     const [verificationData, setVerificationData] = useState({
-        orphanOrSingleParent: false,
-        hazrathOrMuaddin: false,
-        eligibleForZakkath: false,
-        needyButNotZakkath: false,
+        orphanOrSingleParent: null,
+        hazrathOrMuaddin: null,
+        eligibleForZakkath: null,
+        needyButNotZakkath: null,
         remarks: "",
     });
 
@@ -26,15 +27,14 @@ function TutorVerify() {
 
     const openModal = (student) => {
         setSelectedStudent(student);
-        const details = student.tutorVerificationDetails;
         setVerificationData({
-            orphanOrSingleParent: details?.orphanOrSingleParent || false,
-            hazrathOrMuaddin: details?.hazrathOrMuaddin || false,
-            eligibleForZakkath: details?.eligibleForZakkath || false,
-            needyButNotZakkath: details?.needyButNotZakkath || false,
-            remarks: details?.remarks || "",
+            orphanOrSingleParent: null,
+            hazrathOrMuaddin: null,
+            eligibleForZakkath: null,
+            needyButNotZakkath: null,
+            remarks: "",
         });
-
+        setFormErrors({});
         setVerifyModal(true);
     };
 
@@ -42,18 +42,23 @@ function TutorVerify() {
         setVerifyModal(false);
         setSelectedStudent(null);
         setVerificationData({
-            orphanOrSingleParent: false,
-            hazrathOrMuaddin: false,
-            eligibleForZakkath: false,
-            needyButNotZakkath: false,
+            orphanOrSingleParent: null,
+            hazrathOrMuaddin: null,
+            eligibleForZakkath: null,
+            needyButNotZakkath: null,
             remarks: "",
         });
+        setFormErrors({});
     };
 
     const handleVerificationChange = (key, value) => {
         setVerificationData(prev => ({
             ...prev,
             [key]: value,
+        }));
+        setFormErrors(prev => ({
+            ...prev,
+            [key]: undefined,
         }));
     };
 
@@ -85,14 +90,30 @@ function TutorVerify() {
 
         if (!selectedStudent) return;
 
+        const newErrors = {};
+
+        if (verificationData.orphanOrSingleParent == null)
+            newErrors.orphanOrSingleParent = "This field is required";
+
+        if (verificationData.hazrathOrMuaddin == null)
+            newErrors.hazrathOrMuaddin = "This field is required";
+
+        if (verificationData.eligibleForZakkath == null)
+            newErrors.eligibleForZakkath = "This field is required";
+
+        if (verificationData.needyButNotZakkath == null)
+            newErrors.needyButNotZakkath = "This field is required";
+
+
+        if (Object.keys(newErrors).length > 0) {
+            setFormErrors(newErrors);
+            return;
+        }
+
         setIsSubmitting(true);
 
         const tutorVerificationDetails = {
-            orphanOrSingleParent: verificationData.orphanOrSingleParent,
-            hazrathOrMuaddin: verificationData.hazrathOrMuaddin,
-            eligibleForZakkath: verificationData.eligibleForZakkath,
-            needyButNotZakkath: verificationData.needyButNotZakkath,
-            remarks: verificationData.remarks,
+            ...verificationData,
             verifiedBy: staffId,
             verifiedAt: new Date().toISOString(),
         };
@@ -130,6 +151,13 @@ function TutorVerify() {
             </div>
         );
     }
+
+    const isFormValid =
+        verificationData.orphanOrSingleParent != null &&
+        verificationData.hazrathOrMuaddin != null &&
+        verificationData.eligibleForZakkath != null &&
+        verificationData.needyButNotZakkath != null;
+
 
     return (
         <div>
@@ -225,6 +253,7 @@ function TutorVerify() {
                                         checkedValue={verificationData.orphanOrSingleParent}
                                         onChange={handleVerificationChange}
                                         dataKey="orphanOrSingleParent"
+                                        error={formErrors.orphanOrSingleParent}
                                     />
 
                                     <RadioGroup
@@ -233,6 +262,7 @@ function TutorVerify() {
                                         checkedValue={verificationData.hazrathOrMuaddin}
                                         onChange={handleVerificationChange}
                                         dataKey="hazrathOrMuaddin"
+                                        error={formErrors.hazrathOrMuaddin}
                                     />
 
                                     <RadioGroup
@@ -241,6 +271,8 @@ function TutorVerify() {
                                         checkedValue={verificationData.eligibleForZakkath}
                                         onChange={handleVerificationChange}
                                         dataKey="eligibleForZakkath"
+                                        error={formErrors.eligibleForZakkath}
+
                                     />
 
                                     <RadioGroup
@@ -249,6 +281,7 @@ function TutorVerify() {
                                         checkedValue={verificationData.needyButNotZakkath}
                                         onChange={handleVerificationChange}
                                         dataKey="needyButNotZakkath"
+                                        error={formErrors.needyButNotZakkath}
                                     />
                                 </div>
 
@@ -278,12 +311,12 @@ function TutorVerify() {
                             >
                                 Cancel
                             </button>
-
                             <button
                                 onClick={submitVerification}
-                                disabled={isSubmitting}
-                                className={`px-6 py-2.5 rounded-lg font-semibold text-white shadow-md transition 
-                                ${isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"}`}
+                                disabled={isSubmitting || !isFormValid}
+                                className={`px-6 py-2.5 rounded-lg font-semibold text-white shadow-md transition ${isSubmitting || !isFormValid
+                                    ? "bg-gray-400 cursor-not-allowed"
+                                    : "bg-green-600 hover:bg-green-700"}`}
                             >
                                 {isSubmitting ? "Verifying..." : "Verify"}
                             </button>
@@ -311,10 +344,13 @@ const Info = ({ label, value }) => (
     </div>
 );
 
+const RadioGroup = ({ label, name, checkedValue, onChange, dataKey, error }) => (
 
-const RadioGroup = ({ label, name, checkedValue, onChange, dataKey }) => (
     <div className="flex flex-col">
-        <p className="font-medium text-gray-800 dark:text-gray-200 mb-2">{label} :</p>
+        <p className="font-medium text-gray-800 dark:text-gray-200 mb-2">
+            {label} :
+        </p>
+
         <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -338,6 +374,12 @@ const RadioGroup = ({ label, name, checkedValue, onChange, dataKey }) => (
                 <span className="text-gray-700 dark:text-gray-300">No</span>
             </label>
         </div>
+
+        {error && (
+            <p className="text-red-500 text-sm mt-2">
+                {error}
+            </p>
+        )}
     </div>
 )
 
