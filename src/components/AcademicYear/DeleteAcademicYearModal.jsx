@@ -49,12 +49,6 @@ function DeleteAcademicYearModal({ academic, onClose, onDelete }) {
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
                             {academic.academicYear}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Start Date : <span className="font-medium">{academic.applnStartDate ? academic.applnStartDate.split("T")[0] : ""}</span>
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                            End Date : <span className="font-medium">{academic.applnEndDate ? academic.applnEndDate.split("T")[0] : ""}</span>
-                        </p>
                         {academic.isActive && (
                             <p className="text-sm mt-2 text-green-600 font-semibold">
                                 This is the ACTIVE academic year!

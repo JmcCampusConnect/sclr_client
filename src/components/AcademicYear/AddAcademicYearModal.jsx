@@ -54,13 +54,13 @@ function AddAcademicYearModal({ onClose, onAdded }) {
             }
             onClose();
         } catch (error) {
-            if (error.status == 409) { alert(`Academic Year already Exists`) }
+            if (error.status == 409) { alert(`Academic year already exists`) }
             console.error("Error adding academic : ", error);
         }
     }
 
     return (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
 
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-6xl hide-scrollbar overflow-y-auto max-h-[80vh]">
 
@@ -118,15 +118,20 @@ function AddAcademicYearModal({ onClose, onAdded }) {
                         <div className="flex items-center gap-3 mt-4">
                             <input
                                 type="checkbox"
+                                id="isActive"
                                 name="isActive"
                                 checked={formData.isActive}
                                 onChange={handleChange}
-                                className="w-5 h-5"
+                                className="w-5 h-5 cursor-pointer"
                             />
-                            <label className="text-gray-800 dark:text-gray-200 font-semibold">
+                            <label
+                                htmlFor="isActive"
+                                className="text-gray-800 dark:text-gray-200 font-semibold cursor-pointer"
+                            >
                                 Set as Active Academic Year
                             </label>
                         </div>
+
                     </div>
 
                     {/* Footer */}

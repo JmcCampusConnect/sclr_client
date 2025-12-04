@@ -14,7 +14,6 @@ function AcademicYear() {
 
     const [acYears, setAcYears] = useState([]);
     const [currAcYear, setCurrAcYear] = useState("");
-
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
