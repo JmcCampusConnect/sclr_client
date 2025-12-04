@@ -127,7 +127,7 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
 
                 <form onSubmit={handleSubmit} noValidate className="p-6 space-y-7">
                     {/* Personal Information */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">👤 Personal Information</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <Input label="Register No" name="registerNo" value={formData.registerNo ?? ""} onChange={handleChange} required error={errors.registerNo} />
@@ -144,7 +144,7 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
                     </div>
 
                     {/* Academic Information */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">📚 Academic Information</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <Input label="Department" name="department" value={formData.department ?? ""} onChange={handleChange} required error={errors.department} />
@@ -157,7 +157,7 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
                     </div>
 
                     {/* Performance Metrics */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">📊 Performance Metrics</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <Input label="Last Studied Institution (%)" name="lastStudiedInstitutionPercentage" type="number" value={formData.lastStudiedInstitutionPercentage ?? ""} onChange={handleChange} />
@@ -169,7 +169,7 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
                     </div>
 
                     {/* Address & Contact - single-row address */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">🏠 Address & Contact</h2>
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
                             <Input label="Address" name="address" value={formData.address ?? ""} onChange={handleChange} />
@@ -180,7 +180,7 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
                     </div>
 
                     {/* Parent / Financial */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">💳 Parent / Financial</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <Input label="Parent Name" name="parentName" value={formData.parentName ?? ""} onChange={handleChange} />
@@ -192,7 +192,7 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
                     </div>
 
                     {/* Siblings / Hostel */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">👨‍👩‍👧‍👦 Siblings & Hostel</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <SearchDropdown label="Siblings Status" name="siblingsStatus" value={getSelectValue("siblingsStatus", yesNoOptions)} options={yesNoOptions} onChange={handleSelectChange} />
@@ -205,7 +205,7 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
                     </div>
 
                     {/* Tutor Verification */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">🧾 Tutor Verification</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <SearchDropdown label="Tutor Verification Status" name="tutorVerification" value={getSelectValue("tutorVerification", tutorVerificationOptions)} options={tutorVerificationOptions} onChange={handleSelectChange} />
@@ -246,7 +246,7 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
                     </div>
 
                     {/* Rejection Reasons & Attachments */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">📝 Rejection Reasons & Attachments</h2>
                         <div className="grid grid-cols-1 gap-6">
                             <Input label="Rejection Reasons (comma separated)" name="rejectionReasons" value={Array.isArray(formData.rejectionReasons) ? formData.rejectionReasons.join(", ") : formData.rejectionReasons ?? ""} onChange={(e) => { const v = e.target.value ? e.target.value.split(",").map(s => s.trim()) : []; setFormData(prev => ({ ...prev, rejectionReasons: v })); }} />

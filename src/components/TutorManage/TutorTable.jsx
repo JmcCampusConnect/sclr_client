@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+ import React from "react";
 
-function TutorTable({ onEditTutor, onDeleteTutor, tutors }) {
+ function TutorTable({ onEditTutor, onDeleteTutor, tutors }) {
 
 	return (
 		<div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">

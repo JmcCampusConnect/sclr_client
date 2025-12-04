@@ -14,7 +14,6 @@ function StudentGuidelines() {
 					Before filling up the application, ensure you have all your personal and academic information ready.
 				</li>
 				<li>
-					Any misleading information will lead to the cancellation of the scholarship.
 				</li>
 				<li>
 					Use a valid email address and phone number for communication purposes.

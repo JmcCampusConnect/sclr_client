@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../App.css";
 import SearchDropdown from "../../common/SearchDropDown";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function EditTutorModal({tutor, onClose, onUpdateTutor, batchs}) {
+function EditTutorModal({ tutor, onClose, onUpdateTutor, batchs }) {
 
-    const [formData, setFormData] = useState({...tutor});
+    const [formData, setFormData] = useState({ ...tutor });
     const [departments, setDepartments] = useState([]);
     const [errors, setErrors] = useState({});
 
@@ -29,17 +29,22 @@ function EditTutorModal({tutor, onClose, onUpdateTutor, batchs}) {
     }));
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData((prev) => ({...prev, [name]: value}));
-        setErrors((prev) => ({...prev, [name]: ""}));
+        const { name, value } = e.target;
+        const updatedValue =
+            name === "staffName"
+                ? value.toUpperCase()
+                : value;
+        setFormData((prev) => ({ ...prev, [name]: updatedValue }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
     };
+
 
     const handleSelectChange = (name, option) => {
         setFormData((prev) => ({
             ...prev,
             [name]: option ? option.value : "",
         }));
-        setErrors((prev) => ({...prev, [name]: ""}));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
     };
 
     const validateForm = () => {
@@ -50,6 +55,7 @@ function EditTutorModal({tutor, onClose, onUpdateTutor, batchs}) {
         if (!formData.category) newErrors.category = "Category is required.";
         if (!formData.batch) newErrors.batch = "Batch is required.";
         if (!formData.section) newErrors.section = "Section is required.";
+        if (!formData.password) newErrors.password = "Password is required.";
 
         setErrors(newErrors);
         return newErrors;
@@ -117,7 +123,7 @@ function EditTutorModal({tutor, onClose, onUpdateTutor, batchs}) {
                 {/* Form */}
                 <form onSubmit={handleSubmit} noValidate className="p-6 space-y-7">
                     {/* Section 1: Basic Info */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
                             🧾 Basic Information
                         </h2>
@@ -149,6 +155,8 @@ function EditTutorModal({tutor, onClose, onUpdateTutor, batchs}) {
                                 required
                                 error={errors.department}
                             />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-4 mt-4 gap-6">
                             <SearchDropdown
                                 label="Category"
                                 name="category"
@@ -176,6 +184,14 @@ function EditTutorModal({tutor, onClose, onUpdateTutor, batchs}) {
                                 required
                                 error={errors.section}
                             />
+                            <Input
+                                label="Password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                                error={errors.password}
+                            />
                         </div>
                     </div>
 
@@ -201,7 +217,7 @@ function EditTutorModal({tutor, onClose, onUpdateTutor, batchs}) {
     );
 }
 
-const Input = ({label, name, type = "text", value, onChange, error, ...props}) => (
+const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
     <div className="space-y-2">
         <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
             {label} : {props.required && <span className="text-red-500">*</span>}
@@ -212,11 +228,16 @@ const Input = ({label, name, type = "text", value, onChange, error, ...props}) =
             value={value}
             onChange={onChange}
             {...props}
-            className={`w-full p-2.5 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 outline-none transition
-      		${error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
+            className={`w-full p-2.5 border rounded-lg outline-none transition
+                ${props.disabled
+                    ? "bg-gray-100 text-gray-600 cursor-not-allowed"
+                    : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"}
+                ${error ? "border-red-500" : "border-gray-300 focus:ring-blue-500"}
+            `}
         />
         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
 );
+
 
 export default EditTutorModal;

@@ -152,24 +152,60 @@ function Tutor() {
             />
 
             {/* Modals */}
+
             {addTutor && (
                 <AddTutorModal
                     tutor={addTutor}
                     onClose={() => setAddTutor(null)}
                     batchs={batchs}
+                    onAddTutor={(newTutor) => {
+                        setTutors(prev => [newTutor, ...prev]);
+                        setAllTutors(prev => [newTutor, ...prev]);
+                        setFilteredTutors(prev => [newTutor, ...prev]);
+                    }}
                 />
             )}
+
             {editTutor && (
                 <EditTutorModal
                     tutor={editTutor}
                     onClose={() => setEditTutor(null)}
                     batchs={batchs}
+                    onUpdateTutor={(updatedTutor) => {
+                        setTutors(prev =>
+                            prev.map(t =>
+                                t.staffId === updatedTutor.staffId ? updatedTutor : t
+                            )
+                        );
+                        setAllTutors(prev =>
+                            prev.map(t =>
+                                t.staffId === updatedTutor.staffId ? updatedTutor : t
+                            )
+                        );
+                        setFilteredTutors(prev =>
+                            prev.map(t =>
+                                t.staffId === updatedTutor.staffId ? updatedTutor : t
+                            )
+                        );
+                    }}
                 />
             )}
+
             {deleteTutor && (
                 <DeleteTutorModal
                     tutor={deleteTutor}
                     onClose={() => setDeleteTutor(null)}
+                    onDelete={(staffId) => {
+                        setTutors(prev =>
+                            prev.filter(t => t.staffId !== staffId)
+                        );
+                        setAllTutors(prev =>
+                            prev.filter(t => t.staffId !== staffId)
+                        );
+                        setFilteredTutors(prev =>
+                            prev.filter(t => t.staffId !== staffId)
+                        );
+                    }}
                 />
             )}
         </>

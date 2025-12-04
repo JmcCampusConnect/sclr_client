@@ -40,7 +40,7 @@ function DeleteDonorModal({ donor, onClose, onDelete }) {
 
                 {/* Donor Summary Card */}
                 <div className="px-8 py-5">
-                    <div className="rounded-xl bg-gray-50 dark:bg-gray-800/70 p-4 border border-gray-200 dark:border-gray-700 shadow-sm text-center">
+                    <div className="rounded-xl dark:bg-gray-800/70 p-4 border border-gray-200 dark:border-gray-700 shadow-sm text-center">
                         <p className="text-md text-gray-500 dark:text-gray-400 font-mono">
                             Donar ID : {donor.donorId}
                         </p>

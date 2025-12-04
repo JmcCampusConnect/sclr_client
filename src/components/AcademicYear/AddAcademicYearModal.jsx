@@ -80,7 +80,7 @@ function AddAcademicYearModal({ onClose, onAdded }) {
                 {/* Form */}
                 <form onSubmit={handleSubmit} noValidate className="p-6 space-y-6">
                     {/* Academic Section */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
                             📘 Academic Details
                         </h2>

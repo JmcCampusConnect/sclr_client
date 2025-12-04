@@ -1,11 +1,11 @@
 import React from "react";
 import axios from "axios";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function DeleteTutorModal({tutor, onClose, onDelete}) {
+function DeleteTutorModal({ tutor, onClose, onDelete }) {
 
     const handleDelete = async () => {
 
@@ -13,9 +13,9 @@ function DeleteTutorModal({tutor, onClose, onDelete}) {
             const response = await axios.post(`${apiUrl}/api/tutor/deleteTutor`, tutor);
             if (response.status === 200) {
                 alert(`${response.data.message}`);
-                window.location.reload();
+                onDelete?.(tutor.staffId);
+                onClose();
             }
-            onClose();
         } catch (error) {
             console.error("Error deleting tutor : ", error);
             if (error.status == 400) {

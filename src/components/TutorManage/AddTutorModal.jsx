@@ -29,9 +29,14 @@ function AddTutorModal({ onClose, onAddTutor, batchs }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const updatedValue =
+            name === "staffId" || name === "staffName"
+                ? value.toUpperCase()
+                : value;
+        setFormData((prev) => ({ ...prev, [name]: updatedValue }));
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };
+
 
     const handleSelectChange = (name, option) => {
         setFormData((prev) => ({
@@ -122,7 +127,7 @@ function AddTutorModal({ onClose, onAddTutor, batchs }) {
                 {/* Form */}
                 <form onSubmit={handleSubmit} noValidate className="p-6 space-y-">
                     {/* Section 1: Basic Info */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 bg-gray-50 dark:bg-gray-800/50 shadow-sm">
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
                             🧾 Basic Information
                         </h2>
