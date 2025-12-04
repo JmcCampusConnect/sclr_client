@@ -4,7 +4,7 @@ import axios from "axios";
 import SearchDropdown from "../../common/SearchDropdown";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
+function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onSubmissionSuccess }) {
 
     const [selectedDonor, setSelectedDonor] = useState("");
     const [amount, setAmount] = useState("");
@@ -117,15 +117,12 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
 
         setLocalDonors(updatedLocalDonors);
         setScholarships((prev) => [...prev, newScholarship]);
-
-        // reset input fields
         setAmount("");
         setSelectedDonor("");
         setDonorType("");
         setSclrType("");
         setFilteredDonors([]);
     };
-
 
     const handleSaveAll = async () => {
 
@@ -139,10 +136,10 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
             scholarships: scholarships.map((s) => ({
                 ...s, category: selectedStudent?.category,
                 semester: selectedStudent?.semester,
-                registerNo: selectedStudent?.registerNo, 
+                registerNo: selectedStudent?.registerNo,
                 graduate: selectedStudent?.graduate,
-                name: selectedStudent?.name, 
-                sclrType: selectedStudent?.sclrType, 
+                name: selectedStudent?.name,
+                sclrType: selectedStudent?.sclrType,
                 department: selectedStudent?.department,
             })),
         };
@@ -153,8 +150,11 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors }) {
             if (response.status === 201) {
                 alert("Scholarships submitted successfully!");
                 setScholarships([]);
-                closeModal();
-                window.location.reload();
+                if (onSubmissionSuccess) { onSubmissionSuccess() }
+                  else {
+                    closeModal();
+                    window.location.reload();
+                }
             } else {
                 alert(`Failed: ${response.data.message}`);
             }
