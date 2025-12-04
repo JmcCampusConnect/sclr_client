@@ -16,7 +16,6 @@ import LoginApplication from "./pages/student/LoginApplication";
 import StudentGuidelines from "./pages/student/StudentGuidelines";
 import StudentChangePassword from './pages/student/ChangePassword';
 
-
 // Staff Pages
 import StaffLayout from "./layout/StaffLayout";
 import ClassAttendance from "./pages/staff/ClassAttendance";

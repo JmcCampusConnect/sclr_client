@@ -1,7 +1,7 @@
 import React from "react";
 
-const DonorTable = ({ donors, formatCurrency }) => (                                        
-    
+const DonorTable = ({ donors, formatCurrency }) => (
+
     <div className="bg-white border border-gray-200 shadow-lg rounded-xl overflow-hidden">
         <div className="overflow-x-auto max-h-[600px]">
             <table className="min-w-full divide-y divide-gray-200 text-center">
@@ -23,8 +23,8 @@ const DonorTable = ({ donors, formatCurrency }) => (
                             <td className="px-6 py-4 font-semibold whitespace-nowrap">{donor.donorId}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{donor.donorType || "N/A"}</td>
                             <td className="px-6 py-4">{donor.donorName || "Unknown"}</td>
-                            <td className="px-6 py-4">{formatCurrency(donor.generalAmt || 0)}</td>
-                            <td className="px-6 py-4">{formatCurrency(donor.zakkathAmt || 0)}</td>
+                            <td className="px-6 py-4">{formatCurrency(donor.generalBal || 0)}</td>
+                            <td className="px-6 py-4">{formatCurrency(donor.zakkathBal || 0)}</td>
                         </tr>
                     ))}
                 </tbody>

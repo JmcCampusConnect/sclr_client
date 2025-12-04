@@ -32,7 +32,10 @@ function FundsAvailable() {
                     axios.get(`${apiUrl}/api/report/fetchDonors`),
                     axios.get(`${apiUrl}/api/report/fetchCardsData`),
                 ]);
-                setDonors(donorResponse.data.donors);
+                const sortedDonors = [...donorResponse.data.donors].sort(
+                    (a, b) => Number(a.donorId) - Number(b.donorId)
+                );
+                setDonors(sortedDonors);
                 setData(dashboardResponse.data || {});
             } catch (err) {
                 console.error("Error fetching donor and cards data:", err);

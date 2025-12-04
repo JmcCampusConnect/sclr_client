@@ -96,6 +96,7 @@ function LoginApplication() {
                 const response = await axios.get(`${apiUrl}/api/student/fetchStudentData`, { params: { registerNo: userId.toUpperCase() } });
                 const { student, canApply } = response.data;
                 const { lastYearCreditedAmount, currentYearCreditedAmount } = student
+                console.log(student, canApply, lastYearCreditedAmount, currentYearCreditedAmount)
                 setStudentData(student);
                 setCanApply(canApply);
                 const type = lastYearCreditedAmount && currentYearCreditedAmount === 0 ? "Fresher" : "Renewal";
@@ -135,7 +136,7 @@ function LoginApplication() {
             const response = await addData(`${apiUrl}/api/student/loginApplication`, dataToSend);
             if (response.data.status === 201) {
                 alert(response.data?.message || 'Application submitted successfully');
-                navigate(`/student/${userId}/dashboard`); 
+                navigate(`/student/${userId}/dashboard`);
             } else { alert('Error in saving Application') }
         } catch (error) {
             console.error('Error in saving Login Application : ', error);

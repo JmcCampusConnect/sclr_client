@@ -1,27 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SearchDropdown from '../../common/SearchDropdown';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
+function RejectModal({ showRejectModal, closeModal, selectedStudent, refreshStudents }) {
 
     const student = selectedStudent || {};
 
     const reasonOptions = [
-        { value: "Re Appear", label: "Re Appear" },
-        { value: "lowMarks", label: "Low Percentage of Marks" },
-        { value: "missingDocs", label: "Missing Document" },
-        { value: "redo", label: "Redo" },
-        { value: "shortageAttendance", label: "Shortage of Attendance" },
-        { value: "shortageDeeniyath", label: "Shortage of Deeniyath Attendance" },
-        { value: "shortageMoral", label: "Shortage of Moral Attendance" },
-        { value: "others", label: "Others" },
+        { value: "Re-Appear (Failed in Exam)", label: "Re-Appear (Failed in Exam)" },
+        { value: "Low Percentage of Marks", label: "Low Percentage of Marks" },
+        { value: "Required Documents Not Submitted", label: "Required Documents Not Submitted" },
+        { value: "Redo the Course", label: "Redo the Course" },
+        { value: "Shortage of Attendance", label: "Shortage of Attendance" },
+        { value: "Shortage of Deeniyath Moral Attendance", label: "Shortage of Deeniyath Moral Attendance" },
     ];
 
-    const [selectedReasons, setSelectedReasons] = useState([]); 
+    const [selectedReasons, setSelectedReasons] = useState([]);
     const [customReason, setCustomReason] = useState("");
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!showRejectModal) {
+            setSelectedReasons([]);
+            setCustomReason("");
+            setLoading(false);
+        }
+    }, [showRejectModal]);
+
 
     const handleSubmit = async (e) => {
 
@@ -29,7 +36,7 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
 
         const finalReasons = [
             ...selectedReasons,
-            ...(customReason.trim() ? [customReason.trim()] : []),
+            ...(customReason.trim() ? [toTitleCase(customReason.trim())] : []),
         ];
 
         if (finalReasons.length === 0) {
@@ -40,7 +47,7 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
         const payload = {
             applicationId: student.applicationId,
             registerNo: student.registerNo,
-            reasons: finalReasons, 
+            reasons: finalReasons,
         };
 
         try {
@@ -48,8 +55,9 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
             const response = await axios.post(`${apiUrl}/api/admin/application/rejectApplications`, payload);
             if (response.data.success) {
                 alert("Student application has been rejected successfully!");
+                await refreshStudents();
                 closeModal();
-                window.location.reload();
+
             } else {
                 alert(response.data.message || "Failed to reject application.");
             }
@@ -60,6 +68,15 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
             setLoading(false);
         }
     };
+    const toTitleCase = (str) => {
+        return str
+            .toLowerCase()
+            .split(" ")
+            .filter(word => word.trim() !== "")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+    };
+
 
     return (
         <>
@@ -135,6 +152,7 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent }) {
                                         onChange={(e) => setCustomReason(e.target.value)}
                                         className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800"
                                     />
+
                                 </div>
                             </div>
 
