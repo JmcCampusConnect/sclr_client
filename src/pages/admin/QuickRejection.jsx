@@ -14,17 +14,38 @@ function QuickRejection() {
     const [percentageLimit, setPercentageLimit] = useState("");
     const [arrearLimit, setArrearLimit] = useState("");
     const [incomeLimit, setIncomeLimit] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         const fetchApplication = async () => {
             try {
                 const response = await axios.get(`${apiUrl}/api/admin/application/quickRejection`);
-                if (response.status == 200) { setApplications(response.data.application) }
+                const normalized = response.data.application.map(app => ({
+                    ...app,
+
+                    semesterMarkPercentage:
+                        typeof app.semesterMarkPercentage === "number"
+                            ? app.semesterMarkPercentage
+                            : -1,
+
+                    semesterArrear:
+                        typeof app.semesterArrear === "number"
+                            ? app.semesterArrear
+                            : 0,
+
+                    lastStudiedInstitutionPercentage:
+                        typeof app.lastStudiedInstitutionPercentage === "number"
+                            ? app.lastStudiedInstitutionPercentage
+                            : -1,
+                }));
+                if (response.status == 200) {
+                    setApplications(normalized);
+                }
             }
             catch (error) { console.log("Error while fetching applications : ", error) }
         }
         fetchApplication();
-    }, [])
+    }, [apiUrl])
 
     const applyFilters = () => {
 
@@ -46,25 +67,29 @@ function QuickRejection() {
             // Class attendance <= aLimit
             if (aLimit !== null) {
                 const val = Number(app.classAttendancePercentage ?? app.classAttendance ?? -1);
-                if (!isNaN(val) && val <= aLimit) matched = true;
+                if (!isNaN(val) && val > -1 && val <= aLimit) matched = true;
             }
 
             // Deeniyath moral attendance <= dLimit
             if (!matched && dLimit !== null) {
                 const val = Number(app.deeniyathMoralAttendancePercentage ?? app.deeniyathMoralAttendance ?? -1);
-                if (!isNaN(val) && val <= dLimit) matched = true;
+                if (!isNaN(val) && val > -1 && val <= dLimit) matched = true;
             }
 
             // Percentage of marks <= pLimit (try semesterMarkPercentage then lastStudiedInstitutionPercentage)
             if (!matched && pLimit !== null) {
-                const val = Number(app.semesterMarkPercentage ?? app.lastStudiedInstitutionPercentage ?? -1);
-                if (!isNaN(val) && val <= pLimit) matched = true;
+                const val =
+                    app.semesterMarkPercentage >= 0
+                        ? app.semesterMarkPercentage
+                        : app.lastStudiedInstitutionPercentage;
+
+                if (val >= 0 && val <= pLimit) matched = true;
             }
 
             // Arrear subjects >= arLimit
             if (!matched && arLimit !== null) {
-                const val = Number(app.semesterArrear ?? app.arrearSubjects ?? 0);
-                if (!isNaN(val) && val >= arLimit) matched = true;
+                const val = app.semesterArrear ?? 0;
+                if (val >= arLimit) matched = true;
             }
 
             // Income >= incLimit: prefer server-provided combinedIncome, fall back to other fields
@@ -88,8 +113,6 @@ function QuickRejection() {
         setFilteredApps([]);
     }
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
     const submitAllRejections = async () => {
 
         if (!filteredApps || filteredApps.length === 0) { return }
@@ -105,30 +128,39 @@ function QuickRejection() {
 
                 if (attendanceLimit !== "") {
                     const val = Number(app.classAttendancePercentage ?? app.classAttendance ?? -1);
-                    if (!isNaN(val) && val <= Number(attendanceLimit)) reasons.push('shortageAttendance');
+                    if (!isNaN(val) && val > -1 && val <= Number(attendanceLimit)) {
+                        reasons.push("Shortage of Attendance");
+                    }
                 }
 
                 if (deeniyathLimit !== "") {
                     const val = Number(app.deeniyathMoralAttendancePercentage ?? app.deeniyathMoralAttendance ?? -1);
-                    if (!isNaN(val) && val <= Number(deeniyathLimit)) {
-                        reasons.push('shortageDeeniyath');
-                        reasons.push('shortageMoral');
+                    if (!isNaN(val) && val > -1 && val <= Number(deeniyathLimit)) {
+                        reasons.push("Shortage of Deeniyath Moral Attendance");
                     }
                 }
 
                 if (percentageLimit !== "") {
-                    const val = Number(app.semesterMarkPercentage ?? app.lastStudiedInstitutionPercentage ?? -1);
-                    if (!isNaN(val) && val <= Number(percentageLimit)) reasons.push('lowMarks');
+                    const val =
+                        app.semesterMarkPercentage >= 0
+                            ? app.semesterMarkPercentage
+                            : app.lastStudiedInstitutionPercentage;
+
+                    if (val >= 0 && val <= Number(percentageLimit)) {
+                        reasons.push("Low Percentage of Marks");
+                    }
                 }
 
                 if (arrearLimit !== "") {
-                    const val = Number(app.semesterArrear ?? app.arrearSubjects ?? 0);
-                    if (!isNaN(val) && val >= Number(arrearLimit)) reasons.push('Re Appear');
+                    const val = app.semesterArrear ?? 0;
+                    if (val >= Number(arrearLimit)) {
+                        reasons.push("Re-Appear (Failed in Exam)");
+                    }
                 }
 
                 if (incomeLimit !== "") {
                     const val = Number(app.combinedIncome ?? app.annualIncome ?? app.familyIncome ?? app.parentAnnualIncome ?? app.parentIncome ?? app.income ?? 0);
-                    if (!isNaN(val) && val >= Number(incomeLimit)) reasons.push('others');
+                    if (!isNaN(val) && val >= Number(incomeLimit)) reasons.push('High Family Income');
                 }
 
                 // Skip if no reason determined
@@ -158,10 +190,9 @@ function QuickRejection() {
                 if (succeeded.length > 0) {
                     setFilteredApps(prev => prev.filter(a => !succeeded.includes(a.registerNo)));
                 }
-                alert(`Bulk rejection completed! Succeeded : ${succeeded.length}/${applicationsToReject.length}`);
+                alert(`Bulk rejection completed! Succeeded : ${succeeded.length} / ${applicationsToReject.length}`);
                 window.location.reload();
             }
-
         } catch (err) {
             alert(`Error during bulk rejection : ${err?.response?.data?.message || err.message}`);
         } finally { setIsSubmitting(false) }
@@ -269,7 +300,7 @@ function QuickRejection() {
                     </div>
                 </div>
             </div>
-  
+
             {/* Apply Button */}
             <div className="flex justify-end gap-3">
                 <button onClick={() => applyFilters()} className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow transition">

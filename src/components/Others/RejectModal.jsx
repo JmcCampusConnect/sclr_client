@@ -9,12 +9,12 @@ function RejectModal({ showRejectModal, closeModal, selectedStudent, refreshStud
     const student = selectedStudent || {};
 
     const reasonOptions = [
-        { value: "Re-Appear (Failed in Exam)", label: "Re-Appear (Failed in Exam)" },
         { value: "Low Percentage of Marks", label: "Low Percentage of Marks" },
-        { value: "Required Documents Not Submitted", label: "Required Documents Not Submitted" },
-        { value: "Redo the Course", label: "Redo the Course" },
+        { value: "Re-Appear (Failed in Exam)", label: "Re-Appear (Failed in Exam)" },
         { value: "Shortage of Attendance", label: "Shortage of Attendance" },
         { value: "Shortage of Deeniyath Moral Attendance", label: "Shortage of Deeniyath Moral Attendance" },
+        { value: "High Family Income", label: "High Family Income" },
+        { value: "Required Documents Not Submitted", label: "Required Documents Not Submitted" },
     ];
 
     const [selectedReasons, setSelectedReasons] = useState([]);

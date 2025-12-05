@@ -126,7 +126,12 @@ function AdminViewAppln() {
                             donors={donors}
                             onSubmissionSuccess={handleSubmissionSuccess}
                         />
-                        <RejectModal showRejectModal={showRejectModal} closeModal={closeModal} selectedStudent={selectedStudent} />
+                        <RejectModal
+                            showRejectModal={showRejectModal}
+                            closeModal={closeModal}
+                            selectedStudent={selectedStudent}
+                            refreshStudents={handleSubmissionSuccess}
+                        />
                     </div>
                 </div>
             </div>

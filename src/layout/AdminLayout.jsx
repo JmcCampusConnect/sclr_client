@@ -94,6 +94,7 @@ function AdminLayout() {
             show: true,
             subItems: [
                 { name: "Funds Available", path: `/admin/fundsAvailable` },
+                { name: "Donor Transactions", path: `/admin/donorTransactions` },
             ]
         },
         { icon: faUpload, name: 'Upload Center', path: '/admin/uploadCenter', show: true },

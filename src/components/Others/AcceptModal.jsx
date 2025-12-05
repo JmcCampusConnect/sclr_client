@@ -151,10 +151,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onS
                 alert("Scholarships submitted successfully!");
                 setScholarships([]);
                 if (onSubmissionSuccess) { onSubmissionSuccess() }
-                  else {
-                    closeModal();
-                    window.location.reload();
-                }
+                else { closeModal() }
             } else {
                 alert(`Failed: ${response.data.message}`);
             }

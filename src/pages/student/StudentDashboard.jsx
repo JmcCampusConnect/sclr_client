@@ -136,7 +136,7 @@ function StudentDashboard() {
 			<div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
 				<div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4">
 					<h2 className="text-xl font-bold text-white">Student Dashboard – {student.name}</h2>
-					<p className="text-indigo-100 mt-1 text-sm">Register No: {student.registerNo}</p>
+					<p className="text-indigo-100 mt-1 text-sm">Register No : {student.registerNo}</p>
 				</div>
 				<div className="p-6 space-y-8">
 					<ApplicationStatus status={student.applicationStatus} rejectionReasons={student.rejectionReasons} />

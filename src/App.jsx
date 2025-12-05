@@ -51,6 +51,7 @@ import TutorVerify from './pages/staff/TutorVerify';
 import QuickRejection from './pages/admin/QuickRejection';
 import AdminRegisterAppln from './pages/admin/AdminRegisterAppln';
 import AdminLoginAppln from './pages/admin/AdminLoginAppln';
+import DonorTransactions from './pages/admin/report/DonorTransactions';
 
 function App() {
 
@@ -110,6 +111,7 @@ function App() {
                         <Route path="applicationManage" element={<ApplicationManage />} />
                         <Route path="progressReport" element={<ProgressReport />} />
                         <Route path="fundsAvailable" element={<FundsAvailable />} />
+                        <Route path="donorTransactions" element={<DonorTransactions />} />
                         <Route path="changePassword" element={<AdminChangePassword />} />
                         <Route path="guidelines" element={<GuideLines />} />
                         <Route path="dataDeletion" element={<DataDeletion />} />

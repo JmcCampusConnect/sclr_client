@@ -22,8 +22,7 @@ function CheckStatus() {
             }
         };
         fetchDonors();
-    }, []);
-
+    }, [apiUrl]);
 
     const checkStatus = async () => {
 
@@ -90,6 +89,7 @@ function CheckStatus() {
                 closeModal={closeAcceptModal}
                 selectedStudent={selectedStudent}
                 donors={donors}
+                
             />
 
             <header className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
