@@ -195,6 +195,7 @@ function SclrAdministration() {
                         selectedStudent={selectedStudent}
                         showRejectModal={showRejectModal}
                         closeModal={closeModal}
+                        refreshStudents={handleSubmissionSuccess}
                     />
                 </>
             )}

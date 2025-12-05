@@ -34,16 +34,22 @@ function CheckStatus() {
 
         try {
             const response = await axios.get(`${apiUrl}/api/student/status`, { params: { registerNo } });
-            if (response.status === 200) {
+            if (response.data.success) {
                 setModalData(response.data.student);
             } else {
-                alert("Failed to fetch application status.");
+                alert(response.data.message || "Failed to fetch application status.");
+                setModalData(null);
             }
         } catch (error) {
-            alert("An error occurred while fetching the application status.");
-            console.error("Error:", error);
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(error.response.data.message);
+            } else {
+                alert("An error occurred while fetching the application status.");
+            }
+            console.error("Error in checking status : ", error);
+            setModalData(null);
         }
-    };
+    }
 
     const handleRelease = (student) => {
         setSelectedStudent(student);
@@ -74,7 +80,7 @@ function CheckStatus() {
                 <StatusModal
                     data={modalData}
                     onClose={() => setModalData(null)}
-                    onRelease={handleRelease} 
+                    onRelease={handleRelease}
                 />
             )}
 
