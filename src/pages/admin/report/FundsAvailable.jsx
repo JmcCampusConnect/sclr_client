@@ -93,6 +93,7 @@ function FundsAvailable() {
 
     return (
         <div className="relative space-y-6">
+
             <header className="border-b border-gray-200 dark:border-gray-700 pb-4">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
                     Funds Available

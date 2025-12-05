@@ -20,10 +20,13 @@ function DonorTransactions() {
     }, [apiUrl]);
 
     return (
-        <div className="p-4">
-            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
-                Donor Transactions
-            </h2>
+        <div className="relative space-y-6">
+
+            <header className="border-b border-gray-200 dark:border-gray-700 pb-4">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
+                    Donor Transactions
+                </h1>
+            </header>
 
             <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
                 <div className="max-h-[700px] overflow-y-auto">
@@ -32,11 +35,11 @@ function DonorTransactions() {
                             <tr>
                                 {[
                                     "Donor ID",
-                                    "Name",
+                                    "Donor Name",
                                     "Type",
-                                    "General Amount",
-                                    "Zakkath Amount",
-                                    "Transaction Date",
+                                    "General",
+                                    "Zakkath",
+                                    "Date",
                                 ].map((header) => (
                                     <th
                                         key={header}
@@ -68,7 +71,7 @@ function DonorTransactions() {
                                             {txn.donorId}
                                         </td>
 
-                                        <td className="px-4 py-4 text-sm lg:text-base font-medium text-gray-800 dark:text-white">
+                                        <td className="text-nowrap px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                             {txn.donorName}
                                         </td>
 

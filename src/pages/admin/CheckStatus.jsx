@@ -89,7 +89,7 @@ function CheckStatus() {
                 closeModal={closeAcceptModal}
                 selectedStudent={selectedStudent}
                 donors={donors}
-                
+
             />
 
             <header className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
@@ -115,7 +115,11 @@ function CheckStatus() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                <button className={primaryButtonClass} onClick={checkStatus}>
+                <button
+                    className={primaryButtonClass}
+                    // onClick={checkStatus}
+                    onClick={() => alert('Work under progress')}
+                >
                     Check Status
                 </button>
             </div>

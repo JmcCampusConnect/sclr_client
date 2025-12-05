@@ -95,11 +95,9 @@ function LoginApplication() {
             try {
                 const response = await axios.get(`${apiUrl}/api/student/fetchStudentData`, { params: { registerNo: userId.toUpperCase() } });
                 const { student, canApply } = response.data;
-                const { lastYearCreditedAmount, currentYearCreditedAmount } = student
-                console.log(student, canApply, lastYearCreditedAmount, currentYearCreditedAmount)
                 setStudentData(student);
                 setCanApply(canApply);
-                const type = lastYearCreditedAmount && currentYearCreditedAmount === 0 ? "Fresher" : "Renewal";
+                const type = student.totalCreditedAmount !== 0 ? "Renewal" : "Fresher";
                 setSclrType(type);
                 setValue('sclrType', type);
                 Object.keys(student).forEach((key) => { if (key in student) setValue(key, student[key]) });
@@ -109,7 +107,7 @@ function LoginApplication() {
             }
         };
         fetchData();
-    }, [userId, apiUrl, setValue]);
+    }, [userId, setValue]);
 
     useEffect(() => {
         if (studentData) {

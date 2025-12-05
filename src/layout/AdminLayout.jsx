@@ -66,19 +66,19 @@ function AdminLayout() {
         { icon: faIdCard, name: 'Check Status', path: '/admin/checkStatus', show: true },
         { icon: faChartLine, name: 'Work Progress Report', path: '/admin/progressReport', show: true },
         { icon: faFileAlt, name: 'Distribution Statement', path: '/admin/distributionStatement', show: true },
-        {
-            name: "Manage",
-            icon: faUserGroup,
-            show: true,
-            subItems: [
-                { name: "Donor Manage", path: `/admin/donor` },
-                { name: "Application Manage", path: `/admin/applicationManage` },
-                { name: "Student Manage", path: `/admin/studentManage` },
-                { name: "Tutor Manage", path: `/admin/tutorManage` },
-                { name: "Staff Manage", path: `/admin/staffManage` },
-                { name: "Department Manage", path: `/admin/deptManage` },
-            ]
-        },
+        // {
+        //     name: "Manage",
+        //     icon: faUserGroup,
+        //     show: true,
+        //     subItems: [
+        //         { name: "Donor Manage", path: `/admin/donor` },
+        //         { name: "Application Manage", path: `/admin/applicationManage` },
+        //         { name: "Student Manage", path: `/admin/studentManage` },
+        //         { name: "Tutor Manage", path: `/admin/tutorManage` },
+        //         { name: "Staff Manage", path: `/admin/staffManage` },
+        //         { name: "Department Manage", path: `/admin/deptManage` },
+        //     ]
+        // },
         {
             name: "Application Settings",
             icon: faSlidersH,
@@ -97,10 +97,10 @@ function AdminLayout() {
                 { name: "Donor Transactions", path: `/admin/donorTransactions` },
             ]
         },
-        { icon: faUpload, name: 'Upload Center', path: '/admin/uploadCenter', show: true },
+        // { icon: faUpload, name: 'Upload Center', path: '/admin/uploadCenter', show: true },
         { icon: faTools, name: 'Change Password', path: '/admin/changePassword', show: true },
-        { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
-        { icon: faExclamationTriangle, name: 'Data Deletion', path: '/admin/dataDeletion', show: true },
+        // { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
+        // { icon: faExclamationTriangle, name: 'Data Deletion', path: '/admin/dataDeletion', show: true },
     ]
 
     return (
