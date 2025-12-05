@@ -22,7 +22,6 @@ import ClassAttendance from "./pages/staff/ClassAttendance";
 import DmAttendance from "./pages/staff/DmAttendance";
 import CoeMark from "./pages/staff/CoeMark";
 import StaffChangePassword from "./pages/staff/ChangePassword";
-import StaffUploadCenter from "./pages/staff/UploadCenter";
 
 // Admin Pages
 import AdminLayout from "./layout/AdminLayout";
@@ -138,7 +137,6 @@ function App() {
                         <Route path="scholarshipStaff" element={<ScholarshipStaff />} />
                         <Route path="scholarshipStaff" element={<ScholarshipStaff />} />
                         <Route path="tutorVerification" element={<TutorVerify />} />
-                        <Route path="uploadCenter" element={<StaffUploadCenter />} />
                     </Route>
 
                 </Routes>

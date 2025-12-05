@@ -48,15 +48,15 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
                                 <td className="px-4 py-4">
                                     <div className="flex justify-center gap-2">
                                         <button
-                                            onClick={() => alert('Work under progress')}
-                                            // onClick={() => navigate('/admin/sclrAdministration/view', { state: { student: app } })}
+                                            // onClick={() => alert('Work under progress')}
+                                            onClick={() => navigate('/admin/sclrAdministration/view', { state: { student: app } })}
                                             className="w-16 px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
                                         >
                                             View
                                         </button>
                                         <button
-                                            onClick={() => alert('Work under progress')}
-                                            // onClick={() => openAcceptModal(app)}
+                                            // onClick={() => alert('Work under progress')}
+                                            onClick={() => openAcceptModal(app)}
                                             className={`w-16 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm
                       								${app.applicationStatus === 1 ? 'bg-green-400 text-white' :
                                                     app.applicationStatus === 0 ? 'bg-green-600 hover:bg-green-700 text-white' :
@@ -66,8 +66,8 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
                                             Accept
                                         </button>
                                         <button
-                                            onClick={() => alert('Work under progress')}
-                                            // onClick={() => openRejectModal(app)}
+                                            // onClick={() => alert('Work under progress')}
+                                            onClick={() => openRejectModal(app)}
                                             className={`w-16 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm
                       								${app.applicationStatus === 2 ? 'bg-red-400 text-white' :
                                                     app.applicationStatus === 0 ? 'bg-red-500 hover:bg-red-600 text-white' :
@@ -91,7 +91,6 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
             </table>
         </div>
     )
-    x``
 }
 
 export default ApplicationTable;
