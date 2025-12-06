@@ -23,6 +23,8 @@ function AdminViewAppln() {
     const [showRejectModal, setShowRejectModal] = useState(false);
     const { student } = location.state || {};
 
+    console.log(student)
+
     const fetchDonors = async () => {
         try {
             const response = await axios.get(`${apiUrl}/api/admin/application/fetchDonors`);

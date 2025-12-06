@@ -2,7 +2,7 @@ import React from "react";
 import { Card, TableRow } from "./UI";
 
 const EducationalDetails = ({ student }) => (
-    <Card title="Educational Details">
+    <Card title="Scholarship Eligibility & Verification">
         <div className="overflow-x-auto">
             <table className="w-full border border-gray-300 rounded-lg overflow-hidden text-sm">
                 <tbody>
@@ -37,22 +37,69 @@ const EducationalDetails = ({ student }) => (
                     <TableRow label="Class Attendance Percentage">
                         {student.classAttendancePercentage === -1
                             ? "Pending"
-                            : student.classAttendancePercentage
+                            : `${student.classAttendancePercentage}%`
                         }
                     </TableRow>
 
                     <TableRow label="Deeniyath / Moral Percentage">
                         {student.deeniyathMoralAttendancePercentage === -1
                             ? "Pending"
-                            : student.deeniyathMoralAttendancePercentage
+                            : `${student.deeniyathMoralAttendancePercentage}%`
                         }
                     </TableRow>
 
                     {student.sclrType === "Renewal" && (
                         <TableRow label="Last Year Credited Amount">
-                            {student.lastYearCreditedAmount}
+                            Rs. {student.lastYearCreditedAmount ?? 0}
                         </TableRow>
                     )}
+
+                    <TableRow label="Eligible for TPS / PPS">
+                        {student.governmentScholarship === 0
+                            ? "Pending"
+                            : student.governmentScholarship === 1 ? "Yes" : "No"}
+                    </TableRow>
+
+                    {student.tutorVerification === 0 && (
+                        <TableRow label="Tutor Verification Status">
+                            Pending
+                        </TableRow>
+                    )}
+
+                    {student.tutorVerification === 1 && (
+                        <>
+                            <TableRow label="Orphan / Single Parent">
+                                {student.tutorVerificationDetails?.orphanOrSingleParent ? "Yes" : "No"}
+                            </TableRow>
+
+                            <TableRow label="Hazrath / Muaddin">
+                                {student.tutorVerificationDetails?.hazrathOrMuaddin ? "Yes" : "No"}
+                            </TableRow>
+
+                            <TableRow label="Eligible for Zakkath">
+                                {student.tutorVerificationDetails?.eligibleForZakkath ? "Yes" : "No"}
+                            </TableRow>
+
+                            <TableRow label="Needy but not Zakkath">
+                                {student.tutorVerificationDetails?.needyButNotZakkath ? "Yes" : "No"}
+                            </TableRow>
+
+                            <TableRow label="Tutor Remarks">
+                                {student.tutorVerificationDetails?.remarks || "—"}
+                            </TableRow>
+
+                            <TableRow label="Verified By">
+                                {student.tutorVerificationDetails?.verifiedBy || "—"}
+                            </TableRow>
+
+                            <TableRow label="Verified At">
+                                {student.tutorVerificationDetails?.verifiedAt
+                                    ? new Date(student.tutorVerificationDetails.verifiedAt).toLocaleDateString()
+                                    : "—"}
+                            </TableRow>
+                        </>
+                    )}
+
                 </tbody>
             </table>
         </div>

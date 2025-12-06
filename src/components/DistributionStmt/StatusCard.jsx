@@ -5,7 +5,7 @@ import { Users, Activity, ChevronRight, IndianRupee } from "lucide-react";
 function StatusCard() {
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
     const [cardData, setCardData] = useState([]);
-
+ 
     const formatCurrency = (amount = 0) =>
         `₹${Number(amount).toLocaleString("en-IN", {
             minimumFractionDigits: 2,

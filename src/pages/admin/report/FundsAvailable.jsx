@@ -130,15 +130,15 @@ function FundsAvailable() {
                 />
                 <StatCard
                     icon={Users}
-                    title="Students Benefitted"
+                    title="Scholarship Awarded"
                     color="text-indigo-600"
                     bgColor="bg-indigo-50"
                     stats={{
-                        mainValue: data?.studentsBenefitted || "0",
+                        mainValue: formatCurrency(data?.totalDistributed || 0),
                         subLabel: "Scholarship Distribution",
                         details: [
                             { label: "Total Students", value: data?.totalStudents || "0" },
-                            { label: "Departments", value: data?.totalDepartments || "0" },
+                            { label: "Students Benefitted", value: data?.studentsBenefitted || "0" },
                         ],
                     }}
                 />

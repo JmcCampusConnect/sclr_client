@@ -71,7 +71,7 @@ const schema = Yup.object().shape({
                 return validTypes.includes(file.type);
             }
         ),
-})
+}) 
 
 function LoginApplication() {
 
@@ -93,12 +93,12 @@ function LoginApplication() {
             if (!userId) return;
 
             try {
-                const response = await axios.get(`${apiUrl}/api/student/fetchStudentData`, { params: { registerNo: userId.toUpperCase() } });
+               const response = await axios.get(`${apiUrl}/api/student/fetchStudentData`, { params: { registerNo: userId.toUpperCase() } });
                 const { student, canApply } = response.data;
                 setStudentData(student);
                 setCanApply(canApply);
                 const type = student.totalCreditedAmount !== 0 ? "Renewal" : "Fresher";
-                setSclrType(type);
+                setSclrType(type); 
                 setValue('sclrType', type);
                 Object.keys(student).forEach((key) => { if (key in student) setValue(key, student[key]) });
             } catch (error) {
