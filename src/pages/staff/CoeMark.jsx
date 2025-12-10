@@ -20,7 +20,7 @@ function CoeMark() {
     const { addData } = useAdd();
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadMessage, setUploadMessage] = useState("");
-    const [uploadStatus, setUploadStatus] = useState(null); // true = success, false = error
+    const [uploadStatus, setUploadStatus] = useState(null); 
     const [uploadLoading, setUploadLoading] = useState(false);
 
     const headers = [
@@ -265,10 +265,7 @@ function CoeMark() {
 
                     {/* DOWNLOAD BUTTON */}
                     <button
-                        onClick={() => {
-                            handleDownloadExcel();
-                            alert("Template Download Initiated!");
-                        }}
+                        onClick={() => { handleDownloadExcel() }}
                         className="
                             h-10 px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg shadow-md flex-shrink-0 w-full lg:w-auto
                             hover:bg-indigo-700 transition duration-150 ease-in-out flex items-center justify-center
