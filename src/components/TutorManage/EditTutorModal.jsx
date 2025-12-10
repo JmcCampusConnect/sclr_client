@@ -89,15 +89,14 @@ function EditTutorModal({ tutor, onClose, onUpdateTutor, batchs }) {
         }
     };
 
-    const categoryOptions = ["AIDED", "SFM", "SFW"].map((v) => ({
+    const categoryOptions = ["Aided", "SFM", "SFW"].map((v) => ({
         value: v,
-        label: v,
+        label: v.toUpperCase(),
     }));
 
     const batchOptions = batchs.map((v) => ({
         value: String(v), label: String(v),
     }));
-
 
     const sectionOptions = ["A", "B", "C", "D", "E", "F", "G", "H"].map((v) => ({
         value: v,

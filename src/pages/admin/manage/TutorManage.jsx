@@ -22,7 +22,9 @@ function Tutor() {
     const [filteredTutors, setFilteredTutors] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [batchs, setBatchs] = useState([])
+    const [batchs, setBatchs] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+
 
     useEffect(() => {
 
@@ -72,12 +74,31 @@ function Tutor() {
     ];
 
     useEffect(() => {
+        setTutors(filteredTutors);
+    }, [filteredTutors]);
+
+    useEffect(() => {
         if (!filterFormData) return;
         handleFilterForm();
     }, [filterFormData]);
 
+    useEffect(() => {
+        if (!searchTerm) {
+            setTutors(filteredTutors);
+            return;
+        }
+        const searched = filteredTutors.filter(tutor =>
+            tutor.staffName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            tutor.staffId.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setTutors(searched);
+    }, [filteredTutors]);
+
+
     const handleFilterForm = () => {
+
         if (!filterFormData) return;
+
         const filtered = allTutors.filter(tutor => {
             const matchesCategory =
                 filterFormData.category === "All" || tutor.category === filterFormData.category;
@@ -86,19 +107,20 @@ function Tutor() {
             const matchesBatch =
                 filterFormData.batch === "All" || tutor.batch === filterFormData.batch;
             return matchesCategory && matchesDepartment && matchesBatch;
-        })
+        });
+
         setFilteredTutors(filtered);
-        setTutors(filtered);
     };
 
-    const handleSearch = (searchTerm) => {
-        if (!searchTerm) {
+    const handleSearch = (value) => {
+        setSearchTerm(value);
+        if (!value) {
             setTutors(filteredTutors);
             return;
         }
         const searched = filteredTutors.filter(tutor =>
-            tutor.staffName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            tutor.staffId.toLowerCase().includes(searchTerm.toLowerCase())
+            tutor.staffName.toLowerCase().includes(value.toLowerCase()) ||
+            tutor.staffId.toLowerCase().includes(value.toLowerCase())
         );
         setTutors(searched);
     };

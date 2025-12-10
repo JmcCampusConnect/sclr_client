@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import SearchDropdown from "../../common/SearchDropDown";
 
 function TutorFilterSection({ depts, filterForm, batchs }) {
@@ -9,13 +9,10 @@ function TutorFilterSection({ depts, filterForm, batchs }) {
         batch: "All"
     });
 
-    console.log("Fikter", batchs)
-
     const batchOptions = ["All", ...batchs].map((v) => ({
         value: String(v),
         label: String(v),
     }));
-
 
     const categoryOptions = [
         { value: "All", label: "All" },

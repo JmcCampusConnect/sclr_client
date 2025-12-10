@@ -91,8 +91,9 @@ function AddTutorModal({ onClose, onAddTutor, batchs }) {
         }
     };
 
-    const categoryOptions = ["AIDED", "SFM", "SFW"].map((v) => ({
-        value: v, label: v,
+    const categoryOptions = ["Aided", "SFM", "SFW"].map((v) => ({
+        value: v,
+        label: v.toUpperCase(),
     }));
 
     const batchOptions = batchs.map((v) => ({

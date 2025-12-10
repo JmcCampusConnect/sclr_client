@@ -8,7 +8,7 @@ function SearchDropdown({ label, name, value, options = [], onChange, required =
         : options.find((opt) => opt.value === value) || null;
 
     return (
-        <div className="space-y-1">
+        <div className="space-y-3">
             {label && (
                 <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
                     {label} : {required && <span className="text-red-500">*</span>}
@@ -37,7 +37,7 @@ function SearchDropdown({ label, name, value, options = [], onChange, required =
                                 : "0 0 0 1px #3b82f6"
                             : "none",
                         borderRadius: "8px",
-                        padding: "2px",
+                        padding: "4.5px",
                         "&:hover": {
                             borderColor: error ? "#ef4444" : "#3b82f6",
                         },
@@ -46,7 +46,7 @@ function SearchDropdown({ label, name, value, options = [], onChange, required =
                     menu: (base) => ({ ...base, zIndex: 9999 }),
                 }}
             />
-            {error && <p className="text-red-500 text-sm mt-1.5">{error}</p>}
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
     )
 }
