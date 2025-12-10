@@ -17,7 +17,11 @@ function CoeMark() {
     const [statusCount, setStatusCount] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    const { addData } = useAdd()
+    const { addData } = useAdd();
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadMessage, setUploadMessage] = useState("");
+    const [uploadStatus, setUploadStatus] = useState(null); // true = success, false = error
+    const [uploadLoading, setUploadLoading] = useState(false);
 
     const headers = [
         { key: 'sno', label: 'S.No', className: 'w-[6%]' },
@@ -32,7 +36,6 @@ function CoeMark() {
     ]
 
     // FETCH STUDENT DATA
-
     useEffect(() => {
         const fetchStudents = async () => {
             setIsLoading(true);
@@ -53,9 +56,7 @@ function CoeMark() {
     }, []);
 
     // FOR HANDLE INPUT CHANGE FOR PERCENTAGE
-
     const handleMarkChange = (index, field, value) => {
-
         setStudentsData((prev) => {
             const updated = [...prev];
             const student = { ...updated[index] };
@@ -91,7 +92,6 @@ function CoeMark() {
     }
 
     // SAVING MARK 
-
     const handleSubmitMark = async () => {
         try {
             const Students = await addData(`${apiUrl}/api/staff/coe/saveStudentMark`, { changedStudents });
@@ -123,7 +123,6 @@ function CoeMark() {
     }
 
     // DOWNLOAD EXCEL
-
     const handleDownloadExcel = () => {
 
         if (!StudentsData.length) {
@@ -132,6 +131,7 @@ function CoeMark() {
         }
 
         const excelData = StudentsData.map((st) => ({
+            _id: st._id,
             "registerNo": st.registerNo, "name": st.name,
             "department": st.department,
             "semesterMarkPercentage": st.semesterMarkPercentage === -1 ? "" : st.semesterMarkPercentage.toFixed(2),
@@ -145,69 +145,148 @@ function CoeMark() {
         const excelBuffer = XLSX.write(workbook, { type: "array", bookType: "xlsx" });
         const file = new Blob([excelBuffer], { type: "application/octet-stream" });
         saveAs(file, "Scholarship Mark Entry Data.xlsx");
-    };
+    }
+
+    // UPLOAD EXCEL
+    const handleUploadClick = async () => {
+
+        if (!selectedFile) {
+            setUploadMessage("Please select a file first.");
+            setUploadStatus(false);
+            return;
+        }
+
+        setUploadLoading(true);
+        setUploadMessage("");
+
+        const reader = new FileReader();
+
+        reader.onload = async (e) => {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: "array" });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(sheet);
+                const res = await addData(`${apiUrl}/api/fileUpload/uploadMarkExcel`, { excelData: jsonData });
+                if (res.status === 200) {
+                    alert("Uploaded successfully");
+                    setUploadStatus(true);
+                    window.location.reload();
+                }
+            } catch (err) {
+                setUploadMessage("Failed to upload file");
+                setUploadStatus(false);
+                console.error('Error in uploding mark file : ', err)
+            } finally { setUploadLoading(false) }
+        }
+        reader.readAsArrayBuffer(selectedFile);
+    }
 
     return (
         <div>
             <HeaderTag label="Semester Mark Entry" />
             <StaffStatus counts={statusCount} />
 
-            <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center'>
+            {/* UPLOAD + DOWNLOAD SECTION */}
+            <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4'>
                 <div className="text-right font-semibold text-lg">
                     No of Students : {StudentsData.length}
                 </div>
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 order-1 sm:order-2 w-full sm:w-auto justify-end items-center">
-                    <label
-                        htmlFor="file-upload"
-                        className="
-                            flex items-center justify-center w-full sm:w-auto
-                            h-10 px-4 py-2
-                            border-2 border-dashed border-gray-300 rounded-lg cursor-pointer 
-                            bg-gray-50 hover:bg-gray-100 
-                            transition duration-150 ease-in-out
-                        "
-                    >
-                        <div className="flex items-center justify-center space-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-gray-400">
-                                <path d="M9.25 13.25a.75.75 0 001.5 0V7.636l2.955 3.016a.75.75 0 101.09-1.053l-4.25-4.333a.75.75 0 00-1.082 0l-4.25 4.333a.75.75 0 001.09 1.053l2.955-3.016v5.614z" />
-                                <path d="M3.5 16.75a.75.75 0 00.75.75h11.5a.75.75 0 00.75-.75v-2a.75.75 0 00-1.5 0v2H4.25v-2a.75.75 0 00-1.5 0v2z" />
+                <div className="flex flex-col space-y-3 w-full lg:w-auto lg:flex-row lg:space-y-0 lg:space-x-4 items-center">
+                    <div className="flex flex-row space-x-4 w-full lg:w-auto">
+                        <label
+                            htmlFor="file-upload"
+                            className={`
+                            flex items-center justify-center cursor-pointer flex-grow
+                            h-10 px-4 py-2 text-sm font-medium rounded-lg
+                            border transition duration-150 ease-in-out
+                            ${selectedFile
+                                    ? 'bg-blue-50 text-blue-800 border-blue-300 hover:bg-blue-100'
+                                    : 'bg-gray-50 text-gray-600 border-gray-300 hover:bg-gray-100'
+                                }
+                                overflow-hidden
+                            `}
+                        >
+                            <svg className="w-4 h-4 flex-shrink-0 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                             </svg>
-                            <span className="text-sm font-medium text-indigo-600">Click to upload</span>
-                        </div>
+                            <span className="truncate">
+                                {uploadLoading
+                                    ? "Processing..."
+                                    : selectedFile ? selectedFile.name : "Choose Excel File (.xlsx)"
+                                }
+                            </span>
+                        </label>
                         <input
                             id="file-upload"
                             type="file"
                             className="hidden"
                             accept=".xlsx"
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (!file) return;
+                                setSelectedFile(file);
+                                setUploadMessage("");
+                                e.target.value = null;
+                            }}
                         />
-                    </label>
-                    <div className="hidden sm:block w-px h-10 bg-gray-300"></div>
+
+                        <button
+                            disabled={!selectedFile || uploadLoading}
+                            onClick={handleUploadClick}
+                            className="
+                                h-10 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-md flex-shrink-0
+                                disabled:bg-blue-400 disabled:cursor-not-allowed
+                                hover:bg-blue-700 transition duration-150 ease-in-out
+                            "
+                        >
+                            {uploadLoading ? (
+                                <span className="flex items-center justify-center">
+                                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </span>
+                            ) : (
+                                "Upload"
+                            )}
+                        </button>
+                    </div>
+
+                    {/* UPLOAD STATUS MESSAGE */}
+                    {uploadMessage && (
+                        <p className={`text-xs font-medium w-full text-center lg:text-left ${uploadStatus ? "text-green-600" : "text-red-600"}`}>
+                            {uploadMessage}
+                        </p>
+                    )}
+
+                    {/* SEPARATOR */}
+                    <div className="hidden lg:block w-px h-6 bg-gray-200"></div>
+
+                    {/* DOWNLOAD BUTTON */}
                     <button
-                        onClick={handleDownloadExcel}
+                        onClick={() => {
+                            handleDownloadExcel();
+                            alert("Template Download Initiated!");
+                        }}
                         className="
-                            flex items-center space-x-2 
-                            px-4 py-2 w-full sm:w-auto h-10
-                            text-sm font-medium 
-                            text-white bg-indigo-600 
-                            rounded-lg shadow-md 
-                            hover:bg-indigo-700 
-                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-                            transition duration-150 ease-in-out
+                            h-10 px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg shadow-md flex-shrink-0 w-full lg:w-auto
+                            hover:bg-indigo-700 transition duration-150 ease-in-out flex items-center justify-center
                         "
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                            <path d="M10.75 2.75a.75.75 0 00-1.5 0v5.614L6.295 5.398a.75.75 0 00-1.09 1.053l4.25 4.333a.75.75 0 001.082 0l4.25-4.333a.75.75 0 00-1.09-1.053L10.75 8.364V2.75z" />
-                            <path d="M3.5 16.75a.75.75 0 00.75.75h11.5a.75.75 0 00.75-.75v-2a.75.75 0 00-1.5 0v2H4.25v-2a.75.75 0 00-1.5 0v2z" />
+                        {/* SVG Icon for download */}
+                        <svg className="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                         </svg>
-                        <span>Download Template</span>
+                        Download Template
                     </button>
+
                 </div>
             </div>
 
             <div className="overflow-x-auto mt-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
                 <div className="max-h-[700px] overflow-y-auto">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center table-auto">
-
                         <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10 h-15">
                             <tr>
                                 {headers.map((header) => (
@@ -221,7 +300,6 @@ function CoeMark() {
                                 ))}
                             </tr>
                         </thead>
-
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                             {StudentsData.length > 0 ? (
                                 StudentsData.map((student, index) => (
