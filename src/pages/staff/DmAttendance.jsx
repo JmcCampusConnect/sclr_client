@@ -64,11 +64,11 @@ function DmAttendance() {
 
     const validateGlobalWorkingDaysBeforeStudentInput = (type) => {
         if (type === "prev" && prevYearWorkingDays === "") {
-            alert("Please enter Previous Year Working Days first.");
+            alert("Please enter previous year working days first.");
             return false;
         }
         if (type === "curr" && currYearWorkingDays === "") {
-            alert("Please enter Current Year Working Days first.");
+            alert("Please enter current year working days first.");
             return false;
         }
         return true;
@@ -138,7 +138,7 @@ function DmAttendance() {
             alert("Attendance saved successfully");
             window.location.reload();
         } catch (e) {
-            console.log("Something went wrong while saving attendance DM", e);
+            console.log("Something went wrong while saving attendance DM : ", e);
             addError && addError(e);
         }
     }

@@ -16,8 +16,8 @@ function ActionBar({ totalStudents, searchTerm, setSearchTerm }) {
                     <div className="flex justify-end gap-4 w-full">
                         <button
                             className={primaryButtonClass}
-                            onClick={() => alert('Work under progress')}
-                            // onClick={() => navigate(`/admin/quickRejection`)}
+                            // onClick={() => alert('Work under progress')}
+                            onClick={() => navigate(`/admin/quickRejection`)}
                         >
                             Quick Rejection
                         </button>

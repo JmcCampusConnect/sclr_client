@@ -2,6 +2,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import axios from "axios";
 import { useState } from 'react';
+import '../../index.css';
 
 function QuickRejection() {
 
@@ -94,7 +95,7 @@ function QuickRejection() {
 
             // Income >= incLimit: prefer server-provided combinedIncome, fall back to other fields
             if (!matched && incLimit !== null) {
-                const val = Number(app.combinedIncome ?? app.annualIncome ?? app.familyIncome ?? app.parentAnnualIncome ?? app.parentIncome ?? app.income ?? 0);
+                const val = Number(app.combinedIncome ?? app.parentAnnualIncome ?? app.siblingsIncome ?? 0);
                 if (!isNaN(val) && val >= incLimit) matched = true;
             }
 
@@ -136,7 +137,7 @@ function QuickRejection() {
                 if (deeniyathLimit !== "") {
                     const val = Number(app.deeniyathMoralAttendancePercentage ?? app.deeniyathMoralAttendance ?? -1);
                     if (!isNaN(val) && val > -1 && val <= Number(deeniyathLimit)) {
-                        reasons.push("Shortage of Deeniyath Moral Attendance");
+                        reasons.push("Shortage of Deeniyath / Moral Attendance");
                     }
                 }
 
@@ -159,7 +160,7 @@ function QuickRejection() {
                 }
 
                 if (incomeLimit !== "") {
-                    const val = Number(app.combinedIncome ?? app.annualIncome ?? app.familyIncome ?? app.parentAnnualIncome ?? app.parentIncome ?? app.income ?? 0);
+                    const val = Number(app.combinedIncome ?? app.parentAnnualIncome ?? app.siblingsIncome ?? 0);
                     if (!isNaN(val) && val >= Number(incomeLimit)) reasons.push('High Family Income');
                 }
 
@@ -318,16 +319,15 @@ function QuickRejection() {
             </div>
 
             {/* Table */}
-            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-x-auto">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-x-auto max-h-[500px] overflow-y-auto">
                 <table className="min-w-full text-center divide-y divide-gray-200 dark:divide-gray-700">
 
-                    {/* Head */}
-                    <thead className="bg-gray-100 dark:bg-gray-900">
+                    <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
                         <tr>
-                            {["Register No", "Name", "Special Categories"].map((head, i) => (
+                            {["S.No", "Register No", "Name", "Special Categories"].map((head, i) => (
                                 <th
                                     key={i}
-                                    className="px-4 py-4 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide"
+                                    className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap"
                                 >
                                     {head}
                                 </th>
@@ -336,23 +336,22 @@ function QuickRejection() {
                     </thead>
 
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-
                         {filteredApps.length === 0 ? (
                             <tr className="h-[70px]">
-                                <td colSpan="3" className="text-gray-500 dark:text-gray-400 font-medium">
+                                <td colSpan="4" className="text-gray-500 dark:text-gray-400 font-medium">
                                     No records found.
                                 </td>
                             </tr>
                         ) : (
                             filteredApps.map((item, index) => (
                                 <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition" key={index}>
-                                    <td className="px-4 py-4 font-medium text-gray-700 dark:text-gray-200">{item.registerNo}</td>
-                                    <td className="px-4 py-4 font-medium text-gray-700 dark:text-gray-200">{item.name}</td>
-                                    <td className="px-4 py-4 text-gray-600 dark:text-gray-300">{item.specialCategory}</td>
+                                    <td className='px-4 py-4 text-gray-700 dark:text-gray-200 w-40'>{index + 1}</td>
+                                    <td className="px-4 py-4 text-gray-700 dark:text-gray-200">{item.registerNo}</td>
+                                    <td className="px-4 py-4 text-gray-700 dark:text-gray-200">{item.name}</td>
+                                    <td className="px-4 py-4 text-gray-600 dark:text-gray-300 uppercase">{item.specialCategory}</td>
                                 </tr>
                             ))
                         )}
-
                     </tbody>
 
                 </table>
