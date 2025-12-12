@@ -27,7 +27,6 @@ function AddDonorModal({ onClose, onAddDonor }) {
         });
     };
 
-
     const handleSelectChange = (name, option) => {
         setFormData((prev) => ({
             ...prev, [name]: option ? option.value : "",
@@ -148,9 +147,9 @@ function AddDonorModal({ onClose, onAddDonor }) {
                             <Input label="Email ID" name="emailId" type="email" value={formData.emailId} onChange={handleChange} />
                             <Input
                                 label="PAN / Aadhaar No"
-                                name="panNo"
-                                value={formData.panNo}
-                                onChange={(e) => setFormData((prev) => ({ ...prev, panNo: e.target.value.toUpperCase() }))}
+                                name="panOrAadhaar"
+                                value={formData.panOrAadhaar}
+                                onChange={(e) => setFormData((prev) => ({ ...prev, panOrAadhaar: e.target.value.toUpperCase() }))}
                             />
                             <Input
                                 label="Address"

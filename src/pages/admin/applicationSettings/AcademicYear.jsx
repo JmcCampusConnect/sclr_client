@@ -146,8 +146,8 @@ function AcademicYear() {
             {showModal && (
                 <AddAcademicYearModal
                     onClose={() => setShowModal(false)}
-                    onAdded={(newAcademic) => {
-                        setAllAcademicYears((prev) => [...prev, newAcademic]);
+                    onAdded={() => {
+                        fetchAcademicYear();
                         setShowModal(false);
                     }}
                 />
@@ -157,8 +157,8 @@ function AcademicYear() {
                 <EditAcademicYearModal
                     academicData={editData}
                     onClose={() => setEditData(null)}
-                    onUpdateAcademic={(updated) => {
-                        setAllAcademicYears((prev) => prev.map((ac) => ac.academicId === updated.academicId ? updated : ac))
+                    onUpdateAcademic={() => {
+                        fetchAcademicYear();
                         setEditData(null);
                     }}
                 />

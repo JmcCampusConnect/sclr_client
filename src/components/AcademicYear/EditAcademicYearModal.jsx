@@ -11,9 +11,12 @@ function EditAcademicYearModal({ academicData, onClose, onUpdateAcademic }) {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+        let newValue = value;
+        if (name === "academicYear") {
+            newValue = value.replace(/\s+/g, "");
+        }
         setFormData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? (checked ? true : false) : value,
+            ...prev, [name]: type === "checkbox" ? checked : newValue,
         }));
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };

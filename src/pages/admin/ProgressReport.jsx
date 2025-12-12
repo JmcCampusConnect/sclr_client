@@ -15,10 +15,8 @@ function ProgressReport() {
             setData(response.data);
         } catch (err) {
             console.error("Error fetching report : ", err);
-        } finally {
-            setLoading(false);
-        }
-    };
+        } finally { setLoading(false) }
+    }
 
     useEffect(() => {
         fetchCounts();

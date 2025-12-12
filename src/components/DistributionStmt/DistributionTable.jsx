@@ -9,7 +9,7 @@ function DistributionTable({ distribution }) {
                     {/* Table Head */}
                     <thead className="bg-gray-100 sticky top-0 z-10">
                         <tr>
-                            {["S.No", "Register No", "Name", "Department", "Category", "Sclr Type", "Donor Name", "Donor Type", "Date", "Amount"].map(
+                            {["S.No", "Register No", "Name", "Department", "Category", "Sclr Type", "Donor Name", "Donor Type", "Amount", "Date"].map(
                                 (header) => (
                                     <th
                                         key={header}
@@ -53,23 +53,23 @@ function DistributionTable({ distribution }) {
                                             <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                                 {dist.department}
                                             </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                                 {dist.category}
                                             </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                                 {dist.sclrType}
                                             </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '380px' }}>
+                                            <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '380px' }}>
                                                 {dist.donorName}
                                             </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                                 {dist.donorType}
-                                            </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '120px' }}>
-                                                {formatDate(dist.createdAt)}
                                             </td>
                                             <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                                 {`₹ ${dist.givenAmt.toLocaleString("en-IN")}`}
+                                            </td>
+                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '120px' }}>
+                                                {formatDate(dist.createdAt)}
                                             </td>
                                         </tr>
                                     );

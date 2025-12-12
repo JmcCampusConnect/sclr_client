@@ -117,8 +117,7 @@ function CheckStatus() {
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                 <button
                     className={primaryButtonClass}
-                    // onClick={checkStatus}
-                    onClick={() => alert('Work under progress')}
+                    onClick={checkStatus}
                 >
                     Check Status
                 </button>

@@ -17,9 +17,12 @@ function AddAcademicYearModal({ onClose, onAdded }) {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+        let newValue = value;
+        if (name === "academicYear") {
+            newValue = value.replace(/\s+/g, "");
+        }
         setFormData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
+            ...prev, [name]: type === "checkbox" ? checked : newValue,
         }));
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };
@@ -79,6 +82,7 @@ function AddAcademicYearModal({ onClose, onAdded }) {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} noValidate className="p-6 space-y-6">
+
                     {/* Academic Section */}
                     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
@@ -115,7 +119,7 @@ function AddAcademicYearModal({ onClose, onAdded }) {
                         </div>
 
                         {/* Checkbox */}
-                        <div className="flex items-center gap-3 mt-4">
+                        <div className="flex items-center gap-3 mt-6">
                             <input
                                 type="checkbox"
                                 id="isActive"
@@ -131,7 +135,6 @@ function AddAcademicYearModal({ onClose, onAdded }) {
                                 Set as Active Academic Year
                             </label>
                         </div>
-
                     </div>
 
                     {/* Footer */}
