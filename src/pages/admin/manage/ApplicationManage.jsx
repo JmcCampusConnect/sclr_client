@@ -57,7 +57,7 @@ function ApplicationManage() {
             filtered = filtered.filter(app => app.department === filters.department);
         }
         if (filters.batch !== "All") {
-            filtered = filtered.filter(app => app.yearofAddmission === filters.batch);
+            filtered = filtered.filter(app => app.yearOfAdmission === filters.batch);
         }
 
         if (searchTerm.trim() !== "") {
