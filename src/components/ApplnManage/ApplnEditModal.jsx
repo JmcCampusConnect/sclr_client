@@ -2,20 +2,71 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SearchDropdown from "../../common/SearchDropDown";
 import "../../App.css";
-
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function ApplnEditModal({ application, onClose, onUpdate }) {
 
     const [formData, setFormData] = useState(null);
     const [errors, setErrors] = useState({});
-    const [oldRegNo, setOldRegNo] = useState('')
+    const [oldRegNo, setOldRegNo] = useState('');
+    const [dropdownData, setDropdownData] = useState({
+        categories: [],
+        departments: [],
+        batches: [],
+        semesters: [
+            { value: "I", label: "I" },
+            { value: "II", label: "II" },
+            { value: "III", label: "III" },
+            { value: "IV", label: "IV" },
+            { value: "V", label: "V" },
+            { value: "VI", label: "VI" }
+        ],
+        sections: ["A", "B", "C", "D", "E", "F", "G", "H", "I"].map(v => ({
+            value: v, label: v
+        })),
+        religions: ["Muslim", "Hindu", "Christian", "Others"].map(v => ({
+            value: v, label: v
+        }))
+    });
 
     useEffect(() => {
         setFormData(application ? JSON.parse(JSON.stringify(application)) : null);
         setOldRegNo(formData?.registerNo);
         setErrors({});
     }, [application]);
+
+    useEffect(() => {
+        const fetchDropdownData = async () => {
+            try {
+                const res = await axios.get(`${apiUrl}/api/common/fetchDropdownData`);
+                setDropdownData(prev => ({
+                    ...prev,
+                    categories: [
+                        { value: "All", label: "All" },
+                        ...res.data.categories.map(c => ({
+                            value: c, label: c.toUpperCase()
+                        }))
+                    ],
+                    departments: [
+                        { value: "All", label: "All" },
+                        ...res.data.departments.map(d => ({
+                            value: d.department,
+                            label: `${d.department} - ${d.departmentName}`
+                        }))
+                    ],
+                    batches: [
+                        { value: "All", label: "All" },
+                        ...res.data.batches.map(b => ({
+                            value: b, label: b
+                        }))
+                    ]
+                }));
+            } catch (err) {
+                console.error("Dropdown fetch error:", err);
+            }
+        };
+        fetchDropdownData();
+    }, []);
 
     const setByPath = (prev, path, value) => {
         if (!path.includes(".")) return { ...prev, [path]: value };
@@ -87,9 +138,10 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
 
     const graduateOptions = ["UG", "PG"].map((v) => ({ value: v, label: v }));
 
-    const yesNoOptions = [
-        { value: "Yes", label: "Yes" },
-        { value: "No", label: "No" },
+    const categoryOptions = [
+        { value: 'Aided', label: 'AIDED' },
+        { value: 'SFM', label: 'SFM' },
+        { value: 'SFW', label: 'SFW' }
     ]
 
     if (!formData) return null;
@@ -113,13 +165,37 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
                             <Input label="Name" name="name" value={formData.name ?? ""} onChange={handleChange} required error={errors.name} />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-                            <Input label="Category" name="category" value={formData.category ?? ""} onChange={handleChange} />
+                            <SearchDropdown label="Category" name="category" value={formData.category} options={categoryOptions} onChange={handleSelectChange} />
                             <SearchDropdown label="Graduate" name="graduate" value={formData.graduate} options={graduateOptions} onChange={handleSelectChange} />
-                            <Input label="Department" name="department" value={formData.department ?? ""} onChange={handleChange} required error={errors.department} />
+                            <SearchDropdown
+                                label="Department"
+                                name="department"
+                                value={formData.department}
+                                options={dropdownData.departments}
+                                onChange={handleSelectChange}
+                            />
                             <Input label="Batch (Year of Admission)" name="yearOfAdmission" value={formData.yearOfAdmission ?? ""} onChange={handleChange} required error={errors.yearOfAdmission} />
-                            <Input label="Semester" name="semester" value={formData.semester ?? ""} onChange={handleChange} />
-                            <Input label="Section" name="section" value={formData.section ?? ""} onChange={handleChange} />
-                            <Input label="Religion" name="religion" value={formData.religion ?? ""} onChange={handleChange} />
+                            <SearchDropdown
+                                label="Semester"
+                                name="semester"
+                                value={formData.semester}
+                                options={dropdownData.semesters}
+                                onChange={handleSelectChange}
+                            />
+                            <SearchDropdown
+                                label="Section"
+                                name="section"
+                                value={formData.section}
+                                options={dropdownData.sections}
+                                onChange={handleSelectChange}
+                            />
+                            <SearchDropdown
+                                label="Religion"
+                                name="religion"
+                                value={formData.religion}
+                                options={dropdownData.religions}
+                                onChange={handleSelectChange}
+                            />
                             <Input label="Mobile No" name="mobileNo" value={formData.mobileNo ?? ""} onChange={handleChange} />
                             <Input label="Aadhar No" name="aadharNo" value={formData.aadharNo ?? ""} onChange={handleChange} />
                         </div>

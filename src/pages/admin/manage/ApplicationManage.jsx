@@ -17,7 +17,10 @@ function ApplicationManage() {
     const navigate = useNavigate();
     const [applications, setApplications] = useState([]);
     const [filteredApplications, setFilteredApplications] = useState([]);
-    const [filters, setFilters] = useState({ category: "All", department: "All", batch: "All" });
+    const [filters, setFilters] = useState({
+        category: "All", department: "All",
+        batch: "All", semester: "All"
+    });
     const [searchTerm, setSearchTerm] = useState("");
 
     const [isLoading, setIsLoading] = useState(true);
@@ -53,11 +56,29 @@ function ApplicationManage() {
         if (filters.category !== "All") {
             filtered = filtered.filter(app => app.category === filters.category);
         }
+
         if (filters.department !== "All") {
             filtered = filtered.filter(app => app.department === filters.department);
         }
+     
         if (filters.batch !== "All") {
             filtered = filtered.filter(app => app.yearOfAdmission === filters.batch);
+        }
+
+        if (filters.semester !== "All") {
+            const EVEN_SEMESTERS = ["II", "IV", "VI"];
+            const ODD_SEMESTERS = ["I", "III", "V"];
+            filtered = filtered.filter(app => {
+                if (!app.semester) return false;
+                const sem = app.semester.toUpperCase().trim();
+                if (filters.semester === "EVEN") {
+                    return EVEN_SEMESTERS.includes(sem);
+                }
+                if (filters.semester === "ODD") {
+                    return ODD_SEMESTERS.includes(sem);
+                }
+                return true;
+            });
         }
 
         if (searchTerm.trim() !== "") {

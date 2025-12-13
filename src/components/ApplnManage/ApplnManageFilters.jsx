@@ -7,7 +7,12 @@ const apiUrl = import.meta.env.VITE_API_URL;
 function ApplnManageFilters({ filters, setFilters }) {
 
     const [dropdownData, setDropdownData] = useState({
-        categories: [], departments: [], batches: []
+        categories: [], departments: [], batches: [],
+        semesters: [
+            { value: "All", label: "All" },
+            { value: "EVEN", label: "Even Semester" },
+            { value: "ODD", label: "Odd Semester" }
+        ]
     });
 
     const handleSelectChange = (name, option) => {
@@ -21,19 +26,32 @@ function ApplnManageFilters({ filters, setFilters }) {
         const fetchDropdownData = async () => {
             try {
                 const res = await axios.get(`${apiUrl}/api/common/fetchDropdownData`);
-                setDropdownData({
-                    categories: [{ value: "All", label: "All" }, ...res.data.categories.map(c => ({ value: c, label: c.toUpperCase() }))],
+                setDropdownData(prev => ({
+                    ...prev,
+                    categories: [
+                        { value: "All", label: "All" },
+                        ...res.data.categories.map(c => ({
+                            value: c, label: c.toUpperCase()
+                        }))
+                    ],
                     departments: [
                         { value: "All", label: "All" },
-                        ...res.data.departments.map(d => ({ value: d.department, label: `${d.department} - ${d.departmentName}` }))
+                        ...res.data.departments.map(d => ({
+                            value: d.department,
+                            label: `${d.department} - ${d.departmentName}`
+                        }))
                     ],
-                    batches: [{ value: "All", label: "All" }, ...res.data.batches.map(b => ({ value: b, label: b }))]
-                });
+                    batches: [
+                        { value: "All", label: "All" },
+                        ...res.data.batches.map(b => ({
+                            value: b, label: b
+                        }))
+                    ]
+                }));
             } catch (err) {
                 console.error("Dropdown fetch error:", err);
             }
         };
-
         fetchDropdownData();
     }, []);
 
@@ -65,6 +83,15 @@ function ApplnManageFilters({ filters, setFilters }) {
                     name="batch"
                     options={dropdownData.batches}
                     value={filters.batch}
+                    onChange={handleSelectChange}
+                />
+
+                {/* Semester */}
+                <SearchDropdown
+                    label="Semester"
+                    name="semester"
+                    options={dropdownData.semesters}
+                    value={filters.semester}
                     onChange={handleSelectChange}
                 />
 
