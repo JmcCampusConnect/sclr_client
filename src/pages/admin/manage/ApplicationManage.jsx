@@ -60,7 +60,7 @@ function ApplicationManage() {
         if (filters.department !== "All") {
             filtered = filtered.filter(app => app.department === filters.department);
         }
-     
+
         if (filters.batch !== "All") {
             filtered = filtered.filter(app => app.yearOfAdmission === filters.batch);
         }
@@ -102,9 +102,22 @@ function ApplicationManage() {
         setShowEditModal(true);
     };
 
-    const handleUpdateApplication = (updated) => {
-        setApplications(prev => prev.map(a => a._id === updated._id ? ({ ...a, ...updated }) : a));
-        setFilteredApplications(prev => prev.map(a => a._id === updated._id ? ({ ...a, ...updated }) : a));
+    const handleUpdateApplication = (updatedFormData) => {
+        setApplications(prev =>
+            prev.map(app =>
+                app.applicationId === updatedFormData.applicationId
+                    ? { ...updatedFormData }
+                    : app
+            )
+        );
+        setFilteredApplications(prev =>
+            prev.map(app =>
+                app.applicationId === updatedFormData.applicationId
+                    ? { ...updatedFormData }
+                    : app
+            )
+        );
+        setShowEditModal(false);
     };
 
     if (isLoading) {

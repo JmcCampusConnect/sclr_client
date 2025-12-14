@@ -22,7 +22,7 @@ function ApplnManageTable({ applications, onDeleteClick, onRowClick }) {
                         {applications?.length > 0 ? (
                             applications.map((applications, index) => (
                                 <tr
-                                    key={applications?._id}
+                                    key={applications?.applicationId}
                                     className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
                                 >
                                     <td className="px-8 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
