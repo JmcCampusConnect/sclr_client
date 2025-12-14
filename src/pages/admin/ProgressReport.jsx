@@ -23,7 +23,7 @@ function ProgressReport() {
 
     useEffect(() => {
         fetchCounts();
-    }, []);
+    }, [apiUrl]);
 
     if (loading) {
         return (
@@ -148,7 +148,7 @@ function ProgressReport() {
 
             <ProgressReportTable rows={rows} />
         </div>
-    );
+    )
 }
 
 export default ProgressReport;
