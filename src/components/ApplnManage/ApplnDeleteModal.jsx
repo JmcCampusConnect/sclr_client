@@ -12,12 +12,12 @@ function ApplnDeleteModal({ application, onClose, onDelete }) {
         try {
             const response = await axios.post(
                 `${apiUrl}/api/manage/appln/deleteApplication`,
-                { id: application._id }
+                { id: application.applicationId }
             );
 
             if (response.status === 200) {
                 alert(response.data.message);
-                onDelete(application._id);
+                onDelete(application.applicationId);
                 onClose();
             }
 

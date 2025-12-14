@@ -41,7 +41,7 @@ function ActionBar({ total = 0, searchTerm, setSearchTerm, data = [] }) {
                 <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
                     <div className="flex justify-end gap-4 w-full">
                         <button
-                            className="flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition shadow-md"
+                            className="flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition shadow-md"
                             onClick={downloadExcel}
                         >
                             <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,8 +49,19 @@ function ActionBar({ total = 0, searchTerm, setSearchTerm, data = [] }) {
                             </svg>
                             Download Excel
                         </button>
+                        <div className="flex items-center">
+                            <button
+                                className="flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white 
+                                bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
+                                focus:ring-indigo-500 transition duration-150 shadow-md"
+                                onClick={() => alert('Work under progress')}
 
+                            >
+                                Add Distribution
+                            </button>
+                        </div>
                     </div>
+
                 </div>
             </div>
 

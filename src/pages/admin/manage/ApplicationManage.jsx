@@ -93,8 +93,8 @@ function ApplicationManage() {
     }, [filters, searchTerm, applications]);
 
     const handleDeleteApp = (id) => {
-        setApplications(prev => prev.filter(app => app._id !== id));
-        setFilteredApplications(prev => prev.filter(app => app._id !== id));
+        setApplications(prev => prev.filter(app => app.applicationId !== id));
+        setFilteredApplications(prev => prev.filter(app => app.applicationId !== id));
     };
 
     const handleRowClick = (app) => {

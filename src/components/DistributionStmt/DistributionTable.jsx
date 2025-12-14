@@ -71,6 +71,22 @@ function DistributionTable({ distribution }) {
                                             <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '120px' }}>
                                                 {formatDate(dist.createdAt)}
                                             </td>
+                                            <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
+                                                <div className="flex justify-center gap-3">
+                                                    <button
+                                                        onClick={() => alert('Work under progress')}
+                                                        className="w-20 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        onClick={() => alert('Work under progress')}
+                                                        className="w-20 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
                                         </tr>
                                     );
                                 })

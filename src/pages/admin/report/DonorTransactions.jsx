@@ -32,7 +32,7 @@ function DonorTransactions() {
             </header>
 
             <DonorFilters />
-            <DonorActionBar />
+            <DonorActionBar transactions={transactions} />
 
             <DonorTable
                 loading={loading}

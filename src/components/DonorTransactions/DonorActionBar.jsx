@@ -1,6 +1,6 @@
 import React from "react";
 
-function DonorActionBar() {
+function DonorActionBar({ transactions }) {
 
     return (
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
@@ -17,7 +17,7 @@ function DonorActionBar() {
             <p className="text-sm lg:text-base font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
                 No. of Records :
                 <span className="ml-1 font-semibold text-indigo-600 dark:text-indigo-400">
-                    0
+                    {transactions.length}
                 </span>
             </p>
         </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FooterCredit from './FooterCredit';
 
@@ -18,12 +18,16 @@ const Button = ({ onClick, disabled, variant, children }) => (
     >
         {children}
     </button>
-)
+);
 
 function StudentButtons({ applnEndDate }) {
 
     const navigate = useNavigate();
-    const isApplicationClosed = applnEndDate ? new Date().setHours(0, 0, 0, 0) > new Date(applnEndDate).setHours(0, 0, 0, 0) : false;
+    const [isNewAppDisabled, setIsNewAppDisabled] = useState(true);
+    const isApplicationClosed = applnEndDate
+        ? new Date().setHours(0, 0, 0, 0) > new Date(applnEndDate).setHours(0, 0, 0, 0)
+        : false;
+
     const formattedDate = applnEndDate
         ? (() => {
             const d = new Date(applnEndDate);
@@ -33,6 +37,13 @@ function StudentButtons({ applnEndDate }) {
             return `${day}-${month}-${year}`;
         })()
         : "N/A";
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsNewAppDisabled(false);
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <div
@@ -68,7 +79,7 @@ function StudentButtons({ applnEndDate }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-5 mt-4 w-full px-2">
                 <Button
                     variant="primary"
-                    disabled={isApplicationClosed}
+                    disabled={isNewAppDisabled || isApplicationClosed} // <-- respect both conditions
                     onClick={() => navigate('/student/register/application')}
                 >
                     New Application
@@ -84,7 +95,7 @@ function StudentButtons({ applnEndDate }) {
                 <FooterCredit isDarkMode={false} />
             </footer>
         </div>
-    )
+    );
 }
 
 export default StudentButtons;

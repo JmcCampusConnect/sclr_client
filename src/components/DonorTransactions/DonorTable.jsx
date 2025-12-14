@@ -88,6 +88,7 @@ function DonorTable({ transactions, loading }) {
                                             </button>
                                         </div>
                                     </td>
+
                                 </tr>
                             ))
                         ) : (
