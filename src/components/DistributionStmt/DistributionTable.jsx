@@ -1,6 +1,6 @@
 import React from "react";
 
-function DistributionTable({ distribution }) {
+function DistributionTable({ distribution, onDeleteClick }) {
 
     return (
         <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
@@ -9,7 +9,7 @@ function DistributionTable({ distribution }) {
                     {/* Table Head */}
                     <thead className="bg-gray-100 sticky top-0 z-10">
                         <tr>
-                            {["S.No", "Register No", "Name", "Department", "Category", "Sclr Type", "Donor Name", "Donor Type", "Amount", "Date"].map(
+                            {["S.No", "Register No", "Name", "Department", "Category", "Sclr Type", "Donor Id", "Donor Name", "Donor Type", "Amount", "Date", "Actions"].map(
                                 (header) => (
                                     <th
                                         key={header}
@@ -24,79 +24,80 @@ function DistributionTable({ distribution }) {
 
                     {/* Table Body */}
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                        {
-                            distribution.length > 0 ? (
-                                distribution.map((dist, index) => {
-                                    const key = dist._id || dist.registerNo || index;
-                                    const pad = (n) => (n < 10 ? `0${n}` : n);
-                                    const formatDate = (d) => {
-                                        if (!d) return "";
-                                        const dt = new Date(d);
-                                        if (isNaN(dt.getTime())) return "";
-                                        return `${pad(dt.getDate())}-${pad(dt.getMonth() + 1)}-${dt.getFullYear()}`;
-                                    };
-
-                                    return (
-                                        <tr
-                                            key={key}
-                                            className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
-                                        >
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
-                                                {index + 1}
-                                            </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-                                                {dist.registerNo}
-                                            </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '250px' }}>
-                                                {dist.name}
-                                            </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-                                                {dist.department}
-                                            </td>
-                                            <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-                                                {dist.category}
-                                            </td>
-                                            <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-                                                {dist.sclrType}
-                                            </td>
-                                            <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '380px' }}>
-                                                {dist.donorName}
-                                            </td>
-                                            <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-                                                {dist.donorType}
-                                            </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-                                                {`₹ ${dist.givenAmt.toLocaleString("en-IN")}`}
-                                            </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '120px' }}>
-                                                {formatDate(dist.createdAt)}
-                                            </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
-                                                <div className="flex justify-center gap-3">
-                                                    <button
-                                                        onClick={() => alert('Work under progress')}
-                                                        className="w-20 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                    <button
-                                                        onClick={() => alert('Work under progress')}
-                                                        className="w-20 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            ) : (
-                                <tr>
-                                    <td colSpan="10" className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
-                                        No distribution statements found.
-                                    </td>
-                                </tr>
-                            )
+                        {distribution.length > 0 ? (
+                            distribution.map((dist, index) => {
+                                const key = dist._id || dist.registerNo || index;
+                                const pad = (n) => (n < 10 ? `0${n}` : n);
+                                const formatDate = (d) => {
+                                    if (!d) return "";
+                                    const dt = new Date(d);
+                                    if (isNaN(dt.getTime())) return "";
+                                    return `${pad(dt.getDate())}-${pad(dt.getMonth() + 1)}-${dt.getFullYear()}`;
+                                };
+                                return (
+                                    <tr
+                                        key={key}
+                                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
+                                    >
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
+                                            {index + 1}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {dist.registerNo}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '250px' }}>
+                                            {dist.name}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {dist.department}
+                                        </td>
+                                        <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {dist.category}
+                                        </td>
+                                        <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {dist.sclrType}
+                                        </td>
+                                        <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {dist.donorId}
+                                        </td>
+                                        <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '380px' }}>
+                                            {dist.donorName}
+                                        </td>
+                                        <td className="uppercase px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {dist.donorType}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {`₹ ${dist.givenAmt.toLocaleString("en-IN")}`}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white" style={{ minWidth: '120px' }}>
+                                            {formatDate(dist.createdAt)}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
+                                            <div className="flex justify-center gap-3">
+                                                <button
+                                                    onClick={() => alert('Work under progress')}
+                                                    className="w-20 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => onDeleteClick(dist)}
+                                                    className="w-20 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        ) : (
+                            <tr>
+                                <td colSpan="10" className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+                                    No distribution statements found.
+                                </td>
+                            </tr>
+                        )
                         }
                     </tbody>
                 </table>

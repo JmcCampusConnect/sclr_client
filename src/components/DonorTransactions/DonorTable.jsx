@@ -32,7 +32,7 @@ function DonorTable({ transactions, loading, onDelete }) {
                         {loading ? (
                             <tr>
                                 <td
-                                    colSpan="6"
+                                    colSpan="8"
                                     className="px-4 py-4 text-gray-600 dark:text-gray-300"
                                 >
                                     Loading transactions...
@@ -81,7 +81,8 @@ function DonorTable({ transactions, loading, onDelete }) {
                                                 Edit
                                             </button>
                                             <button
-                                                onClick={() => onDelete(txn)}
+                                                // onClick={() => onDelete(txn)}
+                                                onClick={() => alert('Work under progress')}
                                                 className="w-20 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
                                             >
                                                 Delete

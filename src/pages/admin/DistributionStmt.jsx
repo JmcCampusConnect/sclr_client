@@ -5,6 +5,7 @@ import FilterSection from "../../components/DistributionStmt/FilterSection";
 import ActionBar from "../../components/DistributionStmt/ActionBar";
 import StatusCard from "../../components/DistributionStmt/StatusCard";
 import Loading from "../../assets/svg/Pulse.svg";
+import DeleteModal from "../../components/DistributionStmt/DeleteModal";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -13,6 +14,9 @@ function DistributionStmt() {
     const [distribution, setDistribution] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedDonor, setSelectedDonor] = useState(null);
+
 
     const [filters, setFilters] = useState({
         donorId: "all",
@@ -133,7 +137,7 @@ function DistributionStmt() {
         };
 
         let result = [...distribution];
-
+ 
         // Donor Filter
         if (filters.donorId && filters.donorId !== "all") {
             result = result.filter(r => String(r.donorId) === String(filters.donorId));
@@ -227,8 +231,26 @@ function DistributionStmt() {
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
             />
-            <DistributionTable distribution={searchedDistribution} />
+            <DistributionTable
+                distribution={searchedDistribution}
+                onDeleteClick={(donor) => {
+                    setSelectedDonor(donor);
+                    setShowDeleteModal(true);
+                }}
+            />
             <StatusCard />
+            {showDeleteModal && selectedDonor && (
+                <DeleteModal
+                    donor={selectedDonor}
+                    onClose={() => setShowDeleteModal(false)}
+                    onDelete={(donorId) => {
+                        setDistribution(prev =>
+                            prev.filter(d => d.donorId !== donorId)
+                        );
+                    }}
+                />
+            )}
+
         </>
     );
 }
