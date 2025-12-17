@@ -180,9 +180,9 @@ function DonorManage() {
 
             {editDonor && (
                 <EditDonorModal
-                    donor={editDonor}
+                    donorData={editDonor}
                     onClose={() => setEditDonor(null)}
-                    onEditDonor={handleEditDonor}
+                    onUpdateDonor={handleEditDonor}
                 />
             )}
 

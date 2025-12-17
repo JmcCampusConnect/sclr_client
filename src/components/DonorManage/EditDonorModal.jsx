@@ -24,7 +24,8 @@ function EditDonorModal({ donorData, onClose, onUpdateDonor }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`${apiUrl}/api/donor/updateDonor/${formData._id}`, formData);
+            const response = await axios.put(`${apiUrl}/api/donor/updateDonor/${formData.donorId}`, formData);
+            alert(response.data.message || "Donor updated successfully!");
             onUpdateDonor(response.data.updatedDonor);
             onClose();
         } catch (error) {
@@ -71,13 +72,14 @@ function EditDonorModal({ donorData, onClose, onUpdateDonor }) {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
+
                     {/* Basic Information */}
                     <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
                             🧾 Basic Information
                         </h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <Input label="Donor ID" name="donorId" value={formData.donorId} readOnly />
                             <Input
                                 label="Donor Name"
@@ -128,31 +130,6 @@ function EditDonorModal({ donorData, onClose, onUpdateDonor }) {
                                 options={donorTypeOptions}
                                 onChange={handleSelectChange}
                                 required
-                            />
-                            <Input label="Donor Date" name="donorDate" type="date" value={formData.donorDate} onChange={handleChange} />
-                        </div>
-                    </div>
-
-                    {/* Payment Details */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
-                        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
-                            💰 Payment Details
-                        </h2>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Input
-                                label="General Amount"
-                                name="generalAmt"
-                                type="number"
-                                value={formData.generalAmt}
-                                onChange={handleChange}
-                            />
-                            <Input
-                                label="Zakkath Amount"
-                                name="zakkathAmt"
-                                type="number"
-                                value={formData.zakkathAmt}
-                                onChange={handleChange}
                             />
                         </div>
                     </div>

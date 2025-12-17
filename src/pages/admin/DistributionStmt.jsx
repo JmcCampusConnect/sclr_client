@@ -17,7 +17,6 @@ function DistributionStmt() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedDonor, setSelectedDonor] = useState(null);
 
-
     const [filters, setFilters] = useState({
         donorId: "all",
         department: "all",
@@ -137,7 +136,7 @@ function DistributionStmt() {
         };
 
         let result = [...distribution];
- 
+
         // Donor Filter
         if (filters.donorId && filters.donorId !== "all") {
             result = result.filter(r => String(r.donorId) === String(filters.donorId));
