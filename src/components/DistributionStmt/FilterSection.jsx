@@ -13,7 +13,6 @@ function FilterSection({ filters, setFilters, departments = [] }) {
         const fetchDropdownData = async () => {
             try {
                 const res = await axios.get(`${apiUrl}/api/common/fetchDropdownData`);
-                console.log(res.data)
                 setDropdownData({
                     donors: [{ value: "all", label: "All" }, ...res.data.donors.map(d => ({ value: d.donorId, label: `${d.donorId} - ${d.donorName}` }))]
                 });

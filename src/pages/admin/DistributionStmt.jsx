@@ -6,6 +6,7 @@ import ActionBar from "../../components/DistributionStmt/ActionBar";
 import StatusCard from "../../components/DistributionStmt/StatusCard";
 import Loading from "../../assets/svg/Pulse.svg";
 import DeleteModal from "../../components/DistributionStmt/DeleteModal";
+import EditModal from "../../components/DistributionStmt/EditModal";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -30,6 +31,9 @@ function DistributionStmt() {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchedDistribution, setSearchedDistribution] = useState([]);
     const [departments, setDepartments] = useState([]);
+
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [selectedRow, setSelectedRow] = useState(null);
 
     useEffect(() => {
         const fetchDistribution = async () => {
@@ -223,21 +227,46 @@ function DistributionStmt() {
                     Distribution Statement
                 </h1>
             </header>
-            <FilterSection filters={filters} setFilters={setFilters} departments={departments} />
+
+            <FilterSection
+                filters={filters}
+                setFilters={setFilters}
+                departments={departments}
+            />
+
             <ActionBar
                 data={searchedDistribution}
                 total={searchedDistribution.length}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
             />
+
             <DistributionTable
                 distribution={searchedDistribution}
                 onDeleteClick={(donor) => {
                     setSelectedDonor(donor);
                     setShowDeleteModal(true);
                 }}
+                onEditClick={(row) => {
+                    setSelectedRow(row);
+                    setShowEditModal(true);
+                }}
             />
+
             <StatusCard />
+
+            {showEditModal && selectedRow && (
+                <EditModal
+                    distributionData={selectedRow}
+                    onClose={() => setShowEditModal(false)}
+                    onUpdate={(updated) => {
+                        setDistribution(prev =>
+                            prev.map(d => d._id === updated._id ? updated : d)
+                        );
+                    }}
+                />
+            )}
+
             {showDeleteModal && selectedDonor && (
                 <DeleteModal
                     donor={selectedDonor}
