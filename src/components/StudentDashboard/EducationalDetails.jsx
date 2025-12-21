@@ -25,15 +25,6 @@ const EducationalDetails = ({ student }) => (
                         </TableRow>
                     )}
 
-                    {student.semester !== "I" && (
-                        <TableRow label="Grade">
-                            {student.semesterMarkPercentage === -1
-                                ? "Pending"
-                                : `${student.semesterGrade} Grade`
-                            }
-                        </TableRow>
-                    )}
-
                     <TableRow label="Class Attendance Percentage">
                         {student.classAttendancePercentage === -1
                             ? "Pending"

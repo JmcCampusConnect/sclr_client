@@ -96,14 +96,6 @@ function PrintApplication({ student }) {
                                         />
                                     )}
 
-                                    {/* Grade (only if not first semester) */}
-                                    {student.semester !== "I" && (
-                                        <LabeledBox
-                                            label="Grade"
-                                            value={student.semesterMarkPercentage === -1 ? "Pending" : `${student.semesterGrade} Grade`}
-                                        />
-                                    )}
-
                                     {/* Class Attendance */}
                                     <LabeledBox
                                         label="Class Attendance %"
