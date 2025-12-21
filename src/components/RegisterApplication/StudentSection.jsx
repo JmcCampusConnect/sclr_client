@@ -3,7 +3,7 @@ import DropDown from '../../common/DropDown';
 import HeaderTag from '../../common/HeaderTag';
 import InputBox from '../../common/InputBox';
 
-function StudentSection({ register, errors, setValue, watch, addtionalInfo, readOnly = false, sclrType, lastYearCreditedAmount = 0 }) {
+function StudentSection({ register, errors, setValue, watch, addtionalInfo, adminRequired = true, readOnly = false, sclrType, lastYearCreditedAmount = 0 }) {
 
     return (
         <>
@@ -36,13 +36,13 @@ function StudentSection({ register, errors, setValue, watch, addtionalInfo, read
                     name="aadharNo"
                     label="Aadhar No."
                     type="text"
-                    required
+                    required={adminRequired}
                     register={register}
                     errors={errors}
                     readOnly={readOnly}
                 />
 
-                {addtionalInfo && sclrType === 'Renewal'  && (
+                {addtionalInfo && sclrType === 'Renewal' && (
                     <InputBox
                         name="lastYearCreditedAmount"
                         label="Last Year Credited Amount"

@@ -29,7 +29,6 @@ const schema = Yup.object().shape({
     section: Yup.string().required('Section is required'),
     religion: Yup.string().required('Religion is required'),
     mobileNo: Yup.string().required('Mobile Number is required').matches(/^[0-9]{10}$/, 'Mobile Number must contain 10 digits'),
-    aadharNo: Yup.string().required('Aadhar Number is required').matches(/^[0-9]{12}$/, 'Aadhar Number must contain 12 digits'),
     parentName: Yup.string().required("Parent / Guardian Name is required"),
     parentNo: Yup.string().required("Parent / Guardian No. is required"),
     parentOccupation: Yup.string().required("Parent Occupation is required"),
