@@ -20,7 +20,7 @@ function CoeMark() {
     const { addData } = useAdd();
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadMessage, setUploadMessage] = useState("");
-    const [uploadStatus, setUploadStatus] = useState(null); 
+    const [uploadStatus, setUploadStatus] = useState(null);
     const [uploadLoading, setUploadLoading] = useState(false);
 
     const headers = [
@@ -32,7 +32,6 @@ function CoeMark() {
         { key: 'markSecured', label: 'Mark Secured', style: { width: '10%' } },
         { key: 'percent', label: 'Percent %', style: { width: '10%' } },
         { key: 'arrears', label: 'Arrears', style: { width: '10%' } },
-        { key: 'remarks', label: 'Grade', style: { width: '20%' } },
     ]
 
     // FETCH STUDENT DATA
@@ -68,8 +67,6 @@ function CoeMark() {
                 student.semesterMarkPercentage = max > 0 ? (secured / max) * 100 : -1;
             } else if (field === "arrears") {
                 student.semesterArrear = value === "" ? "" : Number(value);
-            } else if (field === "remarks") {
-                student.semesterGrade = value;
             }
             updated[index] = student;
             setChangedStudents((prev) => {
@@ -79,7 +76,6 @@ function CoeMark() {
                     registerNo: student.registerNo,
                     semesterMarkPercentage: student.semesterMarkPercentage,
                     semesterArrear: student.semesterArrear,
-                    semesterGrade: student.semesterGrade
                 }
                 if (existsIndex > -1) {
                     const newArr = [...prev];
@@ -94,16 +90,30 @@ function CoeMark() {
     // SAVING MARK 
     const handleSubmitMark = async () => {
         try {
-            const Students = await addData(`${apiUrl}/api/staff/coe/saveStudentMark`, { changedStudents });
+            const normalizedStudents = changedStudents.map(st => ({
+                ...st,
+                semesterArrear:
+                    st.semesterArrear === "" ||
+                        st.semesterArrear === undefined ||
+                        st.semesterArrear === null
+                        ? 0
+                        : st.semesterArrear
+            }));
+
+            const Students = await addData(
+                `${apiUrl}/api/staff/coe/saveStudentMark`,
+                { changedStudents: normalizedStudents }
+            );
+
             setStudentsData(Students.data.data || []);
-            if (Students.status == 200) {
-                alert("Mark saved successfully")
+            if (Students.status === 200) {
+                alert("Mark saved successfully");
                 window.location.reload();
             }
         } catch (error) {
             console.log('Something error in saving mark in COE : ', error);
         }
-    }
+    };
 
     if (isLoading) {
         return (
@@ -135,8 +145,7 @@ function CoeMark() {
             "registerNo": st.registerNo, "name": st.name,
             "department": st.department,
             "semesterMarkPercentage": st.semesterMarkPercentage === -1 ? "" : st.semesterMarkPercentage.toFixed(2),
-            "semesterArrear": st.semesterArrear ?? "",
-            "semesterGrade": st.semesterGrade ?? "",
+            "semesterArrear": "",
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(excelData);
@@ -357,8 +366,8 @@ function CoeMark() {
                                                 className="w-28 px-3 py-1.5 border border-gray-300 bg-gray-100 font-semibold rounded-lg text-sm text-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-600"
                                                 value={
                                                     student.semesterMarkPercentage >= 0
-                                                        ? student.semesterMarkPercentage.toFixed(2)
-                                                        : "0.00"
+                                                        ? Number(student.semesterMarkPercentage).toFixed(2)
+                                                        : ""
                                                 }
                                                 readOnly
                                             />
@@ -369,21 +378,11 @@ function CoeMark() {
                                             <input
                                                 type="number"
                                                 className="w-20 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
-                                                value={student.semesterArrear ?? ""}
+                                                value={student.semesterArrear === 0 ? "" : student.semesterArrear}
                                                 onChange={(e) => handleMarkChange(index, "arrears", e.target.value)}
                                                 onFocus={(e) => {
                                                     e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false });
                                                 }}
-                                            />
-                                        </td>
-
-                                        {/* Grade */}
-                                        <td className="px-4 py-4">
-                                            <input
-                                                type="text"
-                                                className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
-                                                value={student.semesterGrade ?? ""}
-                                                onChange={(e) => handleMarkChange(index, "remarks", e.target.value)}
                                             />
                                         </td>
                                     </tr>
