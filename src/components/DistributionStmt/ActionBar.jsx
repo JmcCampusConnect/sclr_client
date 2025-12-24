@@ -1,7 +1,7 @@
 import React from "react";
 import * as XLSX from "xlsx";
 
-function ActionBar({ total = 0, searchTerm, setSearchTerm, data = [] }) {
+function ActionBar({ total = 0, searchTerm, setSearchTerm, data = [], onAddClick }) {
 
     const downloadExcel = () => {
 
@@ -54,8 +54,8 @@ function ActionBar({ total = 0, searchTerm, setSearchTerm, data = [] }) {
                                 className="flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white 
                                 bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
                                 focus:ring-indigo-500 transition duration-150 shadow-md"
-                                onClick={() => alert('Work under progress')}
-
+                                // onClick={() => alert('Work under progress')}
+                                onClick={onAddClick}
                             >
                                 Add Distribution
                             </button>

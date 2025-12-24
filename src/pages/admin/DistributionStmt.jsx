@@ -5,6 +5,7 @@ import FilterSection from "../../components/DistributionStmt/FilterSection";
 import ActionBar from "../../components/DistributionStmt/ActionBar";
 import StatusCard from "../../components/DistributionStmt/StatusCard";
 import Loading from "../../assets/svg/Pulse.svg";
+import AddModal from "../../components/DistributionStmt/AddModal";
 import DeleteModal from "../../components/DistributionStmt/DeleteModal";
 import EditModal from "../../components/DistributionStmt/EditModal";
 
@@ -15,6 +16,7 @@ function DistributionStmt() {
     const [distribution, setDistribution] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [donors, setDonors] = useState([]);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedDonor, setSelectedDonor] = useState(null);
 
@@ -31,9 +33,27 @@ function DistributionStmt() {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchedDistribution, setSearchedDistribution] = useState([]);
     const [departments, setDepartments] = useState([]);
-
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
+    const [showAddModal, setShowAddModal] = useState(false);
+
+    const fetchData = async () => {
+
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const [donorsRes] = await Promise.all([
+                axios.get(`${apiUrl}/api/admin/application/fetchDonors`),
+            ]);
+            setDonors(donorsRes.data.donors);
+        } catch (err) {
+            console.error("Error fetching data for admin application:", err);
+            setError("Failed to load data. Please try again later.");
+        } finally { setIsLoading(false) }
+    }
+
+    useEffect(() => { fetchData() }, []);
 
     useEffect(() => {
         const fetchDistribution = async () => {
@@ -239,6 +259,7 @@ function DistributionStmt() {
                 total={searchedDistribution.length}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
+                onAddClick={() => setShowAddModal(true)}
             />
 
             <DistributionTable
@@ -254,6 +275,18 @@ function DistributionStmt() {
             />
 
             <StatusCard />
+
+            {showAddModal && (
+                <AddModal
+                    onClose={() => setShowAddModal(false)}
+                    donors={donors}
+                    onSubmissionSuccess={async () => {
+                        setShowAddModal(false);
+                        const res = await axios.get(`${apiUrl}/api/distribution/fetchDistribution`);
+                        setDistribution(res.data.distributions);
+                    }}
+                />
+            )}
 
             {showEditModal && selectedRow && (
                 <EditModal
