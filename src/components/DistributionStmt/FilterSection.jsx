@@ -6,7 +6,6 @@ function FilterSection({ filters, setFilters, departments = [] }) {
 
     const apiUrl = import.meta.env.VITE_API_URL;
     const [dropdownData, setDropdownData] = useState({ donors: [] });
-
     const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
 
     useEffect(() => {
@@ -20,9 +19,8 @@ function FilterSection({ filters, setFilters, departments = [] }) {
                 console.error("Dropdown fetch error:", err);
             }
         };
-
         fetchDropdownData();
-    }, []);
+    }, [apiUrl]);
 
     return (
         <div className="w-full space-y-6">

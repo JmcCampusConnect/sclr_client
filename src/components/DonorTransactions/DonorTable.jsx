@@ -1,6 +1,6 @@
 import React from "react";
 
-function DonorTable({ transactions, loading, onDelete }) {
+function DonorTable({ transactions }) {
 
     return (
         <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
@@ -16,7 +16,6 @@ function DonorTable({ transactions, loading, onDelete }) {
                                 "General",
                                 "Zakkath",
                                 "Date",
-                                "Actions"
                             ].map((header) => (
                                 <th
                                     key={header}
@@ -29,16 +28,7 @@ function DonorTable({ transactions, loading, onDelete }) {
                     </thead>
 
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                        {loading ? (
-                            <tr>
-                                <td
-                                    colSpan="8"
-                                    className="px-4 py-4 text-gray-600 dark:text-gray-300"
-                                >
-                                    Loading transactions...
-                                </td>
-                            </tr>
-                        ) : transactions.length > 0 ? (
+                        {transactions.length > 0 ? (
                             transactions.map((txn, index) => (
                                 <tr
                                     key={txn._id}
@@ -69,27 +59,8 @@ function DonorTable({ transactions, loading, onDelete }) {
                                     </td>
 
                                     <td className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
-                                        {new Date(txn.createdAt).toLocaleDateString()}
+                                        {new Date(txn.createdAt).toLocaleDateString("en-GB")}
                                     </td>
-
-                                    <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
-                                        <div className="flex justify-center gap-3">
-                                            <button
-                                                onClick={() => alert('Work under progress')}
-                                                className="w-20 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => onDelete(txn)}
-                                                // onClick={() => alert('Work under progress')}
-                                                className="w-20 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </td>
-
                                 </tr>
                             ))
                         ) : (
