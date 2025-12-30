@@ -51,6 +51,7 @@ import QuickRejection from './pages/admin/QuickRejection';
 import AdminRegisterAppln from './pages/admin/AdminRegisterAppln';
 import AdminLoginAppln from './pages/admin/AdminLoginAppln';
 import DonorTransactions from './pages/admin/report/DonorTransactions';
+import MenuGuide from './pages/admin/MenuGuide';
 
 function App() {
 
@@ -118,6 +119,7 @@ function App() {
                         <Route path="quickRejection" element={<QuickRejection />} />
                         <Route path="adminRegisterApplication" element={<AdminRegisterAppln />} />
                         <Route path=":registerNo/adminLoginApplication" element={<AdminLoginAppln />} />
+                        <Route path="menuGuide" element={<MenuGuide />} />
                     </Route>
 
                     {/* Staff */}

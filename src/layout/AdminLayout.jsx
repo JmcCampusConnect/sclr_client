@@ -3,7 +3,7 @@ import JmcLogo from "../assets/logos/JmcLogo.png";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faChalkboard, faExclamationTriangle, faFileAlt, faIdCard, faTools, faSignOutAlt,
+    faChalkboard, faExclamationTriangle, faFileAlt, faIdCard, faTools, faSignOutAlt, faList,
     faChartBar, faUserGroup, faMapSigns, faHandHoldingUsd, faChartLine, faSlidersH, faUpload
 } from '@fortawesome/free-solid-svg-icons';
 import { ChevronUp, ChevronDown } from "lucide-react";
@@ -99,6 +99,7 @@ function AdminLayout() {
         },
         // { icon: faUpload, name: 'Upload Center', path: '/admin/uploadCenter', show: true },
         { icon: faTools, name: 'Change Password', path: '/admin/changePassword', show: true },
+        { icon: faList, name: 'Menu Guide', path: '/admin/menuGuide', show: true },
         // { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
         // { icon: faExclamationTriangle, name: 'Data Deletion', path: '/admin/dataDeletion', show: true },
     ]
