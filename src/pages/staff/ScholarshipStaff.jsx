@@ -18,6 +18,7 @@ function ScholarshipStaff() {
     const [initialFormData, setInitialFormData] = useState({});
 
     useEffect(() => {
+
         const fetchStudents = async () => {
 
             try {

@@ -26,7 +26,6 @@ function DonorTable({ transactions }) {
                             ))}
                         </tr>
                     </thead>
-
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                         {transactions.length > 0 ? (
                             transactions.map((txn, index) => (

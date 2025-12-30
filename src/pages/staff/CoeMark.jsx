@@ -276,8 +276,8 @@ function CoeMark() {
                     <button
                         onClick={() => { handleDownloadExcel() }}
                         className="
-                            h-10 px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg shadow-md flex-shrink-0 w-full lg:w-auto
-                            hover:bg-indigo-700 transition duration-150 ease-in-out flex items-center justify-center
+                            h-10 px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg shadow-md flex-shrink-0 w-full lg:w-auto
+                            hover:bg-green-700 transition duration-150 ease-in-out flex items-center justify-center
                         "
                     >
                         {/* SVG Icon for download */}

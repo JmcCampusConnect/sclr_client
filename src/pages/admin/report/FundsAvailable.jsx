@@ -10,7 +10,7 @@ import DonorSearchBar from "../../../components/FundsAvailable/DonorSearchBar";
 import ButtonsBar from "../../../components/FundsAvailable/ButtonsBar";
 import Loading from "../../../assets/svg/Pulse.svg";
 
-const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
+const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-green-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 shadow-md";
 const secondaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600 transition";
 const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
 
@@ -100,11 +100,11 @@ function FundsAvailable() {
                 </h1>
             </header>
 
-            <ButtonsBar
+            {/* <ButtonsBar
                 primaryButtonClass={primaryButtonClass}
                 secondaryButtonClass={secondaryButtonClass}
                 handleDownloadExcel={handleDownloadExcel}
-            />
+            /> */}
 
             <DonorSearchBar
                 searchTerm={searchTerm}

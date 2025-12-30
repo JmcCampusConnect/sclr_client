@@ -18,15 +18,26 @@ const DonorTable = ({ donors, formatCurrency }) => (
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 text-gray-800 text-sm sm:text-base">
-                    {donors.map((donor, index) => (
-                        <tr key={index} className="hover:bg-gray-50 transition duration-200">
-                            <td className="px-6 py-4 font-semibold whitespace-nowrap">{donor.donorId}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{donor.donorType || "N/A"}</td>
-                            <td className="px-6 py-4">{donor.donorName || "Unknown"}</td>
-                            <td className="px-6 py-4">{formatCurrency(donor.generalBal || 0)}</td>
-                            <td className="px-6 py-4">{formatCurrency(donor.zakkathBal || 0)}</td>
+                    {donors.length > 0 ? (
+                        donors.map((donor, index) => (
+                            <tr key={index} className="hover:bg-gray-50 transition duration-200">
+                                <td className="px-6 py-4 font-semibold whitespace-nowrap">{donor.donorId}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{donor.donorType || "N/A"}</td>
+                                <td className="px-6 py-4">{donor.donorName || "Unknown"}</td>
+                                <td className="px-6 py-4">{formatCurrency(donor.generalBal || 0)}</td>
+                                <td className="px-6 py-4">{formatCurrency(donor.zakkathBal || 0)}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td
+                                colSpan="8"
+                                className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300"
+                            >
+                                No donors found.
+                            </td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
         </div>
