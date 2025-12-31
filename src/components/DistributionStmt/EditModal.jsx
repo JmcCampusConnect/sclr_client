@@ -169,11 +169,11 @@ const Input = ({ label, value, onChange, type = "text", readOnly, name }) => (
             {label} :
         </label>
         <input
-            type={type}
-            name={name}
+            type={type} name={name}
             value={value}
             onChange={onChange}
             readOnly={readOnly}
+            onWheel={type === "number" ? (e) => e.target.blur() : undefined}
             className={`w-full p-2.5 border rounded-lg outline-none transition focus:ring-2 focus:ring-blue-500 
                 ${readOnly
                     ? "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-500 cursor-not-allowed"
@@ -181,6 +181,6 @@ const Input = ({ label, value, onChange, type = "text", readOnly, name }) => (
                 }`}
         />
     </div>
-);
+)
 
 export default EditDistributionModal;

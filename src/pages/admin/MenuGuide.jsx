@@ -4,7 +4,7 @@ import {
     faChalkboard, faTools, faChartBar, faHandHoldingUsd,
     faHistory, faShieldAlt, faCircleInfo, faUserShield,
     faUserGraduate, faUserTie, faChevronRight, faIdCard,
-    faChartLine,
+    faChartLine, faHandHoldingHeart, faCalendarAlt, faCalendarCheck
 } from '@fortawesome/free-solid-svg-icons';
 
 function MenuGuide() {
@@ -62,6 +62,42 @@ function MenuGuide() {
                     'Displays finished, pending, and total counts for each verification stage.',
                     'Supports Odd, Even, and All semester filtering.',
                     'Covers COE marks, attendance, Deeniyath/Moral, scholarship, and tutor verification.'
+                ]
+            },
+            {
+                title: 'Distribution Statement',
+                icon: faHandHoldingHeart,
+                color: 'text-green-600',
+                badge: 'Admin',
+                desc: 'Scholarship distribution tracking for students.',
+                details: [
+                    'View and manage scholarship amounts distributed to students for the academic year.',
+                    'Tracks donor-wise General/Zakat allocations with automatic balance adjustments.',
+                    'Provides summary cards for applicants, beneficiaries, awarded funds, and total distribution.'
+                ]
+            },
+            {
+                title: 'Application Date (Application Settings)',
+                icon: faCalendarAlt,
+                color: 'text-orange-600',
+                badge: 'Admin',
+                desc: 'Control application open and close dates.',
+                details: [
+                    'Set the start and end dates for student applications.',
+                    'Automatically applies dates to the current academic year.',
+                    'Prevents applications outside the configured date range.'
+                ]
+            },
+            {
+                title: 'Academic Year (Application Settings)',
+                icon: faCalendarCheck,
+                color: 'text-indigo-600',
+                badge: 'Admin',
+                desc: 'Manage academic years and activation status.',
+                details: [
+                    'Create, edit, and delete academic years with application date ranges.',
+                    'Set one academic year as active while automatically deactivating others.',
+                    'Controls application availability and resets student semester-based settings.'
                 ]
             },
             {
