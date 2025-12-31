@@ -25,7 +25,6 @@ function Tutor() {
     const [batchs, setBatchs] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
 
-
     useEffect(() => {
 
         const fetchData = async () => {

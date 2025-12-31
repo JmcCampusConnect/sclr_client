@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faChalkboard, faTools, faChartBar, faHandHoldingUsd,
-    faHistory, faShieldAlt, faCircleInfo, faUserShield,
-    faUserGraduate, faUserTie, faChevronRight, faIdCard,
-    faChartLine, faHandHoldingHeart, faCalendarAlt, faCalendarCheck
+    faChalkboard, faTools, faHandHoldingUsd, faHistory,
+    faShieldAlt, faCircleInfo, faUserGraduate, faUserTie,
+    faIdCard, faChartLine, faHandHoldingHeart, faCalendarAlt,
+    faCalendarCheck, faUsers, faUserShield, faChartBar
 } from '@fortawesome/free-solid-svg-icons';
+import { motion } from 'framer-motion';
 
 function MenuGuide() {
 
@@ -16,8 +17,8 @@ function MenuGuide() {
             {
                 title: 'Dashboard',
                 icon: faChalkboard,
-                color: 'text-blue-600',
-                badge: 'All Roles',
+                gradient: 'from-blue-500 to-indigo-600',
+                badge: 'Unified Access',
                 desc: 'Your central hub for real-time scholarship tracking.',
                 details: [
                     'View overall statistics including total applications and benefitted students.',
@@ -29,7 +30,7 @@ function MenuGuide() {
             {
                 title: 'Change Password',
                 icon: faTools,
-                color: 'text-amber-600',
+                gradient: 'from-amber-400 to-orange-500',
                 badge: 'Security',
                 desc: 'Update and manage your account access credentials.',
                 details: [
@@ -43,8 +44,8 @@ function MenuGuide() {
             {
                 title: 'Check Application Status',
                 icon: faIdCard,
-                color: 'text-blue-600',
-                badge: 'Admin Only',
+                gradient: 'from-sky-500 to-blue-700',
+                badge: 'Verification',
                 desc: 'Check and manage student scholarship application status.',
                 details: [
                     'Search student application using register number.',
@@ -55,8 +56,8 @@ function MenuGuide() {
             {
                 title: 'Work Progress Report',
                 icon: faChartLine,
-                color: 'text-green-600',
-                badge: 'Admin / Staff',
+                gradient: 'from-emerald-500 to-teal-700',
+                badge: 'Analytics',
                 desc: 'Tracks semester-wise completion status of application verification processes.',
                 details: [
                     'Displays finished, pending, and total counts for each verification stage.',
@@ -67,8 +68,8 @@ function MenuGuide() {
             {
                 title: 'Distribution Statement',
                 icon: faHandHoldingHeart,
-                color: 'text-green-600',
-                badge: 'Admin',
+                gradient: 'from-green-500 to-emerald-600',
+                badge: 'Funds',
                 desc: 'Scholarship distribution tracking for students.',
                 details: [
                     'View and manage scholarship amounts distributed to students for the academic year.',
@@ -77,10 +78,24 @@ function MenuGuide() {
                 ]
             },
             {
-                title: 'Application Date (Application Settings)',
+                title: 'Donor Manage (Manage)',
+                icon: faUsers,
+                gradient: 'from-violet-500 to-purple-700',
+                badge: 'Donor Relations',
+                desc: 'Complete management of donors, funds, and transactions.',
+                details: [
+                    'Create, update, and remove donor profiles with full contact and identity details.',
+                    'Manage donor funds including adding, editing, and deleting General and Zakkath transactions.',
+                    'Automatically updates donor balances and syncs changes across transactions and distributions.',
+                    'View detailed transaction history with date-wise records for each donor.',
+                    'Ensures academic year–based data separation and accurate financial tracking.'
+                ]
+            },
+            {
+                title: 'Application Date (Settings)',
                 icon: faCalendarAlt,
-                color: 'text-orange-600',
-                badge: 'Admin',
+                gradient: 'from-orange-500 to-red-600',
+                badge: 'Lifecycle',
                 desc: 'Control application open and close dates.',
                 details: [
                     'Set the start and end dates for student applications.',
@@ -89,10 +104,10 @@ function MenuGuide() {
                 ]
             },
             {
-                title: 'Academic Year (Application Settings)',
+                title: 'Academic Year (Settings)',
                 icon: faCalendarCheck,
-                color: 'text-indigo-600',
-                badge: 'Admin',
+                gradient: 'from-indigo-500 to-blue-800',
+                badge: 'Core Config',
                 desc: 'Manage academic years and activation status.',
                 details: [
                     'Create, edit, and delete academic years with application date ranges.',
@@ -103,8 +118,8 @@ function MenuGuide() {
             {
                 title: 'Funds Available (Reports)',
                 icon: faHandHoldingUsd,
-                color: 'text-emerald-600',
-                badge: 'Admin Only',
+                gradient: 'from-cyan-500 to-blue-600',
+                badge: 'Financials',
                 desc: 'Real-time financial oversight of General and Zakat funds.',
                 details: [
                     'Displays opening balance and current available liquid funds.',
@@ -116,22 +131,22 @@ function MenuGuide() {
             {
                 title: 'Donor Transactions (Reports)',
                 icon: faHistory,
-                color: 'text-purple-600',
-                badge: 'Admin Only',
+                gradient: 'from-fuchsia-500 to-purple-800',
+                badge: 'Audit Trail',
                 desc: 'Detailed ledger of all financial contributions received.',
                 details: [
                     'Comprehensive list of all transactions for the current session.',
                     'Detailed tracking of Donor Name, Type, and specific Zakat/General amounts.',
                     'Filter by donor type or date range for periodic audit reports.'
                 ]
-            },
+            }
         ],
         staff: [
             {
                 title: 'Staff Portal Coming Soon',
                 icon: faUserTie,
-                color: 'text-slate-400',
-                badge: 'Pending',
+                gradient: 'from-slate-400 to-slate-600',
+                badge: 'Upcoming',
                 desc: 'Staff-specific management tools are being prepared.',
                 details: ['Application verification tools.', 'Student counseling logs.', 'Departmental report access.']
             }
@@ -140,8 +155,8 @@ function MenuGuide() {
             {
                 title: 'Student Portal Coming Soon',
                 icon: faUserGraduate,
-                color: 'text-slate-400',
-                badge: 'Pending',
+                gradient: 'from-slate-400 to-slate-600',
+                badge: 'Upcoming',
                 desc: 'Student-specific scholarship tracking.',
                 details: ['Application status tracking.', 'Document upload center.', 'History of received benefits.']
             }
@@ -162,75 +177,81 @@ function MenuGuide() {
     );
 
     return (
-        <div className="p-6">
-            {/* Page Title */}
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-800">
-                        <FontAwesomeIcon icon={faCircleInfo} className="text-emerald-600 mr-3" />
-                        Navigation & Usage Guide
-                    </h1>
-                    <p className="text-gray-500 text-sm mt-1">Select a role to view available menu functionalities.</p>
-                </div>
-                <div className="hidden md:block">
-                    <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
-                        JMC Alumni Scholarship
-                    </span>
-                </div>
-            </div>
+        <div className="text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900">
 
-            {/* Navigation Tabs */}
-            <div className="flex flex-wrap gap-1 border-b border-gray-200 mb-8">
-                <TabButton id="common" label="Common" icon={faUserShield} />
-                <TabButton id="admin" label="Admin" icon={faChartBar} />
-                <TabButton id="staff" label="Staff" icon={faUserTie} />
-                <TabButton id="student" label="Student" icon={faUserGraduate} />
-            </div>
+            {/* Minimalist Top Nav */}
+            <div className="p-6">
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-800">
+                            <FontAwesomeIcon icon={faCircleInfo} className="text-emerald-600 mr-3" />
+                            Navigation & Usage Guide
+                        </h1>
+                        <p className="text-gray-500 text-sm mt-1">Select a role to view available menu functionalities.</p>
+                    </div>
+                    <div className="hidden md:block">
+                        <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
+                            JMC Alumni Scholarship
+                        </span>
+                    </div>
+                </div>
 
-            {/* Content Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                {menuContent[activeTab].map((item, idx) => (
-                    <div key={idx} className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-all border-l-4" style={{ borderLeftColor: 'currentColor' }}>
-                        <div className="p-6">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className={`w-12 h-12 rounded-lg flex items-center justify-center bg-gray-50 ${item.color} group-hover:scale-110 transition-transform`}>
-                                    <FontAwesomeIcon icon={item.icon} size="lg" />
-                                </div>
-                                <span className="text-[10px] font-extrabold px-2 py-1 rounded bg-gray-100 text-gray-500 uppercase">
-                                    {item.badge}
-                                </span>
+                {/* Navigation Tabs */}
+                <div className="flex flex-wrap gap-1 border-b border-gray-200 mb-12">
+                    <TabButton id="common" label="Common" icon={faUserShield} />
+                    <TabButton id="admin" label="Admin" icon={faChartBar} />
+                    <TabButton id="staff" label="Staff" icon={faUserTie} />
+                    <TabButton id="student" label="Student" icon={faUserGraduate} />
+                </div>
+
+                {/* Grid Content */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {menuContent[activeTab].map((item, idx) => (
+                        <div
+                            key={idx}
+                            className="group relative bg-white rounded-[2rem] border border-slate-200 p-8 transition-all duration-500 hover:border-emerald-200 hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)]"
+                        >
+                            {/* Decorative Icon Hook */}
+                            <div className={`absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-br ${item.gradient} rounded-2xl shadow-lg flex items-center justify-center text-white transition-transform duration-500`}>
+                                <FontAwesomeIcon icon={item.icon} size="lg" />
                             </div>
 
-                            <h3 className="text-lg font-bold text-gray-800 mb-1">{item.title}</h3>
-                            <p className="text-sm text-gray-500 mb-4 line-clamp-2 italic mt-4">"{item.desc}"</p>
+                            <div className="mb-6">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-emerald-600 transition-colors">
+                                    {item.badge}
+                                </span>
+                                <h3 className="text-2xl font-bold mt-1 text-slate-800 tracking-tight">
+                                    {item.title}
+                                </h3>
+                            </div>
 
-                            <ul className="space-y-3 border-t border-gray-50 pt-1">
+                            <p className="text-slate-500 text-sm leading-relaxed mb-8 min-h-[40px]">
+                                {item.desc}
+                            </p>
+
+                            <div className="space-y-4">
                                 {item.details.map((detail, dIdx) => (
-                                    <li key={dIdx} className="flex items-start text-sm text-gray-600 group/item">
-                                        <FontAwesomeIcon
-                                            icon={faChevronRight}
-                                            className="mt-1 mr-3 text-[10px] text-emerald-500 opacity-50 group-hover/item:opacity-100 transition-opacity"
-                                        />
-                                        <span>{detail}</span>
-                                    </li>
+                                    <div key={dIdx} className="flex gap-4 group/line">
+                                        <div className="mt-1.5">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/line:bg-emerald-500 transition-colors" />
+                                        </div>
+                                        <p className="text-[13.5px] text-slate-600 leading-snug font-medium group-hover/line:text-slate-900 transition-colors">
+                                            {detail}
+                                        </p>
+                                    </div>
                                 ))}
-                            </ul>
-                        </div>
-                    </div>
-                ))}
-            </div>
+                            </div>
 
-            {/* Role Disclaimer */}
-            <div className="mt-10 p-4 bg-emerald-50 rounded-lg border border-emerald-100 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-emerald-600 shadow-sm shrink-0">
-                    <FontAwesomeIcon icon={faShieldAlt} />
+                            {/* Subtle background number */}
+                            <div className="absolute bottom-4 right-8 text-slate-50 text-6xl font-black pointer-events-none select-none">
+                                0{idx + 1}
+                            </div>
+                        </div>
+                    ))}
                 </div>
-                <p className="text-xs text-emerald-800 leading-relaxed">
-                    <strong>Note:</strong> Some menus are restricted based on your assigned permissions. If you are an <strong>Admin</strong>, you have access to both Common and Reporting tabs. Staff and Students are restricted to their respective modules.
-                </p>
             </div>
         </div>
-    )
+    );
 }
 
 export default MenuGuide;
