@@ -20,6 +20,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onS
     const donorTypeOptions = [
         { value: "Alumini", label: "Alumini" },
         { value: "Well Wishers", label: "Well Wishers" },
+        { value: "Others", label: "Others" },
     ]
 
     const amtTypeOptions = [
@@ -31,6 +32,9 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onS
         setLocalDonors(donors);
     }, [donors, showAcceptModal]);
 
+    useEffect(() => {
+        setSelectedDonor("");
+    }, [donorType]);
 
     useEffect(() => {
 

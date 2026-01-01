@@ -20,7 +20,7 @@ function DonorManage() {
     const [deleteDonor, setDeleteDonor] = useState(null);
     const [amtDonarModal, setAmtDonarModal] = useState(null);
     const [selectedCategories, setSelectedCategories] = useState([
-        "All", "Well Wishers", "Alumini"
+        "All", "Well Wishers", "Alumini", "Others"
     ]);
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -77,26 +77,33 @@ function DonorManage() {
         setSelectedCategories((prev) => {
             if (category === "All") {
                 if (!prev.includes("All")) {
-                    return ["All", "Well Wishers", "Alumini"];
+                    return ["All", "Well Wishers", "Alumini", "Others"];
                 }
                 return [];
             }
+
             let updated = prev.includes(category)
                 ? prev.filter((c) => c !== category)
                 : [...prev, category];
+
             if (updated.length === 0) return [];
+
             if (
                 !updated.includes("Well Wishers") ||
-                !updated.includes("Alumini")
+                !updated.includes("Alumini") ||
+                !updated.includes("Others")
             ) {
                 updated = updated.filter((x) => x !== "All");
             }
+
             if (
                 updated.includes("Well Wishers") &&
-                updated.includes("Alumini")
+                updated.includes("Alumini") &&
+                updated.includes("Others")
             ) {
-                updated = ["All", "Well Wishers", "Alumini"];
+                updated = ["All", "Well Wishers", "Alumini", "Others"];
             }
+
             return updated;
         });
     };

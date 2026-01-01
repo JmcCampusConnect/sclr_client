@@ -104,6 +104,7 @@ function AddDonorModal({ onClose, onAddDonor }) {
     const donorTypeOptions = [
         { value: "Alumini", label: "Alumini" },
         { value: "Well Wishers", label: "Well Wishers" },
+        { value: "Others", label: "Others" },
     ];
 
     return (

@@ -51,7 +51,8 @@ function EditDonorModal({ donorData, onClose, onUpdateDonor }) {
 
     const donorTypeOptions = [
         { value: "Alumini", label: "Alumini" },
-        { value: "Well Wisher", label: "Well Wisher" },
+        { value: "Well Wishers", label: "Well Wishers" },
+        { value: "Others", label: "Others" },
     ];
 
     return (
