@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../App.css";
 import axios from "axios";
-import SearchDropdown from "../../common/SearchDropdown";
+import SearchDropdown from "../../common/SearchDropDown";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onSubmissionSuccess }) {
@@ -307,17 +307,17 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onS
                         <div className="space-x-4">
                             <button
                                 type="button"
-                                onClick={handleSaveAll}
-                                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition"
-                            >
-                                Final Submit
-                            </button>
-                            <button
-                                type="button"
                                 onClick={closeModal}
                                 className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold transition"
                             >
                                 Close
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleSaveAll}
+                                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+                            >
+                                Final Submit
                             </button>
                         </div>
                     </div>
