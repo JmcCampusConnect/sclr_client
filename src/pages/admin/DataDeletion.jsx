@@ -10,6 +10,7 @@ const LABELS = {
     distribution: 'Distribution Logs',
     donor: 'Donor History',
     transaction: 'Financial Transactions',
+    staff: 'Staff Assignments',
 };
 
 const DataDeletion = () => {
@@ -95,29 +96,39 @@ const DataDeletion = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main Selection Area */}
                     <div className="lg:col-span-2 space-y-6">
-                        {Object.entries(data).map(([collection, values]) => (
-                            <div key={collection} className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                                <div className="bg-slate-50 px-6 py-4 border-bottom border-slate-200">
-                                    <h2 className="font-bold text-slate-700 uppercase text-xs tracking-wider">
-                                        {LABELS[collection] || collection}
-                                    </h2>
-                                </div>
-                                <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-3">
-                                    {values.map(val => (
-                                        <button
-                                            key={val}
-                                            onClick={() => toggle(collection, val)}
-                                            className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-all ${selected[collection]?.includes(val)
-                                                ? 'bg-red-50 border-red-200 text-red-700 ring-2 ring-red-100'
-                                                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                                                }`}
-                                        >
-                                            <span className="text-sm font-medium">{val}</span>
-                                        </button>
-                                    ))}
-                                </div>
+                        {Object.keys(data).length > 0 && Object.values(data).some(arr => arr.length > 0) ? (
+                            Object.entries(data).map(([collection, values]) => (
+                                values.length > 0 && (
+                                    <div key={collection} className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                                        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                                            <h2 className="font-bold text-slate-700 uppercase text-xs tracking-wider">
+                                                {LABELS[collection] || collection}
+                                            </h2>
+                                        </div>
+                                        <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-3">
+                                            {values.map(val => (
+                                                <button
+                                                    key={val}
+                                                    onClick={() => toggle(collection, val)}
+                                                    className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-all ${selected[collection]?.includes(val)
+                                                        ? 'bg-red-50 border-red-200 text-red-700 ring-2 ring-red-100'
+                                                        : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                                                        }`}
+                                                >
+                                                    <span className="text-sm font-medium">{val}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )
+                            ))
+                        ) : (
+                            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+                                <CheckCircle className="mx-auto text-slate-300 mb-4" size={48} />
+                                <h3 className="text-lg font-bold text-slate-800">Nothing to delete</h3>
+                                <p className="text-slate-500">All system records are currently cleared or no data matches the purge criteria.</p>
                             </div>
-                        ))}
+                        )}
                     </div>
 
                     {/* Action Sidebar */}
