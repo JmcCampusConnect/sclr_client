@@ -1,38 +1,178 @@
-import React from "react";
-import { Hammer } from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Trash2, Key, Loader, AlertTriangle, CheckCircle, Info } from 'lucide-react';
 
-function DataDeletion() {
+const apiUrl = import.meta.env.VITE_API_URL;
+
+const LABELS = {
+    application: 'Application Records',
+    student: 'Student Profiles',
+    distribution: 'Distribution Logs',
+    donor: 'Donor History',
+    transaction: 'Financial Transactions',
+};
+
+const DataDeletion = () => {
+
+    const [data, setData] = useState({});
+    const [selected, setSelected] = useState({});
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState({ type: '', message: '' });
+
+    useEffect(() => {
+        axios.get(`${apiUrl}/api/dataDeletion/fetchUniqueValues`)
+            .then(res => {
+                setData(res.data.data);
+                const init = {};
+                Object.keys(res.data.data).forEach(k => init[k] = []);
+                setSelected(init);
+            });
+    }, []);
+
+    const toggle = (collection, value) => {
+        setSelected(prev => ({
+            ...prev,
+            [collection]: prev[collection].includes(value)
+                ? prev[collection].filter(v => v !== value)
+                : [...prev[collection], value],
+        }));
+    };
+
+    const getTotalSelectedCount = () =>
+        Object.values(selected).reduce((acc, curr) => acc + curr.length, 0);
+
+    const handleDelete = async () => {
+        if (!password) {
+            setStatus({ type: 'error', message: 'Admin password is required.' });
+            return;
+        }
+
+        setLoading(true);
+        setStatus({ type: '', message: '' });
+
+        try {
+            const res = await axios.post(`${apiUrl}/api/dataDeletion/delete`, {
+                selections: selected,
+                adminPassword: password,
+            });
+            setStatus({
+                type: 'success',
+                message: `Data purged successfully. Summary: ${JSON.stringify(res.data.deletedSummary)}`
+            });
+            setPassword('');
+        } catch (err) {
+            setStatus({
+                type: 'error',
+                message: err.response?.data?.message || 'A server error occurred during deletion.'
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-center px-6">
-            <div className="bg-white shadow-xl rounded-2xl p-10 max-w-md w-full border border-gray-200">
-                <div className="flex justify-center mb-6">
-                    <div className="p-4 bg-indigo-100 rounded-full">
-                        <Hammer size={48} className="text-indigo-600" />
+        <div className="min-h-screen bg-slate-50 p-6">
+            <div className="mx-auto">
+                {/* Header */}
+                <div className="mb-8">
+                    <h1 className="text-4xl font-extrabold text-slate-900 flex items-center gap-3">
+                        <Trash2 className="text-red-600" size={36} />
+                        System Data Purge
+                    </h1>
+                    <p className="text-slate-500 mt-2 text-lg">Select specific academic years to permanently remove records from the database.</p>
+                </div>
+
+                {/* Warning Banner */}
+                <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mb-8 flex gap-3 items-start">
+                    <AlertTriangle className="text-amber-600 shrink-0" />
+                    <div>
+                        <h3 className="font-bold text-amber-800">Irreversible Action</h3>
+                        <p className="text-amber-700 text-sm">Deleting data will remove all associated files and logs. Please ensure you have a backup before proceeding.</p>
                     </div>
                 </div>
 
-                <h1 className="text-3xl font-bold text-gray-800 mb-3">
-                    Under Construction
-                </h1>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Main Selection Area */}
+                    <div className="lg:col-span-2 space-y-6">
+                        {Object.entries(data).map(([collection, values]) => (
+                            <div key={collection} className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                                <div className="bg-slate-50 px-6 py-4 border-bottom border-slate-200">
+                                    <h2 className="font-bold text-slate-700 uppercase text-xs tracking-wider">
+                                        {LABELS[collection] || collection}
+                                    </h2>
+                                </div>
+                                <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    {values.map(val => (
+                                        <button
+                                            key={val}
+                                            onClick={() => toggle(collection, val)}
+                                            className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-all ${selected[collection]?.includes(val)
+                                                ? 'bg-red-50 border-red-200 text-red-700 ring-2 ring-red-100'
+                                                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                                                }`}
+                                        >
+                                            <span className="text-sm font-medium">{val}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
-                <p className="text-gray-600 mb-6">
-                    This section is currently being built. We’re working to bring this feature to you soon.
-                </p>
+                    {/* Action Sidebar */}
+                    <div className="space-y-6">
+                        <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200 sticky top-8">
+                            <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <Info size={20} className="text-blue-500" />
+                                Selection Summary
+                            </h2>
 
-                <button
-                    onClick={() => window.location.reload()}
-                    className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold shadow hover:bg-indigo-700 transition-all duration-200"
-                >
-                    Refresh Later
-                </button>
+                            <div className="space-y-3 mb-6">
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-slate-500">Items selected : </span>
+                                    <span className="font-bold text-slate-900">{getTotalSelectedCount()} Categories</span>
+                                </div>
+                                <div className="border-t pt-3">
+                                    <label className="block text-sm font-semibold text-slate-700 mb-4 mt-2">Confirm Admin Password</label>
+                                    <div className="relative">
+                                        <Key className="absolute left-3 top-3 text-slate-400" size={18} />
+                                        <input
+                                            type="password"
+                                            placeholder="••••••••"
+                                            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all"
+                                            value={password}
+                                            onChange={e => setPassword(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={handleDelete}
+                                disabled={loading || getTotalSelectedCount() === 0}
+                                className={`w-full py-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-all shadow-lg ${loading || getTotalSelectedCount() === 0
+                                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                                    : 'bg-red-600 text-white hover:bg-red-700 active:scale-95'
+                                    }`}
+                            >
+                                {loading ? <Loader className="animate-spin" /> : <Trash2 size={20} />}
+                                {loading ? 'Processing...' : 'Execute Bulk Delete'}
+                            </button>
+
+                            {status.message && (
+                                <div className={`mt-4 p-4 rounded-lg flex gap-2 items-start text-sm ${status.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'
+                                    }`}>
+                                    {status.type === 'success' ? <CheckCircle size={16} className="shrink-0 mt-0.5" /> : <AlertTriangle size={16} className="shrink-0 mt-0.5" />}
+                                    <p>{status.message}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <p className="text-sm text-gray-500 mt-8">
-                © {new Date().getFullYear()} Data Management Portal
-            </p>
         </div>
-    )
-}
+    );
+};
 
 export default DataDeletion;

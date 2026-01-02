@@ -97,11 +97,10 @@ function AdminLayout() {
                 { name: "Donor Transactions", path: `/admin/donorTransactions` },
             ]
         },
-        // { icon: faUpload, name: 'Upload Center', path: '/admin/uploadCenter', show: true },
         { icon: faTools, name: 'Change Password', path: '/admin/changePassword', show: true },
         { icon: faList, name: 'Menu Guide', path: '/admin/menuGuide', show: true },
         // { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
-        // { icon: faExclamationTriangle, name: 'Data Deletion', path: '/admin/dataDeletion', show: true },
+        { icon: faExclamationTriangle, name: 'Data Deletion', path: '/admin/dataDeletion', show: true },
     ]
 
     return (
