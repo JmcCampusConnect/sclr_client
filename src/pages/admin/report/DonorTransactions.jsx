@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DonorActionBar from "../../../components/DonorTransactions/DonorActionBar";
@@ -9,12 +10,13 @@ function DonorTransactions() {
 
     const apiUrl = import.meta.env.VITE_API_URL;
     const [transactions, setTransactions] = useState([]);
+    const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
     const [filters, setFilters] = useState({
-        donorId: "all",
-        donorType: "all",
-        fromDate: "", toDate: "",
+        donorTypes: { all: true, wellWishers: true, alumni: true, others: true },
+        donorId: "all", fromDate: "", toDate: "",
     });
 
     useEffect(() => {
@@ -31,6 +33,57 @@ function DonorTransactions() {
         };
         fetchData();
     }, [apiUrl]);
+
+    // Apply filters whenever filters, transactions, or searchTerm change
+
+    useEffect(() => {
+
+        let result = [...transactions];
+
+        // Filter by donor type
+        const selectedTypes = [];
+        if (filters.donorTypes.wellWishers) selectedTypes.push("Well Wishers");
+        if (filters.donorTypes.alumni) selectedTypes.push("Alumini");
+        if (filters.donorTypes.others) selectedTypes.push("Others");
+
+        const allSelected = filters.donorTypes.wellWishers && filters.donorTypes.alumni && filters.donorTypes.others;
+
+        // If none selected -> no results
+        if (selectedTypes.length === 0) {
+            result = [];
+        } else if (!allSelected) {
+            // Filter by selected types
+            result = result.filter(txn => selectedTypes.includes(txn.donorType));
+        }
+
+        // Filter by donor ID
+        if (filters.donorId !== "all") {
+            result = result.filter(txn => txn.donorId === filters.donorId);
+        }
+
+        // Filter by date range
+        if (filters.fromDate) {
+            const fromDate = new Date(filters.fromDate);
+            result = result.filter(txn => new Date(txn.createdAt) >= fromDate);
+        }
+        if (filters.toDate) {
+            const toDate = new Date(filters.toDate);
+            toDate.setHours(23, 59, 59, 999);
+            result = result.filter(txn => new Date(txn.createdAt) <= toDate);
+        }
+
+        // Search filter (searches in displayed filtered data)
+        if (searchTerm.trim()) {
+            const lowerSearchTerm = searchTerm.toLowerCase();
+            result = result.filter(txn =>
+                txn.donorId.toLowerCase().includes(lowerSearchTerm) ||
+                txn.donorName.toLowerCase().includes(lowerSearchTerm) ||
+                txn.donorType.toLowerCase().includes(lowerSearchTerm)
+            );
+        }
+
+        setFilteredTransactions(result);
+    }, [filters, transactions, searchTerm]);
 
     if (loading) {
         return (
@@ -56,9 +109,13 @@ function DonorTransactions() {
                     Donor Transactions
                 </h1>
             </header>
-            <DonorFilters />
-            <DonorActionBar transactions={transactions} setFilters={setFilters} filters={filters} />
-            <DonorTable transactions={transactions} />
+            <DonorFilters filters={filters} setFilters={setFilters} />
+            <DonorActionBar
+                transactions={filteredTransactions}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
+            <DonorTable transactions={filteredTransactions} />
         </div>
     )
 }

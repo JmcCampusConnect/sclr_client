@@ -1,6 +1,6 @@
 import React from "react";
 
-function DonorActionBar({ transactions }) {
+function DonorActionBar({ transactions, searchTerm, setSearchTerm }) {
 
     return (
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
@@ -8,6 +8,8 @@ function DonorActionBar({ transactions }) {
             <input
                 type="text"
                 placeholder="🔍 Search donors..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="block w-full md:w-1/2 px-3 py-2 text-sm lg:text-base text-gray-700 bg-white 
                    border border-gray-300 rounded-lg shadow-sm 
                    focus:ring-indigo-500 focus:border-indigo-500 
