@@ -4,7 +4,8 @@ import {
     faChalkboard, faTools, faHandHoldingUsd, faHistory,
     faShieldAlt, faCircleInfo, faUserGraduate, faUserTie,
     faIdCard, faChartLine, faHandHoldingHeart, faCalendarAlt,
-    faCalendarCheck, faUsers, faUserShield, faChartBar
+    faCalendarCheck, faUsers, faUserShield, faChartBar,
+    faChalkboardTeacher, faBuilding
 } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
 
@@ -42,7 +43,7 @@ function MenuGuide() {
         ],
         admin: [
             {
-                title: 'Check Application Status',
+                title: 'Check Status',
                 icon: faIdCard,
                 gradient: 'from-sky-500 to-blue-700',
                 badge: 'Verification',
@@ -89,6 +90,62 @@ function MenuGuide() {
                     'Automatically updates donor balances and syncs changes across transactions and distributions.',
                     'View detailed transaction history with date-wise records for each donor.',
                     'Ensures academic year–based data separation and accurate financial tracking.'
+                ]
+            },
+            {
+                title: 'Student Manage (Manage)',
+                icon: faUserGraduate,
+                gradient: 'from-emerald-500 to-teal-700',
+                badge: 'Admin / Office',
+                desc: 'Manage student records, access control, and semester-based eligibility.',
+                details: [
+                    'View and manage all student records in a centralized table.',
+                    'Filter students by category, department, and semester-based status.',
+                    'Search students quickly using register number or name.',
+                    'Update student passwords securely.',
+                    'Enable or disable semester-based eligibility for students.',
+                ]
+            },
+            {
+                title: 'Tutor Manage (Manage)',
+                icon: faChalkboardTeacher,
+                gradient: 'from-violet-500 to-purple-700',
+                badge: 'Admin',
+                desc: 'Manage tutor profiles, assignments, and academic responsibilities.',
+                details: [
+                    'View and manage all tutor records in a centralized system.',
+                    'Filter tutors by category, department, and batch.',
+                    'Search tutors quickly using staff ID or name.',
+                    'Add, edit, and update tutor details as required.',
+                    'Remove tutor records securely when no longer needed.'
+                ]
+            },
+            {
+                title: 'Staff Manage (Manage)',
+                icon: faUserTie,
+                gradient: 'from-emerald-500 to-green-700',
+                badge: 'Admin',
+                desc: 'Manage staff login details and basic profile information.',
+                details: [
+                    'View all registered staff members in a centralized list.',
+                    'Search staff quickly using Staff ID or Staff Name.',
+                    'Edit and update staff name and password securely.',
+                    'Maintain controlled access by managing staff credentials.',
+                    'Ensure staff records stay updated and consistent.'
+                ]
+            },
+            {
+                title: 'Department Management',
+                icon: faBuilding,
+                gradient: 'from-blue-500 to-indigo-700',
+                badge: 'Admin',
+                desc: 'Centralized management of academic departments.',
+                details: [
+                    'View and manage the complete list of departments.',
+                    'Add new departments with unique code and name.',
+                    'Edit existing department details when required.',
+                    'Delete departments securely with confirmation.',
+                    'Search departments quickly by code or name.'
                 ]
             },
             {
@@ -180,7 +237,7 @@ function MenuGuide() {
         <div className="text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900">
 
             {/* Minimalist Top Nav */}
-            <div className="p-6">
+            <div className="p-2">
                 <div className="flex items-center justify-between mb-8">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-800">

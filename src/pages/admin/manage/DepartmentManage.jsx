@@ -10,6 +10,7 @@ import Loading from "../../../assets/svg/Pulse.svg";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function Department() {
+
     const [showAddModal, setShowAddModal] = useState(false);
     const [editDepartment, setEditDepartment] = useState(null);
     const [deleteDepartments, setDeleteDepartments] = useState(null);
