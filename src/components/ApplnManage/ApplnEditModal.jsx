@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import SearchDropdown from "../../common/SearchDropDown";
 import "../../App.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function ApplnEditModal({ application, onClose, onUpdate }) {
+function ApplnEditModal({application, onClose, onUpdate}) {
 
     const [formData, setFormData] = useState(null);
     const [errors, setErrors] = useState({});
@@ -15,15 +15,15 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
         departments: [],
         batches: [],
         semesters: [
-            { value: "I", label: "I" },
-            { value: "II", label: "II" },
-            { value: "III", label: "III" },
-            { value: "IV", label: "IV" },
-            { value: "V", label: "V" },
-            { value: "VI", label: "VI" },
+            {value: "I", label: "I"},
+            {value: "II", label: "II"},
+            {value: "III", label: "III"},
+            {value: "IV", label: "IV"},
+            {value: "V", label: "V"},
+            {value: "VI", label: "VI"},
         ],
-        sections: ["A", "B", "C", "D", "E", "F", "G", "H", "I"].map(v => ({ value: v, label: v })),
-        religions: ["Muslim", "Hindu", "Christian", "Others"].map(v => ({ value: v, label: v }))
+        sections: ["A", "B", "C", "D", "E", "F", "G", "H", "I"].map(v => ({value: v, label: v})),
+        religions: ["Muslim", "Hindu", "Christian", "Others"].map(v => ({value: v, label: v}))
     });
 
     useEffect(() => {
@@ -43,9 +43,9 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
                 const res = await axios.get(`${apiUrl}/api/common/fetchDropdownData`);
                 setDropdownData(prev => ({
                     ...prev,
-                    categories: [{ value: "All", label: "All" }, ...res.data.categories.map(c => ({ value: c, label: c.toUpperCase() }))],
-                    departments: [{ value: "All", label: "All" }, ...res.data.departments.map(d => ({ value: d.department, label: `${d.department} - ${d.departmentName}` }))],
-                    batches: [{ value: "All", label: "All" }, ...res.data.batches.map(b => ({ value: b, label: b }))]
+                    categories: [{value: "All", label: "All"}, ...res.data.categories.map(c => ({value: c, label: c.toUpperCase()}))],
+                    departments: [{value: "All", label: "All"}, ...res.data.departments.map(d => ({value: d.department, label: `${d.department} - ${d.departmentName}`}))],
+                    batches: [{value: "All", label: "All"}, ...res.data.batches.map(b => ({value: b, label: b}))]
                 }));
             } catch (err) {
                 console.error("Dropdown fetch error:", err);
@@ -64,30 +64,39 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
 
 
     const setByPath = (prev, path, value) => {
-        if (!path.includes(".")) return { ...prev, [path]: value };
+        if (!path.includes(".")) return {...prev, [path]: value};
         const parts = path.split(".");
         const key = parts[0];
         const rest = parts.slice(1).join(".");
-        return { ...prev, [key]: setNested(prev[key] ?? {}, rest, value) };
+        return {...prev, [key]: setNested(prev[key] ?? {}, rest, value)};
     };
 
     const setNested = (obj, path, value) => {
         const parts = path.split(".");
-        if (parts.length === 1) return { ...obj, [parts[0]]: value };
+        if (parts.length === 1) return {...obj, [parts[0]]: value};
         const [head, ...tail] = parts;
-        return { ...obj, [head]: setNested(obj[head] ?? {}, tail.join("."), value) };
+        return {...obj, [head]: setNested(obj[head] ?? {}, tail.join("."), value)};
     };
 
     const handleChange = (e) => {
-        const { name, value, type } = e.target;
-        const v = type === "number" ? (value === "" ? "" : Number(value)) : value;
+        const {name, value, type, files} = e.target;
+
+        let v;
+
+        if (type === "file") {
+            v = files[0] || null; // store File object
+        } else if (type === "number") {
+            v = value === "" ? "" : Number(value);
+        } else {
+            v = value;
+        }
         setFormData(prev => setByPath(prev, name, v));
-        setErrors(prev => ({ ...prev, [name]: "" }));
+        setErrors(prev => ({...prev, [name]: ""}));
     };
 
     const handleSelectChange = (name, option) => {
         setFormData(prev => setByPath(prev, name, option ? option.value : ""));
-        setErrors(prev => ({ ...prev, [name]: "" }));
+        setErrors(prev => ({...prev, [name]: ""}));
     };
 
     const validate = () => {
@@ -117,7 +126,6 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
     };
 
     const handleSubmit = async (e) => {
-
         e.preventDefault();
         if (!formData) return;
 
@@ -125,29 +133,52 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
         if (Object.keys(newErrors).length) return;
 
         try {
+            const data = new FormData();
 
-            const res = await axios.post(`${apiUrl}/api/manage/appln/updateApplication`, { formData, oldRegNo });
+            // append normal fields
+            Object.keys(formData).forEach(key => {
+                if (key !== "jamathLetter") {
+                    data.append(key, formData[key]);
+                }
+            });
+
+            // append file ONLY if user selected new one
+            if (formData.jamathLetter instanceof File) {
+                data.append("jamathLetter", formData.jamathLetter);
+            }
+
+            // old register no
+            data.append("oldRegNo", oldRegNo);
+
+            const res = await axios.post(
+                `${apiUrl}/api/manage/appln/updateApplication`,
+                data,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                }
+            );
+
             if (res.status === 200) {
                 alert(res.data.message || "Application updated successfully!");
-                onUpdate?.(formData); onClose();
+                onUpdate?.(formData);
+                onClose();
             }
+
         } catch (err) {
             console.error("Update application error:", err);
-            const status = err?.response?.status;
-            const msg = err?.response?.data?.message;
-            if (status === 401) alert(msg || "Unauthorized request.");
-            else if (status === 404) alert(msg || "Application not found.");
-            else alert("Server error while updating application.");
+            alert("Server error while updating application.");
         }
     };
 
     if (!formData) return null;
 
-    const graduateOptions = ["UG", "PG"].map(v => ({ value: v, label: v }));
+    const graduateOptions = ["UG", "PG"].map(v => ({value: v, label: v}));
     const categoryOptions = [
-        { value: 'Aided', label: 'AIDED' },
-        { value: 'SFM', label: 'SFM' },
-        { value: 'SFW', label: 'SFW' }
+        {value: 'Aided', label: 'AIDED'},
+        {value: 'SFM', label: 'SFM'},
+        {value: 'SFW', label: 'SFW'}
     ];
 
     return (
@@ -196,6 +227,38 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
                             <Input label="Deeniyath Remark" name="deeniyathMoralRemark" value={formData.deeniyathMoralRemark ?? ""} onChange={handleChange} />
                         </div>
                     </div>
+                    <div>
+                        {/* View existing file */}
+                        {formData.jamathLetter && (
+                            <div>
+                                <p>
+                                    <strong>Jamath Letter:</strong>{" "}
+                                    {typeof formData.jamathLetter === "string"
+                                        ? formData.jamathLetter
+                                        : formData.jamathLetter.name}
+                                </p>
+
+                                <img
+                                    src={
+                                        typeof formData.jamathLetter === "string"
+                                            ? `${apiUrl}/${formData.jamathLetter}`        // from DB
+                                            : URL.createObjectURL(formData.jamathLetter) // newly selected
+                                    }
+                                    alt="Jamath Letter Preview"
+                                    style={{width: "200px", marginTop: "10px"}}
+                                />
+                            </div>
+                        )}
+
+                        {/* Change file */}
+                        <input
+                            type="file"
+                            name="jamathLetter"
+                            accept="image/*"
+                            onChange={handleChange}
+                        />
+                    </div>
+
 
                     {/* Footer */}
                     <div className="flex justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
@@ -208,7 +271,7 @@ function ApplnEditModal({ application, onClose, onUpdate }) {
     );
 }
 
-const Input = ({ label, name, type = "text", value, onChange, error, ...props }) => (
+const Input = ({label, name, type = "text", value, onChange, error, ...props}) => (
     <div className="space-y-2">
         <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
             {label} : {props.required && <span className="text-red-500">*</span>}
