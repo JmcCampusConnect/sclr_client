@@ -74,6 +74,12 @@ function ScholarshipStaff() {
         );
     }
 
+    const schemeMap = {
+        JMCGSA: "Government Scholarship - Aided",
+        JMCGSM: "Government Scholarship - SFM",
+        JMCGSW: "Government Scholarship - SFW",
+    };
+
     if (error) return <p className="text-red-600">{error}</p>;
 
     const headers = [
@@ -82,13 +88,13 @@ function ScholarshipStaff() {
         { key: "name", label: "Name" },
         { key: "category", label: "Category" },
         { key: "department", label: "Department" },
-        { key: "applied", label: `${userId === "JMCTPS" ? "Applied for TPS" : "Applied for PPS"}` },
+        { key: "applied", label: `Government Scholarship` },
     ];
 
     return (
         <div>
-            <HeaderTag label={userId === "JMCTPS" ? "Tamil Puthalvan Scheme" : "Pudhumai Penn Scheme"} />
 
+            <HeaderTag label={schemeMap[userId] || "Scholarship"} />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-lg font-semibold">
                 <div className="bg-white border-l-4 border-blue-600 p-4 rounded shadow-md">
                     Total Applicants : <span className="float-right">{complete + pending}</span>

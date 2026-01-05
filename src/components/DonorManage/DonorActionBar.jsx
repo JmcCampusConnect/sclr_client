@@ -1,8 +1,50 @@
 import React from "react";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
 
 function DonorActionBar({ donors, handleSearch }) {
+
+    const handleDownloadExcel = () => {
+
+        if (!donors || donors.length === 0) {
+            alert("No donor records to download");
+            return;
+        }
+
+        const excelData = donors.map((donor) => ({
+            "Donor ID": donor.donorId,
+            "Donor Name": donor.donorName,
+            "Donor Type": donor.donorType,
+            "PAN / Aadhaar": donor.panOrAadhaar,
+            "Mobile No": donor.mobileNo,
+            "Email ID": donor.emailId,
+            "Address": donor.address,
+            "District": donor.district,
+            "State": donor.state,
+            "Pin Code": donor.pinCode,
+            "General Amount": donor.generalAmt,
+            "Zakkath Amount": donor.zakkathAmt,
+            "General Balance": donor.generalBal,
+            "Zakkath Balance": donor.zakkathBal,
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Donors");
+
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx", type: "array",
+        });
+
+        const file = new Blob([excelBuffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        saveAs(file, "Sclr Donor.xlsx");
+    };
 
     return (
         <>
@@ -78,6 +120,7 @@ function DonorActionBar({ donors, handleSearch }) {
 
                 {/* DOWNLOAD BUTTON */}
                 <button
+                    onClick={handleDownloadExcel}
                     className="
                         h-10 px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg shadow-md
                         hover:bg-green-700 transition duration-150 ease-in-out

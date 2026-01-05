@@ -113,7 +113,7 @@ function ProgressReport() {
         ...flattenReport(data.coe, "COE Report", false),
         ...flattenReport(data.attendance, "Class Attendance", true),
         ...flattenReport(data.deeniyath, "Deeniyath & Moral", true),
-        ...flattenReport(data.sclr, "Govt. Scholarship", false),
+        ...flattenReport(data.sclr, "Govt. Scholarship", true),
         ...flattenReport(data.tutor, "Tutor Verification", false),
     ];
 

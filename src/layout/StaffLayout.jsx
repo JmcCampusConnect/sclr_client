@@ -25,9 +25,10 @@ function StaffLayout() {
         JMCMW: 'Moral Women',
     }
 
-    const sclrMap = {
-        JMCTPS: 'Tamil Puthalvan Scheme',
-        JMCPPS: 'Pudhumai Penn Scheme',
+    const scholarshipMap = {
+        JMCGSA: 'Govt Scholarship Aided',
+        JMCGSM: 'Govt Scholarship SFM',
+        JMCGSW: 'Govt Scholarship SFW',
     }
 
     const coeMap = {
@@ -37,20 +38,20 @@ function StaffLayout() {
     const restrictedUsers = [
         ...Object.keys(attendanceMap),
         ...Object.keys(subjectMap),
-        ...Object.keys(sclrMap),
+        ...Object.keys(scholarshipMap),
         ...Object.keys(coeMap)
     ]
 
     const attendanceName = attendanceMap[userId] || null;
     const subjectName = subjectMap[userId] || null;
-    const sclrName = sclrMap[userId] || null;
+    const sclrName = scholarshipMap[userId] || null;
 
     const menus = [
         { icon: faChalkboard, name: 'Dashboard', path: `/staff/${userId}/dashboard`, show: true },
         { icon: faClipboardList, name: attendanceName, path: `/staff/${userId}/classAttendance`, show: Object.keys(attendanceMap).includes(userId) },
         { icon: faBook, name: subjectName, path: `/staff/${userId}/dmAttendance`, show: Object.keys(subjectMap).includes(userId) },
         { icon: faBuilding, name: 'COE', path: `/staff/${userId}/markEntry`, show: userId === 'JMCCOE' },
-        { icon: faFilePen, name: sclrName, path: `/staff/${userId}/scholarshipStaff`, show: Object.keys(sclrMap).includes(userId) },
+        { icon: faFilePen, name: sclrName, path: `/staff/${userId}/scholarshipStaff`, show: Object.keys(scholarshipMap).includes(userId) },
         { icon: faFilePen, name: 'Student Verification', path: `/staff/${userId}/tutorVerification`, show: !restrictedUsers.includes(userId), },
         { icon: faTools, name: 'Change Password', path: `/staff/${userId}/changePassword`, show: true },
     ]
