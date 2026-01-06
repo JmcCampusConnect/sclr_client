@@ -29,10 +29,13 @@ export const StatusMessage = ({ type, message }) => {
     }
     return (
         <div className={`p-4 rounded-lg border ${colors[type]}`}>
-            <p className="font-semibold">{message}</p>
+            <div className="font-semibold">
+                {message}
+            </div>
         </div>
-    )
-}
+    );
+};
+
 
 export const TableRow = ({ label, children }) => (
     <tr className="">
