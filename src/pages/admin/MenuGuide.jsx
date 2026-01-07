@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChalkboard, faTools, faHandHoldingUsd, faHistory,
-    faShieldAlt, faCircleInfo, faUserGraduate, faUserTie,
+    faTrashAlt, faCircleInfo, faUserGraduate, faUserTie,
     faIdCard, faChartLine, faHandHoldingHeart, faCalendarAlt,
     faCalendarCheck, faUsers, faUserShield, faChartBar,
     faChalkboardTeacher, faBuilding
@@ -45,7 +45,7 @@ function MenuGuide() {
             {
                 title: 'Check Status',
                 icon: faIdCard,
-                gradient: 'from-sky-500 to-blue-700',
+                gradient: 'from-cyan-500 to-sky-700',
                 badge: 'Verification',
                 desc: 'Check and manage student scholarship application status.',
                 details: [
@@ -57,7 +57,7 @@ function MenuGuide() {
             {
                 title: 'Work Progress Report',
                 icon: faChartLine,
-                gradient: 'from-emerald-500 to-teal-700',
+                gradient: 'from-emerald-500 to-lime-700',
                 badge: 'Analytics',
                 desc: 'Tracks semester-wise completion status of application verification processes.',
                 details: [
@@ -69,7 +69,7 @@ function MenuGuide() {
             {
                 title: 'Distribution Statement',
                 icon: faHandHoldingHeart,
-                gradient: 'from-green-500 to-emerald-600',
+                gradient: 'from-green-500 to-teal-600',
                 badge: 'Funds',
                 desc: 'Scholarship distribution tracking for students.',
                 details: [
@@ -81,7 +81,7 @@ function MenuGuide() {
             {
                 title: 'Donor Manage (Manage)',
                 icon: faUsers,
-                gradient: 'from-violet-500 to-purple-700',
+                gradient: 'from-purple-500 to-fuchsia-700',
                 badge: 'Donor Relations',
                 desc: 'Complete management of donors, funds, and transactions.',
                 details: [
@@ -93,9 +93,23 @@ function MenuGuide() {
                 ]
             },
             {
+                title: 'Application Manage (Manage)',
+                icon: faIdCard,
+                gradient: 'from-indigo-500 to-violet-700',
+                badge: 'Admin / Office',
+                desc: 'View, filter, edit, and manage student scholarship applications for the active academic year.',
+                details: [
+                    'View all applications for the current academic year.',
+                    'Filter by category, department, batch, and semester.',
+                    'Search applications by register number or name.',
+                    'Edit application, student, and academic details.',
+                    'Delete individual applications when required.'
+                ]
+            },
+            {
                 title: 'Student Manage (Manage)',
                 icon: faUserGraduate,
-                gradient: 'from-emerald-500 to-teal-700',
+                gradient: 'from-teal-500 to-emerald-700',
                 badge: 'Admin / Office',
                 desc: 'Manage student records, access control, and semester-based eligibility.',
                 details: [
@@ -103,13 +117,13 @@ function MenuGuide() {
                     'Filter students by category, department, and semester-based status.',
                     'Search students quickly using register number or name.',
                     'Update student passwords securely.',
-                    'Enable or disable semester-based eligibility for students.',
+                    'Enable or disable semester-based eligibility for students.'
                 ]
             },
             {
                 title: 'Tutor Manage (Manage)',
                 icon: faChalkboardTeacher,
-                gradient: 'from-violet-500 to-purple-700',
+                gradient: 'from-violet-500 to-indigo-700',
                 badge: 'Admin',
                 desc: 'Manage tutor profiles, assignments, and academic responsibilities.',
                 details: [
@@ -123,7 +137,7 @@ function MenuGuide() {
             {
                 title: 'Staff Manage (Manage)',
                 icon: faUserTie,
-                gradient: 'from-emerald-500 to-green-700',
+                gradient: 'from-green-500 to-emerald-800',
                 badge: 'Admin',
                 desc: 'Manage staff login details and basic profile information.',
                 details: [
@@ -137,7 +151,7 @@ function MenuGuide() {
             {
                 title: 'Department Management',
                 icon: faBuilding,
-                gradient: 'from-blue-500 to-indigo-700',
+                gradient: 'from-blue-500 to-cyan-700',
                 badge: 'Admin',
                 desc: 'Centralized management of academic departments.',
                 details: [
@@ -151,7 +165,7 @@ function MenuGuide() {
             {
                 title: 'Application Date (Settings)',
                 icon: faCalendarAlt,
-                gradient: 'from-orange-500 to-red-600',
+                gradient: 'from-orange-500 to-amber-600',
                 badge: 'Lifecycle',
                 desc: 'Control application open and close dates.',
                 details: [
@@ -163,7 +177,7 @@ function MenuGuide() {
             {
                 title: 'Academic Year (Settings)',
                 icon: faCalendarCheck,
-                gradient: 'from-indigo-500 to-blue-800',
+                gradient: 'from-indigo-600 to-blue-900',
                 badge: 'Core Config',
                 desc: 'Manage academic years and activation status.',
                 details: [
@@ -175,7 +189,7 @@ function MenuGuide() {
             {
                 title: 'Funds Available (Reports)',
                 icon: faHandHoldingUsd,
-                gradient: 'from-cyan-500 to-blue-600',
+                gradient: 'from-cyan-500 to-sky-600',
                 badge: 'Financials',
                 desc: 'Real-time financial oversight of General and Zakat funds.',
                 details: [
@@ -188,13 +202,27 @@ function MenuGuide() {
             {
                 title: 'Donor Transactions (Reports)',
                 icon: faHistory,
-                gradient: 'from-fuchsia-500 to-purple-800',
+                gradient: 'from-pink-500 to-rose-800',
                 badge: 'Audit Trail',
                 desc: 'Detailed ledger of all financial contributions received.',
                 details: [
                     'Comprehensive list of all transactions for the current session.',
                     'Detailed tracking of Donor Name, Type, and specific Zakat/General amounts.',
                     'Filter by donor type or date range for periodic audit reports.'
+                ]
+            },
+            {
+                title: 'Data Deletion',
+                icon: faTrashAlt,
+                gradient: 'from-red-600 to-rose-800',
+                badge: 'Critical Admin Action',
+                desc: 'Permanently delete academic-year–based records across system modules with admin verification.',
+                details: [
+                    'Delete records by academic year across multiple modules.',
+                    'Supports purge of non-admin staff assignments.',
+                    'Admin password confirmation required.',
+                    'Shows selection count and deletion summary.',
+                    'Permanent and irreversible action.'
                 ]
             }
         ],

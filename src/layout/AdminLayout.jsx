@@ -99,7 +99,7 @@ function AdminLayout() {
         },
         { icon: faTools, name: 'Change Password', path: '/admin/changePassword', show: true },
         { icon: faList, name: 'Menu Guide', path: '/admin/menuGuide', show: true },
-        // { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
+        { icon: faMapSigns, name: 'Guidelines', path: '/admin/guidelines', show: true },
         { icon: faExclamationTriangle, name: 'Data Deletion', path: '/admin/dataDeletion', show: true },
     ]
 
