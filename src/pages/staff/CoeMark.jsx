@@ -28,6 +28,7 @@ function CoeMark() {
         { key: 'regNo', label: 'Reg No', style: { width: '12%' } },
         { key: 'name', label: 'Name', style: { width: '12%' } },
         { key: 'department', label: 'Department', style: { width: '12%' } },
+        { key: 'semester', label: 'Semester', style: { width: '10%' } },
         { key: 'maxMark', label: 'Max Mark', style: { width: '10%' } },
         { key: 'markSecured', label: 'Mark Secured', style: { width: '10%' } },
         { key: 'percent', label: 'Percent %', style: { width: '10%' } },
@@ -41,31 +42,49 @@ function CoeMark() {
             setError(null);
             try {
                 const Students = await fetchData(`${apiUrl}/api/staff/coe/students`, {});
-                setStudentsData(Students.data?.data || []);
-                setStatusCount(Students.data.counts)
+                const semesterOrder = {
+                    I: 1, II: 2, III: 3,
+                    IV: 4, V: 5, VI: 6
+                };
+                const sortedData = (Students.data?.data || []).sort(
+                    (a, b) =>
+                        (semesterOrder[a.semester] || 99) -
+                        (semesterOrder[b.semester] || 99)
+                );
+                setStudentsData(sortedData);
+                setStatusCount(Students.data.counts);
             } catch (err) {
                 if (err.response && err.response.status === 404) {
                     setError(err.response?.data?.message || "Server error");
                 } else {
-                    console.error('Something error on fetch student for coe:', err);
+                    console.error("Something error on fetch student for COE:", err);
                 }
             } finally { setIsLoading(false) }
-        }
-        fetchStudents()
-    }, []);
+        };
+        fetchStudents();
+    }, [apiUrl]);
+
 
     // FOR HANDLE INPUT CHANGE FOR PERCENTAGE
     const handleMarkChange = (index, field, value) => {
+
         setStudentsData((prev) => {
             const updated = [...prev];
             const student = { ...updated[index] };
             if (field === "maxMark" || field === "markSecured") {
-                const newVal = value === "" ? "" : Number(value);
+                let newVal = value === "" ? "" : Number(value);
+                if (field === "markSecured") {
+                    const max = Number(student.maxMark) || 0;
+                    if (newVal > max) {
+                        return prev;
+                    }
+                }
                 student[field] = newVal;
                 const secured = Number(student.markSecured) || 0;
                 const max = Number(student.maxMark) || 0;
                 student.semesterMarkPercentage = max > 0 ? (secured / max) * 100 : -1;
-            } else if (field === "arrears") {
+            }
+            else if (field === "arrears") {
                 student.semesterArrear = value === "" ? "" : Number(value);
             }
             updated[index] = student;
@@ -89,15 +108,25 @@ function CoeMark() {
 
     // SAVING MARK 
     const handleSubmitMark = async () => {
+
+        const invalidStudent = StudentsData.find(st =>
+            st.maxMark !== "" &&
+            st.maxMark !== undefined &&
+            st.maxMark !== null &&
+            (st.markSecured === "" || st.markSecured === undefined || st.markSecured === null)
+        );
+
+        if (invalidStudent) {
+            alert(`Please enter mark secured for register no : ${invalidStudent.registerNo}`);
+            return;
+        }
+
         try {
             const normalizedStudents = changedStudents.map(st => ({
-                ...st,
-                semesterArrear:
+                ...st, semesterArrear:
                     st.semesterArrear === "" ||
                         st.semesterArrear === undefined ||
-                        st.semesterArrear === null
-                        ? 0
-                        : st.semesterArrear
+                        st.semesterArrear === null ? 0 : st.semesterArrear
             }));
 
             const Students = await addData(
@@ -112,8 +141,9 @@ function CoeMark() {
             }
         } catch (error) {
             console.log('Something error in saving mark in COE : ', error);
+            alert("Something error in saving mark in COE");
         }
-    };
+    }
 
     if (isLoading) {
         return (
@@ -143,7 +173,7 @@ function CoeMark() {
         const excelData = StudentsData.map((st) => ({
             _id: st._id,
             "registerNo": st.registerNo, "name": st.name,
-            "department": st.department,
+            "department": st.department, "semester": st.semester,
             "semesterMarkPercentage": st.semesterMarkPercentage === -1 ? "" : st.semesterMarkPercentage.toFixed(2),
             "semesterArrear": "",
         }));
@@ -175,7 +205,12 @@ function CoeMark() {
                 const data = new Uint8Array(e.target.result);
                 const workbook = XLSX.read(data, { type: "array" });
                 const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                const jsonData = XLSX.utils.sheet_to_json(sheet);
+                const jsonData = XLSX.utils.sheet_to_json(sheet).map(row => ({
+                    _id: row._id,
+                    semesterMarkPercentage: row.semesterMarkPercentage,
+                    semesterArrear: row.semesterArrear,
+                    semesterGrade: row.semesterGrade
+                }));
                 const res = await addData(`${apiUrl}/api/fileUpload/uploadMarkExcel`, { excelData: jsonData });
                 if (res.status === 200) {
                     alert("Uploaded successfully");
@@ -331,6 +366,11 @@ function CoeMark() {
                                         {/* Department */}
                                         <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                             {student.department}
+                                        </td>
+
+                                        {/* Semester */}
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {student.semester}
                                         </td>
 
                                         {/* Max Mark */}
