@@ -29,9 +29,13 @@ function DmAttendance() {
             setError(null);
             try {
                 const response = await fetchData(`${apiUrl}/api/staff/dm/studentsDM`, { userId });
-                setStudents(response.data.students || []);
+                const semesterOrder = ["I", "II", "III", "IV", "V", "VI"];
+                const sortedStudents = (response.data.students || []).sort(
+                    (a, b) => semesterOrder.indexOf(a.semester) - semesterOrder.indexOf(b.semester)
+                );
+                setStudents(sortedStudents);
                 setCount(response.data.counts);
-                setStaffData(response.data.StaffData[0])
+                setStaffData(response.data.StaffData[0]);
             } catch (error) {
                 setError("Failed to load student data. Please try again later.");
                 console.log("Error while fetching students : ", error);
@@ -75,21 +79,29 @@ function DmAttendance() {
     };
 
     const onStudentDaysChange = (registerNo, type, val, semester) => {
-
+        // Check if global working days are entered
         if (!validateGlobalWorkingDaysBeforeStudentInput(type)) return;
+
         const maxPrev = parseInt(prevYearWorkingDays) || Number.MAX_SAFE_INTEGER;
         const maxCurr = parseInt(currYearWorkingDays) || Number.MAX_SAFE_INTEGER;
+
+        // Only allow numbers
         if (!/^\d*$/.test(val)) return;
-        if (type === "prev" && val !== "" && parseInt(val) > maxPrev) return;
-        if (type === "curr" && val !== "" && parseInt(val) > maxCurr) return;
 
+        // If value exceeds max, remove it (set to "")
+        if ((type === "prev" && val !== "" && parseInt(val) > maxPrev) ||
+            (type === "curr" && val !== "" && parseInt(val) > maxCurr)) {
+            val = ""; // <-- removes the value
+        }
+
+        // Get existing record or create new
         let record = editedStudents[registerNo] || { prev: "", curr: "", percentage: "0.00", remark: "Good" };
-
         record = { ...record, [type]: val };
 
         const prevVal = record.prev === "" ? 0 : parseInt(record.prev);
         const currVal = record.curr === "" ? 0 : parseInt(record.curr);
 
+        // Calculate percentage
         let totalAllowed;
         let percentage = "0.00";
 
@@ -107,12 +119,16 @@ function DmAttendance() {
 
         record.percentage = percentage;
 
+        // Default remark to "Good"
         if (!(registerNo in editedStudents) || !editedStudents[registerNo].hasOwnProperty('remark')) {
             record.remark = "Good";
         }
 
+        // Update state
         setEditedStudents(prev => ({ ...prev, [registerNo]: record }));
     };
+
+
 
     const onStudentRemarkChange = (registerNo, val) => {
         let record = editedStudents[registerNo] || { prev: "", curr: "", percentage: "0.00", remark: "" };
@@ -205,7 +221,7 @@ function DmAttendance() {
                         {/* Table Head */}
                         <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10 h-15">
                             <tr>
-                                {["S.No", "Reg No", "Name", "Department", "Prev Year", "Curr Year", "Percentage", "Remarks"].map((heading, idx) => (
+                                {["S.No", "Reg No", "Name", "Department", "Semester", "Prev Year", "Curr Year", "Percentage", "Remarks"].map((heading, idx) => (
                                     <th
                                         key={idx}
                                         className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold 
@@ -255,7 +271,12 @@ function DmAttendance() {
 
                                             {/* Department */}
                                             <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-                                                {student.department || student.dept}
+                                                {student.department}
+                                            </td>
+
+                                            {/* Semester */}
+                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                                {student.semester}
                                             </td>
 
                                             {/* Prev Year */}
@@ -267,38 +288,33 @@ function DmAttendance() {
                                                         type="number"
                                                         value={edited.prev ?? ""}
                                                         onChange={(e) => {
-                                                            const val = e.target.value;
-                                                            if (val === "" || handleDayInput(val, maxPrev)) {
-                                                                onStudentDaysChange(student.registerNo, "prev", val, student.semester);
-                                                            }
+                                                            onStudentDaysChange(student.registerNo, "prev", e.target.value, student.semester);
                                                         }}
                                                         onFocus={(e) =>
                                                             e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false })
                                                         }
                                                         className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg 
-                                                       text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400
-                                                       dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
+                                                        text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400
+                                                        dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                                                     />
                                                 )}
                                             </td>
 
                                             {/* Curr Year */}
                                             <td className="px-4 py-4">
+                                                {/* Curr Year */}
                                                 <input
                                                     type="number"
                                                     value={edited.curr ?? ""}
                                                     onChange={(e) => {
-                                                        const val = e.target.value;
-                                                        if (val === "" || handleDayInput(val, maxCurr)) {
-                                                            onStudentDaysChange(student.registerNo, "curr", val, student.semester);
-                                                        }
+                                                        onStudentDaysChange(student.registerNo, "curr", e.target.value, student.semester);
                                                     }}
                                                     onFocus={(e) =>
                                                         e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false })
                                                     }
                                                     className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg 
-                                                   text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400
-                                                   dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
+                                                    text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400
+                                                    dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                                                 />
                                             </td>
 

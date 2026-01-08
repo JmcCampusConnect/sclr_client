@@ -32,9 +32,13 @@ function ClassAttendance() {
                 const response = await fetchData(`${apiUrl}/api/staff/class/students`, { userId });
                 if (response.status === 200) {
                     setStaffData(response.data.staffData);
-                    setStudents(response.data.studentData);
-                    setCount(response.data.counts)
-                    setStudentRows(response.data.studentData.map(stu => ({
+                    const semesterOrder = ["I", "II", "III", "IV", "V", "VI"];
+                    const sortedStudents = response.data.studentData.sort(
+                        (a, b) => semesterOrder.indexOf(a.semester) - semesterOrder.indexOf(b.semester)
+                    );
+                    setStudents(sortedStudents);
+                    setCount(response.data.counts);
+                    setStudentRows(sortedStudents.map(stu => ({
                         _id: stu._id,
                         regNo: stu.registerNo,
                         prevSem: stu.semester === "I" ? 100 : "",
@@ -102,6 +106,7 @@ function ClassAttendance() {
     // FUNCTION FOR CALCULATE PERCENTAGE
 
     const handleWorkingDaysChange = (value) => {
+
         if (value !== "") {
             let val = parseFloat(value);
             if (isNaN(val) || val <= 0) {
@@ -206,7 +211,7 @@ function ClassAttendance() {
                         {/* Table Head */}
                         <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10 h-15">
                             <tr>
-                                {["S.No", "Reg No", "Name", "Department", "Prev Sem (%)", "Curr Sem Attended", "Percentage", "Remarks"].map((heading, idx) => (
+                                {["S.No", "Reg No", "Name", "Department", "Semester", "Prev Sem (%)", "Curr Sem Attended", "Percentage", "Remarks"].map((heading, idx) => (
                                     <th
                                         key={idx}
                                         className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap"
@@ -243,6 +248,11 @@ function ClassAttendance() {
                                         {/* Department */}
                                         <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                             {stu.department}
+                                        </td>
+
+                                        {/* Semester */}
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {stu.semester}
                                         </td>
 
                                         {/* Prev Sem (%) */}

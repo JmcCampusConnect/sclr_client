@@ -76,15 +76,14 @@ function CoeMark() {
                 if (field === "markSecured") {
                     const max = Number(student.maxMark) || 0;
                     if (newVal > max) {
-                        return prev;
+                        newVal = "";
                     }
                 }
                 student[field] = newVal;
                 const secured = Number(student.markSecured) || 0;
                 const max = Number(student.maxMark) || 0;
-                student.semesterMarkPercentage = max > 0 ? (secured / max) * 100 : -1;
-            }
-            else if (field === "arrears") {
+                student.semesterMarkPercentage = max > 0 && secured !== "" ? (secured / max) * 100 : -1;
+            } else if (field === "arrears") {
                 student.semesterArrear = value === "" ? "" : Number(value);
             }
             updated[index] = student;
@@ -101,9 +100,9 @@ function CoeMark() {
                     newArr[existsIndex] = changedStudent;
                     return newArr;
                 } else { return [...prev, changedStudent] }
-            })
+            });
             return updated;
-        })
+        });
     }
 
     // SAVING MARK 
