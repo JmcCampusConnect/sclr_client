@@ -106,16 +106,20 @@ const DataDeletion = () => {
                                             </h2>
                                         </div>
                                         <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-3">
-                                            {values.map(val => (
+                                            {values.map(item => (
                                                 <button
-                                                    key={val}
-                                                    onClick={() => toggle(collection, val)}
-                                                    className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-all ${selected[collection]?.includes(val)
-                                                        ? 'bg-red-50 border-red-200 text-red-700 ring-2 ring-red-100'
-                                                        : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                                                    key={item._id}
+                                                    onClick={() => toggle(collection, item._id)}
+                                                    className={`flex flex-col items-center justify-center px-4 py-3 rounded-lg border transition-all
+                                                        ${selected[collection]?.includes(item._id)
+                                                            ? 'bg-red-50 border-red-200 text-red-700 ring-2 ring-red-100'
+                                                            : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                                                         }`}
                                                 >
-                                                    <span className="text-sm font-medium">{val}</span>
+                                                    <span className="text-sm font-semibold">{item._id}</span>
+                                                    <span className="text-xs text-slate-400 mt-3">
+                                                        {item.count} records
+                                                    </span>
                                                 </button>
                                             ))}
                                         </div>
