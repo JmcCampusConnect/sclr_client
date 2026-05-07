@@ -15,17 +15,14 @@ function ChangePassword() {
 
     const validateForm = () => {
         const errors = {};
-
         if (!formData.newPassword.trim()) {
             errors.newPassword = "This field is required";
         }
-
         if (!formData.confirmPassword.trim()) {
             errors.confirmPassword = "This field is required";
         } else if (formData.confirmPassword !== formData.newPassword) {
             errors.confirmPassword = "Passwords do not match";
         }
-
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
