@@ -59,14 +59,6 @@ function FundsAvailable() {
             d.donorType?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleDownloadExcel = () => {
-        const ws = XLSX.utils.json_to_sheet(donors);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Donors");
-        const wbout = XLSX.write(wb, { type: "array", bookType: "xlsx" });
-        saveAs(new Blob([wbout], { type: "application/octet-stream" }), "FundsAvailable.xlsx");
-    };
-
     const openGeneral = data?.generalAmt || 0;
     const openZakat = data?.zakkathAmt || 0;
     const totalGeneral = data?.generalBal || 0;

@@ -14,7 +14,6 @@ function DonorFilters({ filters, setFilters }) {
             try {
                 const res = await axios.get(`${apiUrl}/api/common/fetchDropdownData`);
                 setAllDonors(res.data.donors || []);
-                console.log(res.data.donors)
             } catch (err) {
                 console.error("Dropdown fetch error : ", err);
             }
@@ -25,41 +24,65 @@ function DonorFilters({ filters, setFilters }) {
     // Filter donors based on selected donor types
 
     useEffect(() => {
+
         const selectedTypes = [];
+
         if (filters.donorTypes.wellWishers) selectedTypes.push("Well Wishers");
         if (filters.donorTypes.alumni) selectedTypes.push("Alumini");
         if (filters.donorTypes.others) selectedTypes.push("Others");
+
         let filteredDonors = allDonors;
-        const allSelected = filters.donorTypes.wellWishers && filters.donorTypes.alumni && filters.donorTypes.others;
+
+        const allSelected =
+            filters.donorTypes.wellWishers &&
+            filters.donorTypes.alumni &&
+            filters.donorTypes.others;
 
         // If none selected -> no donors
         if (selectedTypes.length === 0) {
             filteredDonors = [];
         } else if (!allSelected) {
-            // Filter by selected types
-            filteredDonors = allDonors.filter(d => {
+            filteredDonors = allDonors.filter((d) => {
                 const match = selectedTypes.includes(d.donorType);
-                console.log(`Checking donor ${d.donorId} (${d.donorName}): type="${d.donorType}", match=${match}`);
+
+                console.log(
+                    `Checking donor ${d.donorId} (${d.donorName}): type="${d.donorType}", match=${match}`
+                );
+
                 return match;
             });
         }
 
+        // Proper string sorting with numeric support
+        filteredDonors = [...filteredDonors].sort((a, b) =>
+            a.donorId.localeCompare(b.donorId, undefined, {
+                numeric: true,
+                sensitivity: "base",
+            })
+        );
+
         setDropdownData({
-            donors: filteredDonors.length > 0 ? [
-                { value: "all", label: "All" },
-                ...filteredDonors.map(d => ({
-                    value: d.donorId,
-                    label: `${d.donorId} - ${d.donorName}`,
-                    type: d.donorType
-                })),
-            ] : [],
+            donors:
+                filteredDonors.length > 0
+                    ? [
+                        { value: "all", label: "All" },
+                        ...filteredDonors.map((d) => ({
+                            value: d.donorId,
+                            label: `${d.donorId} - ${d.donorName}`,
+                            type: d.donorType,
+                        })),
+                    ]
+                    : [],
         });
 
         // Reset donor selection if it's no longer in the filtered list
-        if (filters.donorId !== "all" && !filteredDonors.find(d => d.donorId === filters.donorId)) {
-            setFilters(prev => ({
+        if (
+            filters.donorId !== "all" &&
+            !filteredDonors.find((d) => d.donorId === filters.donorId)
+        ) {
+            setFilters((prev) => ({
                 ...prev,
-                donorId: "all"
+                donorId: "all",
             }));
         }
     }, [filters.donorTypes, allDonors]);
