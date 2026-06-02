@@ -20,8 +20,17 @@ const DashboardPie = ({ cardData, pieData }) => {
     const charts = [
         {
             title: 'Application Type Split',
-            labels: [`Freshers (${cardData.totalFreshers})`, `Renewals (${cardData.totalRenewals})`],
-            datasets: [{ data: [cardData.totalFreshers, cardData.totalRenewals], backgroundColor: ['#3B82F6', '#10B981'] }],
+            labels: [
+                `Freshers (${cardData.totalFreshers})`,
+                `Renewals (${cardData.totalRenewals})`
+            ],
+            datasets: [{
+                data: [
+                    ((cardData.totalFreshers ?? 0) / (cardData.totalApplicants || 1)) * 100,
+                    ((cardData.totalRenewals ?? 0) / (cardData.totalApplicants || 1)) * 100,
+                ],
+                backgroundColor: ['#3B82F6', '#10B981']
+            }],
         },
         {
             title: 'Student Category Distribution',

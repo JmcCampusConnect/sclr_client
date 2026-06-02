@@ -1,8 +1,8 @@
 import React from "react";
 
 const StatCard = ({ icon: Icon, title, color, bgColor, stats }) => (
-    
-    <div className="flex flex-col bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden transition duration-300 hover:shadow-3xl">
+
+    <div className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden transition duration-300 hover:shadow-3xl">
         <div className={`p-6 flex items-start justify-between ${bgColor}`}>
             <div>
                 <p className="text-sm font-semibold uppercase tracking-wider text-gray-600">{title}</p>
