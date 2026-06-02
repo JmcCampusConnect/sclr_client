@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import axios from "axios";
 
 const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
 
-function DonorActionBar({ donors, handleSearch }) {
+function DonorActionBar({ donors, handleSearch, onUploadComplete }) {
+
+    const fileInputRef = useRef(null);
+    const [selectedFileName, setSelectedFileName] = useState("");
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+    const handleFileSelect = (event) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedFileName(file.name);
+        } else {
+            setSelectedFileName("");
+        }
+    };
 
     const handleDownloadExcel = () => {
 
@@ -31,19 +45,117 @@ function DonorActionBar({ donors, handleSearch }) {
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(excelData);
-
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Donors");
-
         const excelBuffer = XLSX.write(workbook, {
             bookType: "xlsx", type: "array",
         });
-
         const file = new Blob([excelBuffer], {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
-
         saveAs(file, "Sclr Donor.xlsx");
+    };
+
+    const handleDownloadSample = async () => {
+
+        if (!donors || donors.length === 0) {
+            alert("No donor records to download");
+            return;
+        }
+
+        const excelData = donors.map((donor) => ({
+            "donorId": donor.donorId,
+            "donorName": donor.donorName,
+            "donorType": donor.donorType,
+            "generalAmt": "",
+            "zakkathAmt": "",
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(excelData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Donors");
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx", type: "array",
+        });
+        const file = new Blob([excelBuffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        saveAs(file, "Sclr Fund Sample.xlsx");
+    };
+
+    const handleUpload = async () => {
+
+        const file = fileInputRef.current?.files?.[0];
+
+        if (!file) {
+            alert("Please select an Excel file first");
+            return;
+        }
+
+        // Validate file type
+        const validTypes = [
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-excel"
+        ];
+
+        if (!validTypes.includes(file.type)) {
+            alert("Please upload a valid Excel file (.xlsx or .xls)");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("excelFile", file);
+
+        try {
+            const response = await axios.post(
+                `${apiUrl}/api/donor/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            if (response.data.success) {
+
+                const { summary, details } = response.data;
+
+                // Show detailed results
+                let message = `Upload Complete!\n\n`;
+                message += `Total : ${summary.total}\n`;
+                message += `Successful : ${summary.successful}\n`;
+                message += `Failed : ${summary.failed}\n\n`;
+
+                if (details.failed.length > 0) {
+                    message += `Failed Records:\n`;
+                    details.failed.forEach((fail, index) => {
+                        if (index < 5) {
+                            message += `- ${fail.reason}\n`;
+                        }
+                    });
+                    if (details.failed.length > 5) {
+                        message += `... and ${details.failed.length - 5} more`;
+                    }
+                }
+
+                alert(message);
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = "";
+                    setSelectedFileName("");
+                }
+                if (onUploadComplete) { onUploadComplete() }
+
+            } else {
+                alert(`Upload failed: ${response.data.message}`);
+            }
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert(
+                error.response?.data?.message ||
+                "Error uploading file. Please check the file format and try again."
+            );
+        }
     };
 
     return (
@@ -55,17 +167,37 @@ function DonorActionBar({ donors, handleSearch }) {
                     className={`w-full md:w-1/2 ${formControlClass}`}
                     onChange={(e) => handleSearch(e.target.value)}
                 />
-                <p className="text-sm lg:text-base font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
-                    No. of Records : {" "}
-                    <span className="font-semibold text-indigo-600 dark:text-indigo-400">
-                        {donors.length}
-                    </span>
-                </p>
-            </div>
+            </div >
             <div className="flex flex-col space-y-3 w-full lg:w-auto lg:flex-row lg:space-y-0 lg:space-x-4 items-center justify-end mb-6">
 
+                {/* DOWNLOAD SAMPLE BUTTON - NOW COMES FIRST BEFORE UPLOAD */}
+                <button
+                    onClick={handleDownloadSample}
+                    className="
+                        h-10 px-4 py-2 bg-orange-600 text-white text-sm font-semibold rounded-lg shadow-md
+                        hover:bg-orange-700 transition duration-150 ease-in-out
+                        flex items-center justify-center w-full lg:w-auto
+                    "
+                >
+                    <svg
+                        className="w-5 h-5 mr-2"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3"
+                        />
+                    </svg>
+                    Download Sample
+                </button>
+
                 {/* UPLOAD SECTION */}
-                <div className="flex flex-row space-x-4 w-full lg:w-auto">
+                <div className="flex flex-row w-full lg:w-auto">
 
                     {/* Choose File Button */}
                     <label
@@ -93,7 +225,7 @@ function DonorActionBar({ donors, handleSearch }) {
                             />
                         </svg>
                         <span className="truncate">
-                            Choose Excel File (.xlsx)
+                            {selectedFileName ? selectedFileName : "Choose Excel File (.xlsx)"}
                         </span>
                     </label>
 
@@ -102,23 +234,26 @@ function DonorActionBar({ donors, handleSearch }) {
                         type="file"
                         className="hidden"
                         accept=".xlsx"
+                        ref={fileInputRef}
+                        onChange={handleFileSelect}
                     />
-
-                    {/* Upload Button */}
-                    <button
-                        className="
-                            h-10 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-md
-                            hover:bg-blue-700 transition duration-150 ease-in-out
-                        "
-                    >
-                        Upload
-                    </button>
                 </div>
 
-                {/* SEPARATOR */}
-                <div className="hidden lg:block w-px h-6 bg-gray-200"></div>
+                {/* UPLOAD BUTTON - NOW COMES AFTER DOWNLOAD SAMPLE */}
+                <button
+                    onClick={handleUpload}
+                    className="
+                        h-10 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-md
+                        hover:bg-blue-700 transition duration-150 ease-in-out
+                    "
+                >
+                    Upload
+                </button>
 
-                {/* DOWNLOAD BUTTON */}
+                {/* SEPARATOR */}
+                <div className="hidden lg:block w-px h-6 bg-gray-400"></div>
+
+                {/* DOWNLOAD ALL BUTTON */}
                 <button
                     onClick={handleDownloadExcel}
                     className="

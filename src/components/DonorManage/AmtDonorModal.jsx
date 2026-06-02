@@ -40,7 +40,7 @@ function AmtDonorModal({ onClose, donorData }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`${apiUrl}/api/donor/addAmount`, amountData);
+            await axios.post(`${apiUrl}/api/donor/addTransaction`, amountData);
             alert('Amount added successfully');
             onClose();
         } catch (err) {
