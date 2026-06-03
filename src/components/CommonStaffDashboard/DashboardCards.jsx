@@ -69,7 +69,7 @@ const DashboardCards = ({ cardData = {} }) => {
 
                     {/* Typography Stack */}
                     <div className="flex flex-col gap-1">
-                        <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                        <p className="text-[11px] font-bold text-slate-600 dark:text-slate-500 uppercase tracking-widest">
                             {label}
                         </p>
                         <p className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">

@@ -11,10 +11,10 @@ import { motion } from 'framer-motion';
 
 function MenuGuide() {
 
-    const [activeTab, setActiveTab] = useState('common');
+    const [activeTab, setActiveTab] = useState('admin');
 
     const menuContent = {
-        common: [
+        admin: [
             {
                 title: 'Dashboard',
                 icon: faChalkboard,
@@ -28,20 +28,6 @@ function MenuGuide() {
                     'Monitor scholarship activity specifically for the current academic year.'
                 ]
             },
-            {
-                title: 'Change Password',
-                icon: faTools,
-                gradient: 'from-amber-400 to-orange-500',
-                badge: 'Security',
-                desc: 'Update and manage your account access credentials.',
-                details: [
-                    'Secure password modification with real-time matching validation.',
-                    'Instant system-wide update upon successful submission.',
-                    'Appropriate feedback messages for errors or success.'
-                ]
-            }
-        ],
-        admin: [
             {
                 title: 'Scholarship Administration',
                 icon: faGraduationCap,
@@ -230,10 +216,23 @@ function MenuGuide() {
                     'Filter by donor type or date range for periodic audit reports.'
                 ]
             },
+
+            {
+                title: 'Change Password',
+                icon: faTools,
+                gradient: 'from-amber-400 to-orange-500',
+                badge: 'Security',
+                desc: 'Update and manage your account access credentials.',
+                details: [
+                    'Secure password modification with real-time matching validation.',
+                    'Instant system-wide update upon successful submission.',
+                    'Appropriate feedback messages for errors or success.'
+                ]
+            },
             {
                 title: 'Data Deletion',
                 icon: faTrashAlt,
-                gradient: 'from-gray-500 to-gray-800',
+                gradient: 'from-red-500 to-red-800',
                 badge: 'Critical Admin Action',
                 desc: 'Permanently delete academic-year–based records across system modules with admin verification.',
                 details: [
@@ -243,26 +242,6 @@ function MenuGuide() {
                     'Shows selection count and deletion summary.',
                     'Permanent and irreversible action.'
                 ]
-            }
-        ],
-        staff: [
-            {
-                title: 'Staff Portal Coming Soon',
-                icon: faUserTie,
-                gradient: 'from-slate-400 to-slate-600',
-                badge: 'Upcoming',
-                desc: 'Staff-specific management tools are being prepared.',
-                details: ['Application verification tools.', 'Student counseling logs.', 'Departmental report access.']
-            }
-        ],
-        student: [
-            {
-                title: 'Student Portal Coming Soon',
-                icon: faUserGraduate,
-                gradient: 'from-slate-400 to-slate-600',
-                badge: 'Upcoming',
-                desc: 'Student-specific scholarship tracking.',
-                details: ['Application status tracking.', 'Document upload center.', 'History of received benefits.']
             }
         ]
     };
@@ -301,11 +280,8 @@ function MenuGuide() {
                 </div>
 
                 {/* Navigation Tabs */}
-                <div className="flex flex-wrap gap-1 border-b border-gray-200 mb-12">
-                    <TabButton id="common" label="Common" icon={faUserShield} />
+                <div className="flex flex-wrap gap-1 border-b border-gray-200 mb-8">
                     <TabButton id="admin" label="Admin" icon={faChartBar} />
-                    <TabButton id="staff" label="Staff" icon={faUserTie} />
-                    <TabButton id="student" label="Student" icon={faUserGraduate} />
                 </div>
 
                 {/* Grid Content */}
@@ -313,7 +289,7 @@ function MenuGuide() {
                     {menuContent[activeTab].map((item, idx) => (
                         <div
                             key={idx}
-                            className="group relative bg-white rounded-[2rem] border border-slate-200 p-8 transition-all duration-500 hover:border-emerald-200 hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)]"
+                            className="group relative bg-white rounded-[1rem] border border-slate-200 p-8 transition-all duration-500 hover:border-emerald-200 hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)]"
                         >
                             {/* Decorative Icon Hook */}
                             <div className={`absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-br ${item.gradient} rounded-2xl shadow-lg flex items-center justify-center text-white transition-transform duration-500`}>

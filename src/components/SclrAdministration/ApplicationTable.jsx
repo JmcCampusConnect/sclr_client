@@ -48,14 +48,12 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
                                 <td className="px-4 py-4">
                                     <div className="flex justify-center gap-2">
                                         <button
-                                            // onClick={() => alert('Work under progress')}
                                             onClick={() => navigate('/admin/sclrAdministration/view', { state: { student: app } })}
                                             className="w-16 px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
                                         >
                                             View
                                         </button>
                                         <button
-                                            // onClick={() => alert('Work under progress')}
                                             onClick={() => openAcceptModal(app)}
                                             className={`w-16 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm
                       								${app.applicationStatus === 1 ? 'bg-green-400 text-white' :
@@ -66,7 +64,6 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
                                             Accept
                                         </button>
                                         <button
-                                            // onClick={() => alert('Work under progress')}
                                             onClick={() => openRejectModal(app)}
                                             className={`w-16 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm
                       								${app.applicationStatus === 2 ? 'bg-red-400 text-white' :
@@ -82,7 +79,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="7" className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+                            <td colSpan="8" className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
                                 No applications found.
                             </td>
                         </tr>

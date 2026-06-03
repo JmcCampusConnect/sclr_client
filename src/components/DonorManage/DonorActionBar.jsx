@@ -193,7 +193,7 @@ function DonorActionBar({ donors, handleSearch, onUploadComplete }) {
                             d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3"
                         />
                     </svg>
-                    Download Sample
+                    Download Fund Sample Excel
                 </button>
 
                 {/* UPLOAD SECTION */}
@@ -247,7 +247,7 @@ function DonorActionBar({ donors, handleSearch, onUploadComplete }) {
                         hover:bg-blue-700 transition duration-150 ease-in-out
                     "
                 >
-                    Upload
+                    Upload Fund Excel
                 </button>
 
                 {/* SEPARATOR */}
