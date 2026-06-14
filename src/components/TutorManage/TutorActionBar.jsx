@@ -54,14 +54,6 @@ function TutorActionBar({ onAddTutor, handleSearch, tutors, onUploadComplete }) 
                 department: 'Civil',
                 category: 'Head Tutor',
                 section: 'B'
-            },
-            {
-                staffId: 'T006',
-                staffName: 'Sarah Wilson',
-                batch: '',
-                department: '',
-                category: '',
-                section: ''
             }
         ];
 
@@ -77,7 +69,7 @@ function TutorActionBar({ onAddTutor, handleSearch, tutors, onUploadComplete }) 
 
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Tutors_Sample');
-        XLSX.writeFile(workbook, 'tutor_sample.xlsx');
+        XLSX.writeFile(workbook, 'Tutor Sample.xlsx');
     };
 
     // Function to download all tutors

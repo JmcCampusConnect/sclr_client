@@ -42,12 +42,6 @@ function GuideLines() {
                         <div className="pl-6 border-l-2 border-slate-200">
                             <p className="text-lg text-slate-800 leading-relaxed">
                                 Go to <span className="font-semibold text-slate-900">Donor Management</span> and download the sample fund Excel file.
-                            </p>
-                        </div>
-
-                        {/* Step C */}
-                        <div className="pl-6 border-l-2 border-slate-200">
-                            <p className="text-lg text-slate-800 leading-relaxed">
                                 Fill in the donor balances – if you don't have balances, leave them empty or put 0.
                             </p>
                             <div className="mt-3 flex items-start gap-2 bg-amber-50 border border-amber-200/60 rounded-lg p-3 text-sm text-amber-800">
@@ -58,10 +52,17 @@ function GuideLines() {
                             </div>
                         </div>
 
-                        {/* Step D */}
+                        {/* Step C */}
                         <div className="pl-6 border-l-2 border-slate-200">
                             <p className="text-lg text-slate-800 leading-relaxed">
                                 Choose the Excel file in <span className="font-semibold text-slate-900">Donor Management</span> and click the <span className="font-semibold text-slate-900">Upload</span> button. After successful uploading, verify the fund availability and transaction in the <span className="font-semibold text-slate-900">Report</span> menu.
+                            </p>
+                        </div>
+
+                        {/* Step D */}
+                        <div className="pl-6 border-l-2 border-slate-200">
+                            <p className="text-lg text-slate-800 leading-relaxed">
+                                Download the sample Tutor Excel file from <span className="font-semibold text-slate-900">Tutor Management</span>. Fill in the required details, select the completed file, and upload it using the <span className="font-semibold text-slate-900">Upload</span> button. Once the upload is successful, the records will appear in the <span className="font-semibold text-slate-900">Tutor Table</span>.
                             </p>
                         </div>
                     </div>

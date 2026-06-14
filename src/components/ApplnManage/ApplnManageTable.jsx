@@ -67,7 +67,7 @@ function ApplnManageTable({ applications, onDeleteClick, onRowClick }) {
                                 </tr>
                             ))) : (
                             <tr>
-                                <td colSpan="7" className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
+                                <td colSpan="8" className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
                                     No applications found.
                                 </td>
                             </tr>
