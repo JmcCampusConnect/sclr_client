@@ -10,7 +10,7 @@ function AddAcademicYearModal({ onClose, onAdded }) {
         academicYear: "",
         startDate: "",
         endDate: "",
-        isActive: false,
+        isActive: true,
     });
 
     const [errors, setErrors] = useState({});

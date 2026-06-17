@@ -28,7 +28,7 @@ function GuideLines() {
                         {/* Step A */}
                         <div className="group relative pl-6 border-l-2 border-slate-200 focus-within:border-emerald-500 transition-colors">
                             <p className="text-lg font-medium text-slate-800 leading-relaxed">
-                                Go to <span className="font-semibold text-slate-900">Academic Settings → Academic Year</span>, click <span className="font-semibold text-slate-900">Add Academic</span> and enter the academic year, application start date, and end date, then check <span className="font-semibold text-slate-900">"Set as Active Academic Year"</span> and click <span className="font-semibold text-slate-900">Submit</span>.
+                                Go to <span className="font-semibold text-slate-900">Application Settings → Academic Year</span>, click <span className="font-semibold text-slate-900">Add Academic</span> and enter the academic year, application start date, and end date, then check <span className="font-semibold text-slate-900">"Set as Active Academic Year"</span> and click <span className="font-semibold text-slate-900">Submit</span>.
                             </p>
                             <div className="mt-3 flex items-start gap-2 bg-amber-50 border border-amber-200/60 rounded-lg p-3 text-sm text-amber-800">
                                 <AlertCircle className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
