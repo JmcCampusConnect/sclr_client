@@ -52,6 +52,7 @@ function ForgotPassword() {
         setFormData((prev) => ({ ...prev, [name]: value }));
         setFormErrors((prev) => ({ ...prev, [name]: "" }));
         setSuccessMessage("");
+        setFormErrors((prev) => ({ ...prev, generalError: "" }));
     };
 
     const handleSubmit = async (e) => {
@@ -59,24 +60,60 @@ function ForgotPassword() {
         e.preventDefault();
         setSuccessMessage("");
         setFormErrors({});
-
         if (!validateForm()) return;
-
         setIsSubmitting(true);
 
         try {
-            const response = await axios.put(`${apiUrl}/api/student/forgotPassword`, formData);
+            await axios.put(`${apiUrl}/api/student/forgotPassword`, formData);
+            // Success case
             setSuccessMessage("Password reset successful!");
             setFormData({
                 registerNo: "", mobileNo: "", aadharNo: "",
                 newPassword: "", confirmPassword: "",
             });
+            // Clear any existing errors
+            setFormErrors({});
+
         } catch (error) {
             console.error("Error resetting password : ", error);
-            setFormErrors((prev) => ({
-                ...prev,
-                generalError: "Failed to reset password. Please provide valid details or contact scholarship office.",
-            }));
+
+            // Check if it's a validation error (400)
+            if (error.response && error.response.status === 400) {
+                const errorMessage = error.response.data.message;
+
+                // Check for specific error types
+                if (errorMessage.includes("invalid mobile number")) {
+                    setFormErrors((prev) => ({
+                        ...prev,
+                        mobileNo: "Invalid mobile number. Please check and try again.",
+                    }));
+                } else if (errorMessage.includes("invalid aadhar number")) {
+                    setFormErrors((prev) => ({
+                        ...prev,
+                        aadharNo: "Invalid Aadhar number. Please check and try again.",
+                    }));
+                } else if (errorMessage.includes("both mobile and aadhar are incorrect")) {
+                    setFormErrors((prev) => ({
+                        ...prev,
+                        generalError: "Both Mobile Number and Aadhar Number are incorrect. Please verify your details.",
+                    }));
+                } else {
+                    setFormErrors((prev) => ({
+                        ...prev,
+                        generalError: errorMessage || "Failed to reset password. Please try again.",
+                    }));
+                }
+            } else if (error.response && error.response.status === 404) {
+                setFormErrors((prev) => ({
+                    ...prev,
+                    registerNo: "Student not found with this Register Number. Please check and try again.",
+                }));
+            } else {
+                setFormErrors((prev) => ({
+                    ...prev,
+                    generalError: "Failed to reset password. Please try again later.",
+                }));
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -87,21 +124,21 @@ function ForgotPassword() {
 
             <LoginHeader />
 
-            <div className="w-full flex justify-center items-center">
-                <div className="bg-white shadow-xl rounded-xl w-full max-w-2xl px-8 py-4 pt-8 border border-gray-100 transition-all duration-500 transform hover:shadow-orange-300/50">
+            <div className="w-full flex justify-center items-center mt-1">
+                <div className="bg-white shadow-lg rounded-xl w-full max-w-3xl px-8 py-4 pt-8 border border-gray-100 transition-all duration-500 transform">
                     <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-5 tracking-tight">
                         Reset Your Password
                     </h2>
 
                     {/* Global Messages */}
                     {successMessage && (
-                        <p className="text-green-600 font-semibold text-sm text-center mb-5">
+                        <p className="text-green-600 font-semibold text-sm text-center mb-5 bg-green-50 p-3 rounded-lg border border-green-200">
                             {successMessage}
                         </p>
                     )}
 
                     {formErrors.generalError && (
-                        <p className="text-red-600 font-semibold text-sm text-center mb-5">
+                        <p className="text-red-600 font-semibold text-sm text-center mb-5 bg-red-50 p-3 rounded-lg border border-red-200">
                             {formErrors.generalError}
                         </p>
                     )}
@@ -112,7 +149,7 @@ function ForgotPassword() {
                         onSubmit={handleSubmit}
                     >
                         {/* Register Number */}
-                        <div className="relative group">
+                        <div className="relative group sm:col-span-2">
                             <FaUserAlt className="absolute left-3 top-4 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
                             <input
                                 type="text"
@@ -159,7 +196,7 @@ function ForgotPassword() {
                         </div>
 
                         {/* Aadhar Number */}
-                        <div className="relative group sm:col-span-2">
+                        <div className="relative group">
                             <FaIdCard className="absolute left-3 top-4 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
                             <input
                                 type="text"
