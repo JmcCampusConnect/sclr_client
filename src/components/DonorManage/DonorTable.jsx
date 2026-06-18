@@ -42,7 +42,6 @@ function DonorTable({ donors, onEdit, onDelete, onAmount }) {
                                             <button
                                                 className="w-20 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
                                                 onClick={() => onEdit(donor)}
-                                                // onClick={() => alert('Work under progress')}
                                             >
                                                 Edit
                                             </button>

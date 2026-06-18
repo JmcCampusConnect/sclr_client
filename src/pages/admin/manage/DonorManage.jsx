@@ -133,7 +133,7 @@ function DonorManage() {
 
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
                 <img src={Loading} alt="Loading..." className="w-24 h-24 mb-4 animate-spin" />
                 <p className="text-gray-600 font-medium text-lg">Loading donors...</p>
             </div>
@@ -166,9 +166,13 @@ function DonorManage() {
                 onAdd={() => setShowAddModal(true)}
                 filterOptions={handleCategoryChange}
                 selectedCategories={selectedCategories}
+                donors={donors}
             />
 
-            <DonorActionBar donors={donors} handleSearch={handleSearch} />
+            <DonorActionBar
+                donors={donors}
+                handleSearch={handleSearch}
+            />
 
             <DonorTable
                 donors={donors}

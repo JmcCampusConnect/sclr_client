@@ -90,11 +90,36 @@ function FundsAvailable() {
                 </h1>
             </header>
 
-            {/* <ButtonsBar
-                primaryButtonClass={primaryButtonClass}
-                secondaryButtonClass={secondaryButtonClass}
-                handleDownloadExcel={handleDownloadExcel}
-            /> */}
+            <ButtonsBar
+                primaryButtonClass={"h-10 px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-150 ease-in-out flex items-center justify-center whitespace-nowrap"}
+                handleDownloadExcel={() => {
+                    if (!filteredDonors || filteredDonors.length === 0) {
+                        alert("No fund records to download");
+                        return;
+                    }
+
+                    const excelData = filteredDonors.map((donor) => ({
+                        "Donor ID": donor.donorId,
+                        "Donor Name": donor.donorName,
+                        "Donor Type": donor.donorType,
+                        "Academic Year": donor.academicYear,
+                        "General Balance": donor.generalBal,
+                        "Zakat Balance": donor.zakkathBal,
+                    }));
+
+                    const worksheet = XLSX.utils.json_to_sheet(excelData);
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, worksheet, "Funds Available");
+                    const excelBuffer = XLSX.write(workbook, {
+                        bookType: "xlsx",
+                        type: "array",
+                    });
+                    const file = new Blob([excelBuffer], {
+                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    });
+                    saveAs(file, "Funds Available.xlsx");
+                }}
+            />
 
             <DonorSearchBar
                 searchTerm={searchTerm}

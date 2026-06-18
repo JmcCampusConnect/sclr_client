@@ -1,83 +1,193 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import axios from "axios";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import StudentFilterSection from "../../../components/StudentManage/StudentFilterSection";
 import StudentActionBar from "../../../components/StudentManage/StudentActionBar";
 import Loading from "../../../assets/svg/Pulse.svg";
 import StudentManageTable from "../../../components/StudentManage/StudentManageTable";
+import StudentEditModal from "../../../components/StudentManage/StudentEditModal";
+import Toast from "../../../common/Toast";
+import { debounce } from "../../../utils/debounce";
 
 function StudentManage() {
 
     const apiUrl = import.meta.env.VITE_API_URL;
-    const [students, setStudents] = useState([]);
-    const [filteredStudents, setFilteredStudents] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [departments, setDepartments] = useState([]);
+    const queryClient = useQueryClient();
 
+    // State management
     const [filters, setFilters] = useState({ category: "All", department: "All", semBased: "All" });
     const [searchTerm, setSearchTerm] = useState("");
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+    const [pagination, setPagination] = useState({
+        page: 1,
+        limit: 100,
+        total: 0,
+    });
+    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [toast, setToast] = useState(null);
+
+    // Use ref to track if search is from user typing
+    const isTypingRef = useRef(false);
+
+    // Debounce search - use useRef to prevent recreation
+    const debouncedSetSearchRef = useRef(
+        debounce((value) => {
+            setDebouncedSearchTerm(value);
+            setPagination(prev => ({ ...prev, page: 1 }));
+            isTypingRef.current = false;
+        }, 600)
+    );
 
     useEffect(() => {
-        const fetchDepartments = async () => {
-            try {
-                const response = await axios.get(`${apiUrl}/api/tutor/departments`);
-                setDepartments(response.data.departments);
-            } catch (error) {
-                console.error("Error fetching departments : ", error);
-            }
+        const debouncedFn = debouncedSetSearchRef.current;
+        if (searchTerm !== debouncedSearchTerm) {
+            isTypingRef.current = true;
+            debouncedFn(searchTerm);
+        }
+        return () => {
+            debouncedFn.cancel();
         };
-        fetchDepartments();
-    }, [apiUrl]);
+    }, [searchTerm, debouncedSearchTerm]);
 
-    useEffect(() => {
-        const fetchStudentData = async () => {
-            try {
-                const response = await axios.get(`${apiUrl}/api/studentManage/fetchStudentData`);
-                setStudents(response.data.students);
-                setFilteredStudents(response.data.students);
-            } catch (err) {
-                console.error("Error fetching student data:", err);
-                setError("Failed to load students. Please try again later.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchStudentData();
-    }, [apiUrl]);
+    // Fetch departments
+    const { data: departmentsData } = useQuery({
+        queryKey: ['departments'],
+        queryFn: async () => {
+            const response = await axios.get(`${apiUrl}/api/tutor/departments`);
+            return response.data.departments || [];
+        },
+        staleTime: 5 * 60 * 1000,
+    });
 
-    useEffect(() => {
-        let filtered = [...students];
-
-        if (filters.category && filters.category !== "All") {
-            filtered = filtered.filter((s) => s.category === filters.category);
-        }
-        if (filters.department && filters.department !== "All") {
-            filtered = filtered.filter((s) => s.department === filters.department);
-        }
-        if (filters.semBased !== "All") {
-            filtered = filtered.filter(
-                s => String(s.isSemBased) === String(filters.semBased)
-            );
-        }
-        if (searchTerm.trim() !== "") {
-            const term = searchTerm.toLowerCase();
-            filtered = filtered.filter((s) => {
-                const nameMatches = s.name
-                    ? s.name.toLowerCase().includes(term)
-                    : false;
-                const regNoMatches = s.registerNo
-                    ? s.registerNo.toLowerCase().includes(term)
-                    : false;
-
-                return nameMatches || regNoMatches;
+    // Fetch students with pagination and filters
+    const {
+        data: studentsData,
+        isLoading,
+        error,
+        refetch,
+        isFetching
+    } = useQuery({
+        queryKey: ['students', debouncedSearchTerm, filters, pagination.page, pagination.limit],
+        queryFn: async () => {
+            const params = new URLSearchParams({
+                page: pagination.page,
+                limit: pagination.limit,
+                search: debouncedSearchTerm || '',
+                category: filters.category || 'All',
+                department: filters.department || 'All',
+                semBased: filters.semBased || 'All',
             });
-        }
-        setFilteredStudents(filtered);
-    }, [filters, searchTerm, students]);
+            const response = await axios.get(`${apiUrl}/api/studentManage/fetchStudentData?${params}`);
+            return response.data;
+        },
+        keepPreviousData: true,
+        staleTime: 30000,
+        enabled: !isTypingRef.current || !!debouncedSearchTerm,
+    });
 
-    if (isLoading) {
+    // Update student mutation
+    const updateStudentMutation = useMutation({
+        mutationFn: async ({ registerNo, data }) => {
+            const response = await axios.put(
+                `${apiUrl}/api/studentManage/updateStudent/${registerNo}`, data
+            );
+            return response.data;
+        },
+        onSuccess: (data, variables) => {
+            showToast('success', data.message || 'Student updated successfully!');
+            queryClient.invalidateQueries(['students']);
+            setIsModalOpen(false);
+            setSelectedStudent(null);
+        },
+        onError: (error) => {
+            showToast('error', error.response?.data?.message || 'Failed to update student. Please try again.');
+        },
+    });
+
+    // Quick save mutation 
+    const quickSaveMutation = useMutation({
+        mutationFn: async ({ registerNo, data }) => {
+            const response = await axios.put(
+                `${apiUrl}/api/studentManage/quickSaveStudent/${registerNo}`,
+                data
+            );
+            return response.data;
+        },
+        onSuccess: (data) => {
+            showToast('success', data.message || 'Student updated successfully!');
+            queryClient.invalidateQueries(['students']);
+        },
+        onError: (error) => {
+            showToast('error', error.response?.data?.message || 'Failed to update student.');
+        },
+    });
+
+    // Show toast notification - memoized
+    const showToast = useCallback((type, message) => {
+        setToast({ type, message });
+        setTimeout(() => setToast(null), 5000);
+    }, []);
+
+    // Handle filter changes
+    const handleFilterChange = useCallback((filterName, value) => {
+        setFilters(prev => ({ ...prev, [filterName]: value }));
+        setPagination(prev => ({ ...prev, page: 1 }));
+    }, []);
+
+    // Handle page change
+    const handlePageChange = useCallback((newPage) => {
+        setPagination(prev => ({ ...prev, page: newPage }));
+        const tableElement = document.querySelector('.overflow-x-auto');
+        if (tableElement) {
+            tableElement.scrollTop = 0;
+        }
+    }, []);
+
+    // Handle limit change
+    const handleLimitChange = useCallback((newLimit) => {
+        setPagination(prev => ({ ...prev, limit: newLimit, page: 1 }));
+    }, []);
+
+    // Handle edit student
+    const handleEditStudent = useCallback((student) => {
+        setSelectedStudent(student);
+        setIsModalOpen(true);
+    }, []);
+
+    // Handle save from modal
+    const handleModalSave = useCallback(async (studentData) => {
+        await updateStudentMutation.mutateAsync({
+            registerNo: studentData.registerNo,
+            data: studentData
+        });
+    }, [updateStudentMutation]);
+
+    // Handle quick save from table
+    const handleQuickSave = useCallback(async (registerNo, data) => {
+        await quickSaveMutation.mutateAsync({ registerNo, data });
+    }, [quickSaveMutation]);
+
+    // Close modal
+    const handleCloseModal = useCallback(() => {
+        setIsModalOpen(false);
+        setSelectedStudent(null);
+    }, []);
+
+    // Memoized computed values
+    const totalStudents = useMemo(() => studentsData?.pagination?.total || 0, [studentsData]);
+    const studentList = useMemo(() => studentsData?.students || [], [studentsData]);
+    const departments = useMemo(() => departmentsData || [], [departmentsData]);
+
+    // Memoize setSearchTerm to prevent unnecessary re-renders
+    const handleSetSearchTerm = useCallback((value) => {
+        setSearchTerm(value);
+    }, []);
+
+    // Loading state
+    if (isLoading && !studentsData) {
         return (
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
                 <img src={Loading} alt="Loading..." className="w-24 h-24 mb-4 animate-spin" />
                 <p className="text-gray-600 font-medium text-lg">Loading students...</p>
             </div>
@@ -86,8 +196,14 @@ function StudentManage() {
 
     if (error) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen">
-                <p className="text-red-600 font-semibold">{error}</p>
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+                <p className="text-red-600 font-semibold">Failed to load students. Please try again.</p>
+                <button
+                    onClick={() => refetch()}
+                    className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                >
+                    Retry
+                </button>
             </div>
         );
     }
@@ -103,20 +219,45 @@ function StudentManage() {
             <StudentFilterSection
                 departments={departments}
                 filters={filters}
-                setFilters={setFilters}
+                onFilterChange={handleFilterChange}
             />
 
             <StudentActionBar
-                totalCount={filteredStudents.length}
+                totalCount={totalStudents}
                 searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
+                setSearchTerm={handleSetSearchTerm}
             />
 
             <StudentManageTable
-                students={filteredStudents}
+                students={studentList}
+                isLoading={isLoading || isFetching}
+                onQuickSave={handleQuickSave}
+                onEditStudent={handleEditStudent}
+                pagination={pagination}
+                totalCount={totalStudents}
+                onPageChange={handlePageChange}
+                onLimitChange={handleLimitChange}
             />
+
+            {isModalOpen && selectedStudent && (
+                <StudentEditModal
+                    student={selectedStudent}
+                    onClose={handleCloseModal}
+                    onSave={handleModalSave}
+                    isLoading={updateStudentMutation.isLoading}
+                    departments={departments}
+                />
+            )}
+
+            {toast && (
+                <Toast
+                    type={toast.type}
+                    message={toast.message}
+                    onClose={() => setToast(null)}
+                />
+            )}
         </>
-    )
+    );
 }
 
 export default StudentManage;

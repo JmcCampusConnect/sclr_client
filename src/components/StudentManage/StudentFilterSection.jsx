@@ -1,14 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import SearchDropdown from "../../common/SearchDropDown";
 
-function StudentFilterSection({ departments, filters, setFilters }) {
-
-    const handleSelectChange = (name, option) => {
-        setFilters((prev) => ({
-            ...prev,
-            [name]: option ? option.value : "All",
-        }));
-    };
+function StudentFilterSection({ departments, filters, onFilterChange }) {
 
     const categoryOptions = [
         { value: "All", label: "All" },
@@ -17,19 +10,28 @@ function StudentFilterSection({ departments, filters, setFilters }) {
         { value: "SFW", label: "SFW" },
     ];
 
-    const depts = [
-        { value: "All", label: "All" },
-        ...Object.values(departments).map((item) => ({
-            value: item.department,
-            label: `${item.department} - ${item.departmentName}`,
-        })),
-    ];
+    const departmentOptions = useMemo(() => {
+        const options = [{ value: "All", label: "All" }];
+        if (departments && Array.isArray(departments)) {
+            departments.forEach(item => {
+                options.push({
+                    value: item.department,
+                    label: `${item.department} - ${item.departmentName}`,
+                });
+            });
+        }
+        return options;
+    }, [departments]);
 
     const semBasedOptions = [
         { value: "All", label: "All" },
         { value: "1", label: "Yes" },
         { value: "0", label: "No" },
     ];
+
+    const handleSelectChange = (name, option) => {
+        onFilterChange(name, option ? option.value : "All");
+    };
 
     return (
         <div className="w-full space-y-6">
@@ -45,7 +47,7 @@ function StudentFilterSection({ departments, filters, setFilters }) {
                 <SearchDropdown
                     label="Department"
                     name="department"
-                    options={depts}
+                    options={departmentOptions}
                     value={filters.department}
                     onChange={handleSelectChange}
                 />
@@ -56,7 +58,6 @@ function StudentFilterSection({ departments, filters, setFilters }) {
                     options={semBasedOptions}
                     value={filters.semBased}
                     onChange={handleSelectChange}
-                    required
                 />
             </div>
         </div>

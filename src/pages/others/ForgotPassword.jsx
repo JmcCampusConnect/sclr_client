@@ -294,7 +294,7 @@ function ForgotPassword() {
                                 disabled={isSubmitting}
                                 className={`w-1/2 flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 ${isSubmitting
                                     ? "bg-gray-400 cursor-not-allowed"
-                                    : "bg-orange-500 hover:bg-orange-600 shadow-orange-500/50 hover:shadow-orange-600/60"
+                                    : "bg-orange-500 hover:bg-orange-600"
                                     }`}
                             >
                                 {isSubmitting ? "Submitting..." : "Submit"}

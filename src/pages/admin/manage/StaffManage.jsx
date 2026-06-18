@@ -1,12 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { Search } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200";
 
+// Fetch staffs function
+const fetchStaffs = async () => {
+    const response = await axios.get(`${apiUrl}/api/staffManage/fetchStaffs`);
+    return response.data.staffs;
+};
+
+// Update staff function
+const updateStaff = async (staffData) => {
+    const response = await axios.put(`${apiUrl}/api/staffManage/updateStaff`, staffData);
+    return response.data;
+};
+
 function Staff() {
 
-    const [staffs, setStaffs] = useState([]);
+    const queryClient = useQueryClient();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         staffId: "",
@@ -16,13 +30,33 @@ function Staff() {
     const [search, setSearch] = useState("");
     const [errors, setErrors] = useState({});
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await axios.get(`${apiUrl}/api/staffManage/fetchStaffs`);
-            setStaffs(response.data.staffs);
-        };
-        fetchData();
-    }, []);
+    // React Query for fetching staffs
+    const { data: staffs = [], isLoading, isError, error } = useQuery({
+        queryKey: ['staffs'],
+        queryFn: fetchStaffs,
+        staleTime: 0,
+        refetchOnMount: 'always',
+        retry: 2,
+    });
+
+    // React Query for updating staff
+    const updateMutation = useMutation({
+        mutationFn: updateStaff,
+        onSuccess: (data, variables) => {
+            queryClient.setQueryData(['staffs'], (oldData) => {
+                return oldData?.map((staff) =>
+                    staff.staffId === variables.staffId
+                        ? { ...staff, ...variables }
+                        : staff
+                ) || [];
+            });
+            onClose();
+        },
+        onError: (err) => {
+            console.error('Error in updating staff details:', err);
+            alert("Update failed!");
+        }
+    });
 
     const filteredStaffs = staffs.filter((staff) => {
         const query = search.toLowerCase();
@@ -32,7 +66,6 @@ function Staff() {
             staff.password.toLowerCase().includes(query)
         );
     });
-
 
     const handleEdit = (staff) => {
         setFormData({
@@ -53,43 +86,54 @@ function Staff() {
     };
 
     const handleSubmit = async (e) => {
-
+        e.preventDefault();
         if (!formData.staffName || !formData.password || !formData.staffId) {
-            alert("All Feild Shoud be Required")
+            alert("All fields are required.");
             return;
         }
-        e.preventDefault();
-
-        try {
-            await axios.put(`${apiUrl}/api/staffManage/updateStaff`, formData);
-            setStaffs((prev) =>
-                prev.map((x) =>
-                    x.staffId === formData.staffId ? { ...x, ...formData } : x
-                )
-            );
-            onClose();
-        } catch (err) {
-            console.error('Error in updating staff details : ', err);
-            alert("Update failed!");
-        }
+        updateMutation.mutate(formData);
     };
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="text-xl text-gray-600 dark:text-gray-400">
+                    Loading staff data...
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (isError) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="text-xl text-red-600 dark:text-red-400">
+                    Error loading staff data : {error?.message || "Please try again later"}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <>
             {/* Header */}
-            <header className="">
+            <header>
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
                     Staff Management
                 </h1>
-
                 <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
-                    <input
-                        type="text"
-                        placeholder="🔍 Search staff..."
-                        className={`w-full md:w-1/2 ${formControlClass}`}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
+                    <div className="relative w-full md:w-1/2">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
+                        <input
+                            type="text"
+                            placeholder="Search staff..."
+                            className={`w-full pl-10 pr-4 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-gray-400 focus:border-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 outline-none transition`}
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
                     <p className="text-sm lg:text-base font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
                         No. of Records :{" "}
                         <span className="font-semibold text-indigo-600 dark:text-indigo-400">
@@ -97,62 +141,62 @@ function Staff() {
                         </span>
                     </p>
                 </div>
+            </header>
 
-                <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
-                    <div className="max-h-[700px] overflow-y-auto">
-                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center table-auto">
-                            <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
-                                <tr>
-                                    {["S.No", "Staff ID", "Staff Name", "Password", "Action"].map(
-                                        (header) => (
-                                            <th
-                                                key={header}
-                                                className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap"
+            <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
+                <div className="max-h-[700px] overflow-y-auto">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center table-auto">
+                        <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
+                            <tr>
+                                {["S.No", "Staff ID", "Staff Name", "Password", "Action"].map(
+                                    (header) => (
+                                        <th
+                                            key={header}
+                                            className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap"
+                                        >
+                                            {header}
+                                        </th>
+                                    )
+                                )}
+                            </tr>
+                        </thead>
+
+                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                            {filteredStaffs.length > 0 ? (
+                                filteredStaffs.map((staff, index) => (
+                                    <tr
+                                        key={staff.staffId}
+                                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
+                                    >
+                                        <td className="px-4 py-4">{index + 1}</td>
+                                        <td className="px-4 py-4">{staff.staffId}</td>
+                                        <td className="px-4 py-4">{staff.staffName}</td>
+                                        <td className="px-4 py-4">{staff.password}</td>
+                                        <td className="px-4 py-4">
+                                            <button
+                                                onClick={() => handleEdit(staff)}
+                                                className="w-20 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+                                                disabled={updateMutation.isPending}
                                             >
-                                                {header}
-                                            </th>
-                                        )
-                                    )}
-                                </tr>
-                            </thead>
-
-                            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                {filteredStaffs.length > 0 ? (
-                                    filteredStaffs.map((staff, index) => (
-                                        <tr
-                                            key={staff.staffId}
-                                            className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
-                                        >
-                                            <td className="px-4 py-4">{index + 1}</td>
-                                            <td className="px-4 py-4">{staff.staffId}</td>
-                                            <td className="px-4 py-4 uppercase">{staff.staffName}</td>
-                                            <td className="px-4 py-4">{staff.password}</td>
-
-                                            <td className="px-4 py-4">
-                                                <button
-                                                    onClick={() => handleEdit(staff)}
-                                                    className="w-20 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
-                                                >
-                                                    Edit
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td
-                                            colSpan="8"
-                                            className="px-4 py-6 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base"
-                                        >
-                                            No records found
+                                                Edit
+                                            </button>
                                         </td>
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan="5"
+                                        className="px-4 py-6 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base"
+                                    >
+                                        No records found
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
-            </header>
+            </div>
 
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
@@ -164,6 +208,7 @@ function Staff() {
                             <button
                                 onClick={onClose}
                                 className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 text-xl font-bold transition"
+                                disabled={updateMutation.isPending}
                             >
                                 ×
                             </button>
@@ -193,6 +238,7 @@ function Staff() {
                                         onChange={handleChange}
                                         required
                                         error={errors.staffName}
+                                        disabled={updateMutation.isPending}
                                     />
 
                                     <Input
@@ -203,6 +249,7 @@ function Staff() {
                                         onChange={handleChange}
                                         required
                                         error={errors.password}
+                                        disabled={updateMutation.isPending}
                                     />
                                 </div>
                             </div>
@@ -212,17 +259,18 @@ function Staff() {
                                     type="button"
                                     onClick={onClose}
                                     className="px-6 py-2.5 rounded-lg font-semibold bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100 transition"
+                                    disabled={updateMutation.isPending}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-6 py-2.5 rounded-lg font-semibold bg-green-600 hover:bg-green-700 text-white shadow-md transition"
+                                    className="px-6 py-2.5 rounded-lg font-semibold bg-green-600 hover:bg-green-700 text-white shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={updateMutation.isPending}
                                 >
-                                    Update
+                                    {updateMutation.isPending ? "Updating..." : "Update"}
                                 </button>
                             </div>
-
                         </form>
                     </div>
                 </div>
@@ -234,12 +282,10 @@ function Staff() {
 const Input = ({
     label, name, type = "text", value, onChange, error, ...props
 }) => (
-
     <div className="space-y-2">
         <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-200">
             {label} : {props.required && <span className="text-red-500">*</span>}
         </label>
-
         <input
             type={type}
             name={name}
@@ -254,10 +300,10 @@ const Input = ({
                 }
                 focus:outline-none focus:ring-1`
             }
-        /> 
+        />
 
         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
-)
+);
 
 export default Staff;

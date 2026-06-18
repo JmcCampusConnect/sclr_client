@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Search } from "lucide-react";
 import Loading from "../../../assets/svg/Pulse.svg";
 import AcademicYearTable from "../../../components/AcademicYear/AcademicYearTable";
 import AddAcademicYearModal from "../../../components/AcademicYear/AddAcademicYearModal";
@@ -124,15 +125,21 @@ function AcademicYear() {
             </form>
 
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 my-6">
-                <input
-                    type="text"
-                    placeholder="🔍 Search by ID or Year..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className={`w-full md:w-1/2 ${formControlClass}`}
-                />
+                <div className="relative w-full md:w-1/2">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
+                    <input
+                        type="text"
+                        placeholder="Search by ID or Year..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className={`w-full pl-10 pr-4 ${formControlClass}`}
+                    />
+                </div>
 
                 <button className={primaryButtonClass} onClick={() => setShowModal(true)}>
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                    </svg>
                     Add Academic
                 </button>
             </div>
