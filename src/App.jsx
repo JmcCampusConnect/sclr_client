@@ -116,7 +116,7 @@ function App() {
                         <Route path="guidelines" element={<GuideLines />} />
                         <Route path="dataDeletion" element={<DataDeletion />} />
                         <Route path="uploadCenter" element={<AdminUploadCenter />} />
-                        <Route path="quickRejection" element={<QuickRejection />} />
+                        <Route path="rejectApplications" element={<QuickRejection />} />
                         <Route path="adminRegisterApplication" element={<AdminRegisterAppln />} />
                         <Route path=":registerNo/adminLoginApplication" element={<AdminLoginAppln />} />
                         <Route path="menuGuide" element={<MenuGuide />} />

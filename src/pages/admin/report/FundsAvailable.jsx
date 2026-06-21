@@ -19,6 +19,7 @@ function FundsAvailable() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null)
     const [searchTerm, setSearchTerm] = useState("");
+    const [showOnlyWithFunds, setShowOnlyWithFunds] = useState(false);
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
     useEffect(() => {
@@ -52,12 +53,21 @@ function FundsAvailable() {
             minimumFractionDigits: 2,
         }).format(amount || 0);
 
-    const filteredDonors = donors.filter(
+    // First filter by search term
+    const searchFilteredDonors = donors.filter(
         (d) =>
             d.donorName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             d.donorId?.toString().includes(searchTerm) ||
             d.donorType?.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    // Then filter by funds availability if checkbox is checked
+    const filteredDonors = showOnlyWithFunds
+        ? searchFilteredDonors.filter(
+            (d) =>
+                (Number(d.generalBal) !== 0 || Number(d.zakkathBal) !== 0)
+        )
+        : searchFilteredDonors;
 
     const openGeneral = data?.generalAmt || 0;
     const openZakat = data?.zakkathAmt || 0;
@@ -89,44 +99,6 @@ function FundsAvailable() {
                     Funds Available
                 </h1>
             </header>
-
-            <ButtonsBar
-                primaryButtonClass={"h-10 px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-150 ease-in-out flex items-center justify-center whitespace-nowrap"}
-                handleDownloadExcel={() => {
-                    if (!filteredDonors || filteredDonors.length === 0) {
-                        alert("No fund records to download");
-                        return;
-                    }
-
-                    const excelData = filteredDonors.map((donor) => ({
-                        "Donor ID": donor.donorId,
-                        "Donor Name": donor.donorName,
-                        "Donor Type": donor.donorType,
-                        "Academic Year": donor.academicYear,
-                        "General Balance": donor.generalBal,
-                        "Zakat Balance": donor.zakkathBal,
-                    }));
-
-                    const worksheet = XLSX.utils.json_to_sheet(excelData);
-                    const workbook = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(workbook, worksheet, "Funds Available");
-                    const excelBuffer = XLSX.write(workbook, {
-                        bookType: "xlsx",
-                        type: "array",
-                    });
-                    const file = new Blob([excelBuffer], {
-                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    });
-                    saveAs(file, "Funds Available.xlsx");
-                }}
-            />
-
-            <DonorSearchBar
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                donorCount={filteredDonors.length}
-                formControlClass={formControlClass}
-            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-6">
                 <StatCard
@@ -172,6 +144,48 @@ function FundsAvailable() {
                     }}
                 />
             </div>
+
+            <ButtonsBar
+                primaryButtonClass={"h-10 px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-150 ease-in-out flex items-center justify-center whitespace-nowrap"}
+                handleDownloadExcel={() => {
+                    if (!filteredDonors || filteredDonors.length === 0) {
+                        alert("No fund records to download");
+                        return;
+                    }
+
+                    const excelData = filteredDonors.map((donor) => ({
+                        "Donor ID": donor.donorId,
+                        "Donor Name": donor.donorName,
+                        "Donor Type": donor.donorType,
+                        "Academic Year": donor.academicYear,
+                        "General Balance": donor.generalBal,
+                        "Zakat Balance": donor.zakkathBal,
+                    }));
+
+                    const worksheet = XLSX.utils.json_to_sheet(excelData);
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, worksheet, "Funds Available");
+                    const excelBuffer = XLSX.write(workbook, {
+                        bookType: "xlsx",
+                        type: "array",
+                    });
+                    const file = new Blob([excelBuffer], {
+                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    });
+                    saveAs(file, "Funds Available.xlsx");
+                }}
+            />
+
+            {/* Pass checkbox props to DonorSearchBar */}
+            <DonorSearchBar
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                donorCount={filteredDonors.length}
+                formControlClass={formControlClass}
+                showOnlyWithFunds={showOnlyWithFunds}
+                setShowOnlyWithFunds={setShowOnlyWithFunds}
+            />
+
             <DonorTable donors={filteredDonors} formatCurrency={formatCurrency} />
         </div>
     )

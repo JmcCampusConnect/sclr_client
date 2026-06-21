@@ -1,11 +1,10 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Search } from 'lucide-react';
 
 function ActionBar({ totalStudents, searchTerm, setSearchTerm }) {
 
     const navigate = useNavigate();
-    const { userId } = useParams();
     const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-orange-600 rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-150 shadow-md";
     const formControlClass = "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-gray-400 focus:border-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 outline-none transition";
 
@@ -17,9 +16,9 @@ function ActionBar({ totalStudents, searchTerm, setSearchTerm }) {
                     <div className="flex justify-end gap-4 w-full">
                         <button
                             className={primaryButtonClass}
-                            onClick={() => navigate(`/admin/quickRejection`)}
+                            onClick={() => navigate(`/admin/rejectApplications`)}
                         >
-                            Quick Rejection
+                            Reject Ineligible Applications
                         </button>
                     </div>
                 </div>
