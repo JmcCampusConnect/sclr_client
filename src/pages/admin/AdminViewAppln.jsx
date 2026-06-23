@@ -89,7 +89,7 @@ function AdminViewAppln() {
                         <h2 className="text-xl font-bold text-white">{student.name}</h2>
                         <p className="text-indigo-100 text-md mt-2">Register No : {student.registerNo}</p>
                     </div>
-                    <div className="p-6 space-y-8">
+                    <div className="p-6 space-y-7">
                         <ApplicationStatus status={student.applicationStatus} />
                         <div className="grid md:grid-cols-2 gap-6">
                             <InfoCard label="Scholarship Type" value={student.sclrType} />
