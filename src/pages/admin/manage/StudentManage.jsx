@@ -94,7 +94,7 @@ function StudentManage() {
             );
             return response.data;
         },
-        onSuccess: (data, variables) => {
+        onSuccess: (data) => {
             showToast('success', data.message || 'Student updated successfully!');
             queryClient.invalidateQueries(['students']);
             setIsModalOpen(false);
@@ -155,14 +155,6 @@ function StudentManage() {
         setIsModalOpen(true);
     }, []);
 
-    // Handle save from modal
-    const handleModalSave = useCallback(async (studentData) => {
-        await updateStudentMutation.mutateAsync({
-            registerNo: studentData.registerNo,
-            data: studentData
-        });
-    }, [updateStudentMutation]);
-
     // Handle quick save from table
     const handleQuickSave = useCallback(async (registerNo, data) => {
         await quickSaveMutation.mutateAsync({ registerNo, data });
@@ -183,6 +175,25 @@ function StudentManage() {
     const handleSetSearchTerm = useCallback((value) => {
         setSearchTerm(value);
     }, []);
+
+    const handleModalSave = useCallback(async (studentData) => {
+        const isRegisterNoChanged = selectedStudent?.registerNo !== studentData.registerNo;
+        if (isRegisterNoChanged) {
+            const confirmed = window.confirm(
+                `⚠️ You are changing the Register Number from "${selectedStudent.registerNo}" to "${studentData.registerNo}".\n\n` +
+                `This will update the register number in:\n` +
+                `• Student Records\n` +
+                `• Application Records (${studentData.applicationsCount || 'multiple'})\n` +
+                `• Transaction Records (${studentData.distributionsCount || 'multiple'})\n\n` +
+                `Are you sure you want to proceed?`
+            );
+            if (!confirmed) { return }
+        }
+        await updateStudentMutation.mutateAsync({
+            registerNo: selectedStudent.registerNo,
+            data: studentData
+        });
+    }, [selectedStudent, updateStudentMutation]);
 
     // Loading state
     if (isLoading && !studentsData) {

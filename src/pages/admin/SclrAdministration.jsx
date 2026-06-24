@@ -7,6 +7,8 @@ import ApplicationTable from "../../components/SclrAdministration/ApplicationTab
 import AcceptModal from "../../components/Others/AcceptModal";
 import RejectModal from "../../components/Others/RejectModal";
 import Loading from "../../assets/svg/Pulse.svg";
+const primaryButtonClass = "flex items-center justify-center px-4 py-2 text-sm lg:text-base font-semibold text-white bg-orange-600 rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-150 shadow-md";
+
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -165,6 +167,19 @@ function SclrAdministration() {
                             Scholarship Administration
                         </h1>
                     </header>
+
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+                        <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
+                            <div className="flex justify-end gap-4 w-full">
+                                <button
+                                    className={primaryButtonClass}
+                                    onClick={() => navigate(`/admin/rejectApplications`)}
+                                >
+                                    Reject Ineligible Applications
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     <FilterSection
                         filters={filters}

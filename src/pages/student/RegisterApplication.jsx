@@ -109,7 +109,7 @@ function RegisterApplication() {
         resolver: yupResolver(schema), shouldUnregister: true
     });
     const navigate = useNavigate();
-    const { addData, addError } = useAdd();
+    const { addData } = useAdd();
     const [newStudent, setNewStudent] = useState(false);
     const [registerNo, setRegisterNo] = useState('');
 

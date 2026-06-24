@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useForm } from 'react-hook-form';
-
 import InputBox from "../../common/InputBox";
 import SearchDropdown from "../../common/SearchDropDown";
 
-function StudentEditModal({ student, onClose, onSave, isLoading, departments }) {
+function StudentEditModal({ student, onClose, onSave, isLoading, departments, existingRegisterNos }) {
+
+    const [registerNoChanged, setRegisterNoChanged] = useState(false);
 
     const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
         defaultValues: {
@@ -17,8 +18,6 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
             department: '',
             section: '',
             category: '',
-            mobileNo: '',
-            aadharNo: '',
             address: '',
             district: '',
             state: '',
@@ -33,14 +32,30 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
             siblingsIncome: '',
             hostelStatus: 'No',
             governmentScholarship: 0,
-            isSemBased: 0,
-            totalCreditedAmount: 0,
         }
     });
 
-    // Options for dropdowns
+    const watchRegisterNo = watch('registerNo');
+    const siblingsStatus = watch('siblingsStatus');
+
+    useEffect(() => {
+        if (student && watchRegisterNo) {
+            setRegisterNoChanged(student.registerNo !== watchRegisterNo);
+        }
+    }, [student, watchRegisterNo]);
+
+    const validateRegisterNo = useCallback((value) => {
+        if (!value) return 'Register number is required';
+        if (registerNoChanged && existingRegisterNos?.includes(value) && value !== student?.registerNo) {
+            return 'Register number already exists';
+        }
+        return true;
+    }, [registerNoChanged, existingRegisterNos, student]);
+
+
+    // Mapped Options matching your section configurations
     const categoryOptions = useMemo(() => [
-        { value: "Aided", label: "AIDED" },
+        { value: "Aided", label: "Aided" },
         { value: "SFM", label: "SFM" },
         { value: "SFW", label: "SFW" },
     ], []);
@@ -51,24 +66,19 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
     ], []);
 
     const sectionOptions = useMemo(() => [
-        { value: "A", label: "A" },
-        { value: "B", label: "B" },
-        { value: "C", label: "C" },
+        { value: "A", label: "A" }, { value: "B", label: "B" },
+        { value: "C", label: "C" }, { value: "D", label: "D" },
+        { value: "E", label: "E" }, { value: "F", label: "F" },
+        { value: "G", label: "G" }, { value: "H", label: "H" },
+        { value: "I", label: "I" }
     ], []);
 
     const religionOptions = useMemo(() => [
-        { value: "Islam", label: "Islam" },
-        { value: "Christianity", label: "Christianity" },
-        { value: "Hinduism", label: "Hinduism" },
+        { value: "Muslim", label: "Muslim" },
+        { value: "Hindu", label: "Hindu" },
+        { value: "Christian", label: "Christian" },
+        { value: "Others", label: "Others" },
     ], []);
-
-    const semesterOptions = useMemo(() => {
-        const semesters = [];
-        for (let i = 1; i <= 8; i++) {
-            semesters.push({ value: i.toString(), label: `Semester ${i}` });
-        }
-        return semesters;
-    }, []);
 
     const departmentOptions = useMemo(() => {
         if (!departments || !Array.isArray(departments)) return [];
@@ -77,6 +87,25 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
             label: `${item.department} - ${item.departmentName}`
         }));
     }, [departments]);
+
+    const stateOptions = useMemo(() => [
+        'Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh',
+        'Chhattisgarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Goa', 'Gujarat', 'Haryana',
+        'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka', 'Kerala', 'Ladakh',
+        'Lakshadweep', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
+        'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim',
+        'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Others'
+    ].map(state => ({ value: state, label: state })), []);
+
+    const districtOptions = useMemo(() => [
+        'Ariyalur', 'Chengalpattu', 'Chennai', 'Coimbatore', 'Cuddalore', 'Dharmapuri',
+        'Dindigul', 'Erode', 'Kallakurichi', 'Kanchipuram', 'Kanyakumari', 'Karur',
+        'Krishnagiri', 'Madurai', 'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur',
+        'Pudukkottai', 'Ramanathapuram', 'Ranipet', 'Salem', 'Sivaganga', 'Tenkasi',
+        'Thanjavur', 'Theni', 'Thoothukuidi', 'Tiruchirappalli', 'Tirunelveli', 'Tirupathur',
+        'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore', 'Viluppuram',
+        'Virudhunagar', 'Others'
+    ].map(district => ({ value: district, label: district })), []);
 
     const siblingOptions = useMemo(() => [
         { value: "Yes", label: "Yes" },
@@ -88,65 +117,30 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
         { value: "No", label: "No" }
     ], []);
 
-    const scholarshipOptions = useMemo(() => [
-        { value: "0", label: "None" },
-        { value: "1", label: "Partial" },
-        { value: "2", label: "Full" }
-    ], []);
-
-    const semBasedOptions = useMemo(() => [
-        { value: "0", label: "No" },
-        { value: "1", label: "Yes" }
-    ], []);
-
-    // Initialize form data
+    // Form Initialization
     useEffect(() => {
         if (student) {
             Object.keys(student).forEach(key => {
-                if (key !== '_id' && key !== '__v' && key !== 'createdAt' && key !== 'updatedAt') {
+                if (!['_id', '__v', 'createdAt', 'updatedAt'].includes(key)) {
                     setValue(key, student[key] ?? '');
                 }
             });
         }
     }, [student, setValue]);
 
-    // Handle select change
     const handleSelectChange = useCallback((name, option) => {
         setValue(name, option ? option.value : '');
     }, [setValue]);
 
-    // Custom validation
-    const validateForm = (data) => {
-        const errors = {};
-
-        if (data.mobileNo && !/^[0-9]{10}$/.test(data.mobileNo)) {
-            errors.mobileNo = 'Mobile number must be 10 digits';
-        }
-
-        if (data.aadharNo && !/^[0-9]{12}$/.test(data.aadharNo)) {
-            errors.aadharNo = 'Aadhaar number must be 12 digits';
-        }
-
-        return errors;
-    };
-
-    // Handle form submit
     const onSubmit = useCallback(async (data) => {
-        const validationErrors = validateForm(data);
-        if (Object.keys(validationErrors).length > 0) {
-            // Set errors manually
-            Object.keys(validationErrors).forEach(key => {
-                // You might want to use setError from react-hook-form
-                // For now, we'll handle it in the component
-            });
-            return;
-        }
         await onSave(data);
     }, [onSave]);
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full border border-gray-200 dark:border-gray-700 max-w-6xl hide-scrollbar overflow-y-auto max-h-[80vh]">
+
+                {/* Modal Header */}
                 <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-900 z-10">
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         ✏️ Edit Student
@@ -161,10 +155,11 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate className="p-6 space-y-7">
-                    {/* Personal Information */}
-                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-800/50 shadow-sm">
+
+                    {/* Academic & Personal Information */}
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 dark:bg-gray-880/50 shadow-sm">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
-                            👤 Personal Information
+                            👤 Personal & Academic Information
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <InputBox
@@ -174,7 +169,10 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
                                 type="text"
                                 register={register}
                                 errors={errors}
-                                readOnly
+                                readOnly={false}
+                                validation={{
+                                    validate: validateRegisterNo
+                                }}
                             />
                             <InputBox
                                 name="name"
@@ -215,21 +213,12 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
                             />
                             <InputBox
                                 name="yearOfAdmission"
-                                label="Batch (Year of Admission)"
+                                label="Year of Admission"
                                 required
                                 type="text"
                                 register={register}
                                 errors={errors}
-                                placeholder="e.g., 2023"
-                            />
-                            <SearchDropdown
-                                label="Semester"
-                                name="semester"
-                                value={watch('semester')}
-                                options={semesterOptions}
-                                onChange={handleSelectChange}
-                                required
-                                error={errors.semester?.message}
+                                placeholder="e.g., 2024"
                             />
                             <SearchDropdown
                                 label="Section"
@@ -249,22 +238,6 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
                                 required
                                 error={errors.religion?.message}
                             />
-                            <InputBox
-                                name="mobileNo"
-                                label="Mobile No"
-                                type="text"
-                                register={register}
-                                errors={errors}
-                                placeholder="10 digits only"
-                            />
-                            <InputBox
-                                name="aadharNo"
-                                label="Aadhar No"
-                                type="text"
-                                register={register}
-                                errors={errors}
-                                placeholder="12 digits only"
-                            />
                         </div>
                     </div>
 
@@ -273,7 +246,7 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
                         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
                             📍 Address Information
                         </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
                             <InputBox
                                 name="address"
                                 label="Address"
@@ -281,27 +254,31 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
                                 register={register}
                                 errors={errors}
                             />
-                            <InputBox
-                                name="district"
-                                label="District"
-                                type="text"
-                                register={register}
-                                errors={errors}
-                            />
-                            <InputBox
-                                name="state"
-                                label="State"
-                                type="text"
-                                register={register}
-                                errors={errors}
-                            />
-                            <InputBox
-                                name="pinCode"
-                                label="Pin Code"
-                                type="number"
-                                register={register}
-                                errors={errors}
-                            />
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <SearchDropdown
+                                    label="State"
+                                    name="state"
+                                    value={watch('state')}
+                                    options={stateOptions}
+                                    onChange={handleSelectChange}
+                                    error={errors.state?.message}
+                                />
+                                <SearchDropdown
+                                    label="District"
+                                    name="district"
+                                    value={watch('district')}
+                                    options={districtOptions}
+                                    onChange={handleSelectChange}
+                                    error={errors.district?.message}
+                                />
+                                <InputBox
+                                    name="pinCode"
+                                    label="Pin Code"
+                                    type="number"
+                                    register={register}
+                                    errors={errors}
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -311,34 +288,10 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
                             👨‍👩‍👧‍👦 Family Information
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <InputBox
-                                name="parentName"
-                                label="Parent Name"
-                                type="text"
-                                register={register}
-                                errors={errors}
-                            />
-                            <InputBox
-                                name="parentNo"
-                                label="Parent Contact No"
-                                type="text"
-                                register={register}
-                                errors={errors}
-                            />
-                            <InputBox
-                                name="parentOccupation"
-                                label="Parent Occupation"
-                                type="text"
-                                register={register}
-                                errors={errors}
-                            />
-                            <InputBox
-                                name="parentAnnualIncome"
-                                label="Parent Annual Income"
-                                type="number"
-                                register={register}
-                                errors={errors}
-                            />
+                            <InputBox name="parentName" label="Parent Name" type="text" register={register} errors={errors} />
+                            <InputBox name="parentNo" label="Parent Contact No" type="text" register={register} errors={errors} />
+                            <InputBox name="parentOccupation" label="Parent Occupation" type="text" register={register} errors={errors} />
+                            <InputBox name="parentAnnualIncome" label="Parent Annual Income" type="number" register={register} errors={errors} />
                         </div>
                     </div>
 
@@ -355,27 +308,15 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
                                 options={siblingOptions}
                                 onChange={handleSelectChange}
                             />
-                            <InputBox
-                                name="siblingsCount"
-                                label="Siblings Count"
-                                type="number"
-                                register={register}
-                                errors={errors}
-                            />
-                            <InputBox
-                                name="siblingsOccupation"
-                                label="Siblings Occupation"
-                                type="text"
-                                register={register}
-                                errors={errors}
-                            />
-                            <InputBox
-                                name="siblingsIncome"
-                                label="Siblings Income"
-                                type="number"
-                                register={register}
-                                errors={errors}
-                            />
+
+                            {siblingsStatus === 'Yes' && (
+                                <>
+                                    <InputBox name="siblingsCount" label="Siblings Count" type="number" register={register} errors={errors} />
+                                    <InputBox name="siblingsOccupation" label="Siblings Occupation" type="text" register={register} errors={errors} />
+                                    <InputBox name="siblingsIncome" label="Siblings Income" type="number" register={register} errors={errors} />
+                                </>
+                            )}
+
                             <SearchDropdown
                                 label="Hostel Status"
                                 name="hostelStatus"
@@ -383,31 +324,10 @@ function StudentEditModal({ student, onClose, onSave, isLoading, departments }) 
                                 options={hostelOptions}
                                 onChange={handleSelectChange}
                             />
-                            <SearchDropdown
-                                label="Government Scholarship"
-                                name="governmentScholarship"
-                                value={watch('governmentScholarship')?.toString()}
-                                options={scholarshipOptions}
-                                onChange={(name, option) => setValue(name, parseInt(option?.value))}
-                            />
-                            <SearchDropdown
-                                label="Semester Based"
-                                name="isSemBased"
-                                value={watch('isSemBased')?.toString()}
-                                options={semBasedOptions}
-                                onChange={(name, option) => setValue(name, parseInt(option?.value))}
-                            />
-                            <InputBox
-                                name="totalCreditedAmount"
-                                label="Total Credited Amount"
-                                type="number"
-                                register={register}
-                                errors={errors}
-                            />
                         </div>
                     </div>
 
-                    {/* Footer */}
+                    {/* Modal Actions Footer */}
                     <div className="flex justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-700 sticky bottom-0 bg-white dark:bg-gray-900 p-4">
                         <button
                             type="button"

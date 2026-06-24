@@ -251,8 +251,8 @@ function StudentManageTable({
                                                         Save
                                                     </button>
                                                     <button
-                                                        // onClick={() => onEditStudent(student)}
-                                                        onClick={() => alert('Work under progress')}
+                                                        onClick={() => onEditStudent(student)}
+                                                        // onClick={() => alert('Work under progress')}
                                                         className="px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm bg-green-500 hover:bg-green-600 text-white"
                                                     >
                                                         Edit
