@@ -62,7 +62,9 @@ function EditTutorModal({ tutor, onClose, onUpdateTutor, batchs }) {
     };
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
+
         const newErrors = validateForm();
         if (Object.keys(newErrors).length > 0) {
             const firstErrorField = Object.keys(newErrors)[0];
@@ -72,7 +74,10 @@ function EditTutorModal({ tutor, onClose, onUpdateTutor, batchs }) {
         }
 
         try {
-            const response = await axios.post(`${apiUrl}/api/tutor/updateTutor`, formData);
+            const response = await axios.put(
+                `${apiUrl}/api/tutor/updateTutor/${formData.staffId}`,
+                formData
+            );
             if (response.status === 200) {
                 alert(response.data.message || "Tutor updated successfully!");
                 onUpdateTutor?.(formData);

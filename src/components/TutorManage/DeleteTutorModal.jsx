@@ -10,7 +10,7 @@ function DeleteTutorModal({ tutor, onClose, onDelete }) {
     const handleDelete = async () => {
 
         try {
-            const response = await axios.post(`${apiUrl}/api/tutor/deleteTutor`, tutor);
+            const response = await axios.delete(`${apiUrl}/api/tutor/deleteTutor/${tutor.staffId}`);
             if (response.status === 200) {
                 alert(`${response.data.message}`);
                 onDelete?.(tutor.staffId);
