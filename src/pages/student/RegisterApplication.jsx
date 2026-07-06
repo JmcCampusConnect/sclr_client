@@ -135,16 +135,20 @@ function RegisterApplication() {
             const response = await axios.get(
                 `${apiUrl}/api/student/checkRegisterNo?registerNo=${normalizedRegisterNo}`
             )
-            if (response.data.message === 'Allow to apply') {
+            const message = response?.data?.message || response?.data?.error || '';
+
+            if (response?.data?.success || message === 'Allow to apply') {
                 setValue('registerNo', normalizedRegisterNo);
-                setNewStudent(true)
+                setNewStudent(true);
+            } else if (message === 'Register number is not valid.') {
+                setRegisterNoError('Register number is not valid.');
             } else {
                 const confirmed = window.confirm('You already registered with this Register Number \nDo you want go to Login Page');
-                if (confirmed) { navigate('/') }
+                if (confirmed) { navigate('/'); }
             }
         } catch (err) {
-            console.error('Error checking register number : ', err);
-            alert('Something went wrong. Please try again.');
+            const serverMessage = err?.response?.data?.message || err?.response?.data?.error;
+            setRegisterNoError(serverMessage || 'Register number is not valid.');
         }
     }
 
