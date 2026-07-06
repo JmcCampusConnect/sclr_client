@@ -50,7 +50,7 @@ const EducationalDetails = ({ student }) => (
                         <TableRow label="TPS / PPS Beneficiary">
                             {student.governmentScholarship === 0
                                 ? "Pending"
-                                : student.governmentScholarship === 1 ? "Yes" : "No"}
+                                : student.governmentScholarship === 2 ? "Yes" : "No"}
                         </TableRow>
                     </tbody>
                 </table>
