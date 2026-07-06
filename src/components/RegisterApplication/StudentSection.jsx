@@ -3,7 +3,7 @@ import DropDown from '../../common/DropDown';
 import HeaderTag from '../../common/HeaderTag';
 import InputBox from '../../common/InputBox';
 
-function StudentSection({ register, errors, setValue, watch, addtionalInfo, adminRequired = true, readOnly = false, sclrType }) {
+function StudentSection({ register, errors, setValue, watch, addtionalInfo, adminRequired = true, readOnly = false, sclrType, loginConstraint = false }) {
 
     return (
         <>
@@ -17,7 +17,7 @@ function StudentSection({ register, errors, setValue, watch, addtionalInfo, admi
                     options={['Muslim', 'Hindu', 'Christian', 'Others']}
                     required
                     errors={errors}
-                    readOnly={readOnly}
+                    readOnly={readOnly || loginConstraint}
                     setValue={setValue}
                     watch={watch}
                 />

@@ -14,6 +14,8 @@ import Button from '../../common/Button';
 import { useAdd } from '../../hook/useAdd';
 const apiUrl = import.meta.env.VITE_API_URL;
 
+const registerNoPattern = /^\d{2}[A-Za-z]{3}\d{3}$/;
+
 const schema = Yup.object().shape({
     specialCategory: Yup.string().required('Special Category is required'),
     hasAppliedOtherScholarships: Yup.string().required('Applied Scholarship is required'),
@@ -21,7 +23,7 @@ const schema = Yup.object().shape({
     category: Yup.string().required('Category is required'),
     semester: Yup.string().required('Semester is required'),
     hostelStatus: Yup.string().required('Hostel Status is required'),
-    registerNo: Yup.string().required('Register Number is required'),
+    registerNo: Yup.string().required('Register Number is required').matches(registerNoPattern, 'Register number is not valid.'),
     name: Yup.string().required('Name is required'),
     yearOfAdmission: Yup.number().required('Year of Admission is required').typeError('Must be a number'),
     department: Yup.string().required('Department is required'),
@@ -172,6 +174,7 @@ function LoginApplication() {
                 addtionalInfo={true}
                 readOnly={!canApply}
                 sclrType={sclrType}
+                loginConstraint={true}
                 lastYearCreditedAmount={studentData?.lastYearCreditedAmount}
             />
 

@@ -16,6 +16,8 @@ import { useAdd } from '../../hook/useAdd';
 import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
 
+const registerNoPattern = /^\d{2}[A-Za-z]{3}\d{3}$/;
+
 const schema = Yup.object().shape({
     specialCategory: Yup.string().required('Special Category is required'),
     hasAppliedOtherScholarships: Yup.string().required('Applied Scholarship is required'),
@@ -23,7 +25,7 @@ const schema = Yup.object().shape({
     category: Yup.string().required('Category is required'),
     semester: Yup.string().required('Semester is required'),
     hostelStatus: Yup.string().required('Hostel Status is required'),
-    registerNo: Yup.string().required('Register Number is required'),
+    registerNo: Yup.string().required('Register Number is required').matches(registerNoPattern, 'Register number is not valid.'),
     name: Yup.string().required('Name is required'),
     yearOfAdmission: Yup.number().required('Year of Admission is required').typeError('Must be a number'),
     department: Yup.string().required('Department is required'),
@@ -112,18 +114,29 @@ function RegisterApplication() {
     const { addData } = useAdd();
     const [newStudent, setNewStudent] = useState(false);
     const [registerNo, setRegisterNo] = useState('');
+    const [registerNoError, setRegisterNoError] = useState('');
 
     const checkRegisterNumber = async () => {
+        const normalizedRegisterNo = registerNo.trim().toUpperCase();
 
-        if (registerNo === '') { return alert('Please enter Register Number') }
+        if (!normalizedRegisterNo) {
+            setRegisterNoError('Register number is not valid.');
+            return;
+        }
+
+        if (!registerNoPattern.test(normalizedRegisterNo)) {
+            setRegisterNoError('Register number is not valid.');
+            return;
+        }
+
+        setRegisterNoError('');
 
         try {
             const response = await axios.get(
-                `${apiUrl}/api/student/checkRegisterNo?registerNo=${registerNo}`
+                `${apiUrl}/api/student/checkRegisterNo?registerNo=${normalizedRegisterNo}`
             )
-            // console.log(response)
             if (response.data.message === 'Allow to apply') {
-                setValue('registerNo', registerNo);
+                setValue('registerNo', normalizedRegisterNo);
                 setNewStudent(true)
             } else {
                 const confirmed = window.confirm('You already registered with this Register Number \nDo you want go to Login Page');
@@ -183,7 +196,10 @@ function RegisterApplication() {
                                     type="text" placeholder="Ex : 24MCAXXX"
                                     className="w-full border text-gray-900 transition border-gray-200 p-2 rounded-md bg-white shadow-xs mt-2.5"
                                     value={registerNo}
-                                    onChange={(e) => setRegisterNo(e.target.value.toUpperCase())}
+                                    onChange={(e) => {
+                                        setRegisterNo(e.target.value.toUpperCase());
+                                        setRegisterNoError('');
+                                    }}
                                     required
                                 />
                                 <button
@@ -194,6 +210,9 @@ function RegisterApplication() {
                                     Check
                                 </button>
                             </div>
+                            {registerNoError && (
+                                <p className="text-red-500 text-sm mt-3">{registerNoError}</p>
+                            )}
                         </div>
                     </div>
                 </div>

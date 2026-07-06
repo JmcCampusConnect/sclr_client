@@ -1,35 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import RadioButton from '../../common/RadioButton';
 import InputBox from '../../common/InputBox';
 import DropDown from '../../common/DropDown';
 import HeaderTag from '../../common/HeaderTag';
-import axios from 'axios';
 
 function AcademicDetails({ register, errors, watch, setValue, readOnly = false, loginConstraint = false }) {
 
-    const apiUrl = import.meta.env.VITE_API_URL;
     const graduate = watch('graduate');
-    const [departments, setDepartments] = useState([]);
+    const registerNo = watch('registerNo');
     const semesterOptions = graduate === 'PG'
         ? ['I', 'II', 'III', 'IV']
         : ['I', 'II', 'III', 'IV', 'V', 'VI'];
 
     useEffect(() => {
-        const fetchDepartments = async () => {
-            try {
-                const response = await axios.get(`${apiUrl}/api/tutor/departments`);
-                setDepartments(response.data?.departments);
-            } catch (error) {
-                console.error("Error fetching departments : ", error);
-            }
-        };
-        fetchDepartments();
-    }, []);
+        if (!registerNo || typeof registerNo !== 'string') return;
 
-    const depts = Object.values(departments).map((item) => ({
-        value: item.department,
-        label: `${item.department} - ${item.departmentName}`,
-    }));
+        const normalizedRegisterNo = registerNo.toUpperCase();
+        const match = normalizedRegisterNo.match(/^(\d{2})([A-Z]{3})(\d{3})$/);
+
+        if (!match) {
+            setValue('yearOfAdmission', '', { shouldValidate: true, shouldDirty: true });
+            setValue('department', '', { shouldValidate: true, shouldDirty: true });
+            return;
+        }
+
+        const [, yearPrefix, departmentCode] = match;
+        setValue('yearOfAdmission', `20${yearPrefix}`, { shouldValidate: true, shouldDirty: true });
+        setValue('department', departmentCode, { shouldValidate: true, shouldDirty: true });
+    }, [registerNo, setValue]);
 
     return (
         <>
@@ -108,19 +106,18 @@ function AcademicDetails({ register, errors, watch, setValue, readOnly = false, 
                         required
                         register={register}
                         errors={errors}
-                        readOnly={readOnly}
+                        readOnly={true}
                     />
 
-                    {/* Department Dropdown */}
-                    <DropDown
-                        name="department"
+                    <InputBox
                         label="Department"
-                        options={depts}
+                        type="text"
+                        name="department"
+                        placeholder="e.g.: CSE"
                         required
+                        register={register}
                         errors={errors}
-                        readOnly={readOnly || loginConstraint}
-                        setValue={setValue}
-                        watch={watch}
+                        readOnly={true}
                     />
 
                     {/* Section Dropdown */}
@@ -130,7 +127,7 @@ function AcademicDetails({ register, errors, watch, setValue, readOnly = false, 
                         options={['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']}
                         required
                         errors={errors}
-                        readOnly={readOnly}
+                        readOnly={readOnly || loginConstraint}
                         setValue={setValue}
                         watch={watch}
                     />
