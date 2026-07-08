@@ -16,7 +16,6 @@ function SclrAdministration() {
     const location = useLocation();
     const navigate = useNavigate();
     const [students, setStudents] = useState([]);
-    const [filteredStudents, setFilteredStudents] = useState([]);
     const [donors, setDonors] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -24,92 +23,102 @@ function SclrAdministration() {
     const [showRejectModal, setShowRejectModal] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [filters, setFilters] = useState({
-        applicationStatus: "0", sclrType: "all", tutorVerification: "all",
+        applicationStatus: "0",
+        sclrType: "all",
+        tutorVerification: "all",
+        courseType: "all",
+        year: "all",
+        gender: "all",
+        stream: "all",
         specialCategories: ["All", "General", "Mu-addin", "Hazrath", "Father Mother Separated", "Father Expired", "Single Parent", "Orphan"]
     });
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchedStudents, setSearchedStudents] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+    const pageSize = 20;
 
 
-    const fetchData = async () => {
+    const fetchData = async (page = 1, activeFilters = filters, activeSearchTerm = searchTerm) => {
 
         setIsLoading(true);
         setError(null);
 
         try {
+            const params = new URLSearchParams({
+                page: String(page),
+                limit: String(pageSize),
+            });
+
+            if (activeSearchTerm?.trim()) {
+                params.set("search", activeSearchTerm.trim());
+            }
+
+            if (activeFilters.applicationStatus !== "all") {
+                params.set("applicationStatus", activeFilters.applicationStatus);
+            }
+
+            if (activeFilters.sclrType !== "all") {
+                params.set("sclrType", activeFilters.sclrType);
+            }
+
+            if (activeFilters.tutorVerification !== "all") {
+                params.set("tutorVerification", activeFilters.tutorVerification);
+            }
+
+            if (activeFilters.courseType !== "all") {
+                params.set("courseType", activeFilters.courseType);
+            }
+
+            if (activeFilters.year !== "all") {
+                params.set("year", activeFilters.year);
+            }
+
+            if (activeFilters.gender !== "all") {
+                params.set("gender", activeFilters.gender);
+            }
+
+            if (activeFilters.stream !== "all") {
+                params.set("stream", activeFilters.stream);
+            }
+
+            const selectedSpecialCategories = (activeFilters.specialCategories || []).filter(cat => cat !== "All");
+            if (selectedSpecialCategories.length > 0) {
+                params.set("specialCategories", selectedSpecialCategories.join(","));
+            }
+
             const [studentsRes, donorsRes] = await Promise.all([
-                axios.get(`${apiUrl}/api/admin/application/fetchStudents`),
+                axios.get(`${apiUrl}/api/admin/application/fetchStudents`, { params }),
                 axios.get(`${apiUrl}/api/admin/application/fetchDonors`),
             ]);
 
-            const sortedStudents = studentsRes.data.data.sort(
+            const sortedStudents = (studentsRes.data.data || []).sort(
                 (a, b) => a.applicationStatus - b.applicationStatus
             );
             setStudents(sortedStudents);
-            setDonors(donorsRes.data.donors);
+            setDonors(donorsRes.data.donors || []);
+            setCurrentPage(studentsRes.data.pagination?.page || page);
+            setTotalPages(studentsRes.data.pagination?.totalPages || 1);
+            setTotalItems(studentsRes.data.pagination?.totalItems || sortedStudents.length);
         } catch (err) {
             console.error("Error fetching data for admin application:", err);
             setError("Failed to load data. Please try again later.");
         } finally { setIsLoading(false) }
     }
 
-    useEffect(() => { fetchData() }, []);
-
-    // Apply filters with AND gate logic
-
     useEffect(() => {
-
-        let filtered = [...students];
-
-        // Filter by application status (AND gate)
-        if (filters.applicationStatus !== "all") {
-            filtered = filtered.filter(student =>
-                String(student.applicationStatus) === filters.applicationStatus
-            );
-        }
-
-        // Filter by scholarship type (AND gate)
-        if (filters.sclrType !== "all") {
-            filtered = filtered.filter(student =>
-                student.sclrType === filters.sclrType
-            );
-        }
-
-        // Filter by tutor verification (AND gate)
-        if (filters.tutorVerification !== "all") {
-            filtered = filtered.filter(student =>
-                String(student.tutorVerification) === filters.tutorVerification
-            );
-        }
-
-        // Filter by special categories
-        if (filters.specialCategories && filters.specialCategories.length > 0) {
-            const categoriesToFilter = filters.specialCategories.filter(cat => cat !== "All");
-            if (categoriesToFilter.length === 0) { }
-            else {
-                filtered = filtered.filter(student => {
-                    return categoriesToFilter.includes(student.specialCategory);
-                });
-            }
-        } else { filtered = [] }
-
-        setFilteredStudents(filtered);
-    }, [filters, students]);
-
-    // Apply search to filtered students only
-    useEffect(() => {
-        if (searchTerm.trim() === "") {
-            setSearchedStudents(filteredStudents);
-        } else {
-            const lower = searchTerm.toLowerCase();
-            const searched = filteredStudents.filter(student =>
-                student.name?.toLowerCase().includes(lower) ||
-                student.registerNo?.toLowerCase().includes(lower) ||
-                student.department?.toLowerCase().includes(lower)
-            );
-            setSearchedStudents(searched);
-        }
-    }, [searchTerm, filteredStudents]);
+        fetchData(1, filters, searchTerm);
+    }, [
+        filters.applicationStatus,
+        filters.sclrType,
+        filters.tutorVerification,
+        filters.courseType,
+        filters.year,
+        filters.gender,
+        filters.stream,
+        JSON.stringify(filters.specialCategories),
+        searchTerm,
+    ]);
 
     const isViewPage = location.pathname.endsWith("/view");
 
@@ -131,10 +140,16 @@ function SclrAdministration() {
         setSelectedStudent(null);
     };
 
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages && page !== currentPage) {
+            fetchData(page, filters, searchTerm);
+        }
+    };
+
     const handleSubmissionSuccess = () => {
         closeModal();
         navigate("/admin/sclrAdministration");
-        fetchData();
+        fetchData(1, filters, searchTerm);
     }
 
     if (isLoading) {
@@ -186,15 +201,38 @@ function SclrAdministration() {
                     />
 
                     <ActionBar
-                        totalStudents={searchedStudents.length}
+                        totalStudents={totalItems}
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
                     />
 
+                    <div className="mb-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                        <span>Showing {students.length} of {totalItems} applications</span>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className="px-3 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Previous
+                            </button>
+                            <span>Page {currentPage} / {totalPages}</span>
+                            <button
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                                className="px-3 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+
                     <ApplicationTable
-                        students={searchedStudents}
+                        students={students}
                         openAcceptModal={openAcceptModal}
                         openRejectModal={openRejectModal}
+                        currentPage={currentPage}
+                        pageSize={pageSize}
                     />
 
                     <AcceptModal

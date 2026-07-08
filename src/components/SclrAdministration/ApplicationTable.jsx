@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
+function ApplicationTable({ students, openAcceptModal, openRejectModal, currentPage, pageSize }) {
 
     const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal }) {
                     {students.length > 0 ? (
                         students.map((app, index) => (
                             <tr key={app.applicationId} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200">
-                                <td className="px-4 py-4">{index + 1}</td>
+                                <td className="px-4 py-4">{(currentPage - 1) * pageSize + index + 1}</td>
                                 <td className="px-4 py-4">{app.registerNo}</td>
                                 <td className="px-4 py-4" style={{ minWidth: '300px' }}>{app.name}</td>
                                 <td className="px-4 py-4">{app.semester}</td>

@@ -1,7 +1,7 @@
 import React from "react";
 import SearchDropdown from "../../common/SearchDropDown";
 
-function FilterSection({filters, setFilters}) {
+function FilterSection({ filters, setFilters }) {
 
     const checkboxes = [
         "General",
@@ -14,37 +14,63 @@ function FilterSection({filters, setFilters}) {
     ]
 
     const statusOptions = [
-        {value: "all", label: "All"},
-        {value: "0", label: "In Progress"},
-        {value: "1", label: "Accepted"},
-        {value: "2", label: "Rejected"},
+        { value: "all", label: "All" },
+        { value: "0", label: "In Progress" },
+        { value: "1", label: "Accepted" },
+        { value: "2", label: "Rejected" },
     ]
 
     const typeOptions = [
-        {value: "all", label: "All"},
-        {value: "Fresher", label: "Fresher"},
-        {value: "Renewal", label: "Renewal"},
+        { value: "all", label: "All" },
+        { value: "Fresher", label: "Fresher" },
+        { value: "Renewal", label: "Renewal" },
     ]
 
     const verificationOptions = [
-        {value: "all", label: "All"},
-        {value: "1", label: "Verified"},
-        {value: "0", label: "Pending"},
+        { value: "all", label: "All" },
+        { value: "1", label: "Verified" },
+        { value: "0", label: "Pending" },
+    ]
+
+    const courseTypeOptions = [
+        { value: "all", label: "All" },
+        { value: "UG", label: "UG" },
+        { value: "PG", label: "PG" },
+    ]
+
+    const yearOptions = [
+        { value: "all", label: "All" },
+        { value: "I", label: "I" },
+        { value: "II", label: "II" },
+        { value: "III", label: "III" },
+    ]
+
+    const genderOptions = [
+        { value: "all", label: "All" },
+        { value: "Men", label: "Men" },
+        { value: "Women", label: "Women" },
+    ]
+
+    const streamOptions = [
+        { value: "all", label: "All" },
+        { value: "Aided", label: "Aided" },
+        { value: "SFM", label: "SFM" },
+        { value: "SFW", label: "SFW" },
     ]
 
     const handleDropdownChange = (name, option) => {
-        setFilters((prev) => ({...prev, [name]: option?.value || "all"}));
+        setFilters((prev) => ({ ...prev, [name]: option?.value || "all" }));
     };
 
     const handleCheckboxChange = (label) => {
-        
+
         setFilters((prev) => {
             const updated = prev.specialCategories || [];
             if (label === "All") {
                 if (updated.includes("All")) {
-                    return {...prev, specialCategories: []};
+                    return { ...prev, specialCategories: [] };
                 } else {
-                    return {...prev, specialCategories: ["All", ...checkboxes]};
+                    return { ...prev, specialCategories: ["All", ...checkboxes] };
                 }
             }
             // If any specific checkbox is clicked
@@ -71,7 +97,7 @@ function FilterSection({filters, setFilters}) {
                 newCategories = newCategories.filter(i => i !== "All");
             }
 
-            return {...prev, specialCategories: newCategories};
+            return { ...prev, specialCategories: newCategories };
         });
     };
 
@@ -84,7 +110,7 @@ function FilterSection({filters, setFilters}) {
 
     return (
         <div className="w-full space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
                 {/* Application Status */}
                 <SearchDropdown
@@ -110,6 +136,42 @@ function FilterSection({filters, setFilters}) {
                     name="tutorVerification"
                     options={verificationOptions}
                     value={filters.tutorVerification}
+                    onChange={handleDropdownChange}
+                />
+
+                {/* Course Type */}
+                <SearchDropdown
+                    label="Course Type"
+                    name="courseType"
+                    options={courseTypeOptions}
+                    value={filters.courseType}
+                    onChange={handleDropdownChange}
+                />
+
+                {/* Year */}
+                <SearchDropdown
+                    label="Year"
+                    name="year"
+                    options={yearOptions}
+                    value={filters.year}
+                    onChange={handleDropdownChange}
+                />
+
+                {/* Gender */}
+                <SearchDropdown
+                    label="Gender"
+                    name="gender"
+                    options={genderOptions}
+                    value={filters.gender}
+                    onChange={handleDropdownChange}
+                />
+
+                {/* Stream */}
+                <SearchDropdown
+                    label="Stream"
+                    name="stream"
+                    options={streamOptions}
+                    value={filters.stream}
                     onChange={handleDropdownChange}
                 />
             </div>
