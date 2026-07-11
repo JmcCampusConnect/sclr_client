@@ -33,13 +33,13 @@ function SclrAdministration() {
         specialCategories: ["All", "General", "Mu-addin", "Hazrath", "Father Mother Separated", "Father Expired", "Single Parent", "Orphan"]
     });
     const [searchTerm, setSearchTerm] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const pageSize = 20;
 
-
-    const fetchData = async (page = 1, activeFilters = filters, activeSearchTerm = searchTerm) => {
+    const fetchData = async (page = 1, activeFilters = filters, activeSearchTerm = searchQuery) => {
 
         setIsLoading(true);
         setError(null);
@@ -106,8 +106,13 @@ function SclrAdministration() {
         } finally { setIsLoading(false) }
     }
 
+    const handleSearchClick = () => {
+        setCurrentPage(1);
+        setSearchQuery(searchTerm);
+    };
+
     useEffect(() => {
-        fetchData(1, filters, searchTerm);
+        fetchData(1, filters, searchQuery);
     }, [
         filters.applicationStatus,
         filters.sclrType,
@@ -117,7 +122,7 @@ function SclrAdministration() {
         filters.gender,
         filters.stream,
         JSON.stringify(filters.specialCategories),
-        searchTerm,
+        searchQuery,
     ]);
 
     const isViewPage = location.pathname.endsWith("/view");
@@ -142,14 +147,14 @@ function SclrAdministration() {
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages && page !== currentPage) {
-            fetchData(page, filters, searchTerm);
+            fetchData(page, filters, searchQuery);
         }
     };
 
     const handleSubmissionSuccess = () => {
         closeModal();
         navigate("/admin/sclrAdministration");
-        fetchData(1, filters, searchTerm);
+        fetchData(1, filters, searchQuery);
     }
 
     if (isLoading) {
@@ -204,6 +209,7 @@ function SclrAdministration() {
                         totalStudents={totalItems}
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
+                        onSearchClick={handleSearchClick}
                     />
 
                     <div className="mb-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
