@@ -8,7 +8,7 @@ function ApplnManageActionBar({ totalCount, searchTerm, setSearchTerm }) {
         "rounded-lg shadow-sm focus:ring-gray-400 focus:border-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 outline-none transition";
 
     return (
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
             <div className="relative w-full md:w-1/2">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
                 <input

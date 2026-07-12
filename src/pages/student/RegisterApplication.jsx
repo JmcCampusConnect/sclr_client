@@ -118,19 +118,15 @@ function RegisterApplication() {
 
     const checkRegisterNumber = async () => {
         const normalizedRegisterNo = registerNo.trim().toUpperCase();
-
         if (!normalizedRegisterNo) {
             setRegisterNoError('Register number is not valid.');
             return;
         }
-
         if (!registerNoPattern.test(normalizedRegisterNo)) {
             setRegisterNoError('Register number is not valid.');
             return;
         }
-
         setRegisterNoError('');
-
         try {
             const response = await axios.get(
                 `${apiUrl}/api/student/checkRegisterNo?registerNo=${normalizedRegisterNo}`
@@ -151,6 +147,13 @@ function RegisterApplication() {
             setRegisterNoError(serverMessage || 'Register number is not valid.');
         }
     }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            checkRegisterNumber();
+        }
+    };
 
     const registerFormSubmit = async (formData) => {
         const dataToSend = new FormData();
@@ -204,6 +207,7 @@ function RegisterApplication() {
                                         setRegisterNo(e.target.value.toUpperCase());
                                         setRegisterNoError('');
                                     }}
+                                    onKeyDown={handleKeyDown}
                                     required
                                 />
                                 <button

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Loading from "../../assets/svg/Pulse.svg";
 import HeaderTag from '../../common/HeaderTag';
+import StaffStatus from '../../components/Others/StaffStatus';
 
 function TutorVerify() {
 
@@ -10,9 +11,17 @@ function TutorVerify() {
     const { userId: staffId } = useParams();
 
     const [studentData, setStudentData] = useState([]);
+    const [allStudents, setAllStudents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [formErrors, setFormErrors] = useState({});
+    const [counts, setCounts] = useState({
+        totalApplications: 0,
+        completed: 0,
+        pending: 0
+    });
+    const [viewMode, setViewMode] = useState('pending');
+    const [searchTerm, setSearchTerm] = useState('');
 
     const [verificationData, setVerificationData] = useState({
         orphanOrSingleParent: null,
@@ -75,7 +84,20 @@ function TutorVerify() {
                 params: { userId: staffId }
             });
             if (response.status === 200) {
-                setStudentData(response.data);
+                const students = response.data || [];
+                setAllStudents(students);
+                setStudentData(students);
+
+                // Calculate counts
+                const total = students.length;
+                const completed = students.filter(s => s.tutorVerification === 1).length;
+                const pending = students.filter(s => s.tutorVerification === 0).length;
+
+                setCounts({
+                    totalApplications: total,
+                    completed: completed,
+                    pending: pending
+                });
             }
         } catch (error) {
             setError("Failed to load student data. Please try again later.");
@@ -131,9 +153,38 @@ function TutorVerify() {
             fetchStudents();
         } catch (err) {
             alert("Verification failed!\nPlease try again.");
-            console.error('Error in verfiying student : ', err);
+            console.error('Error in verifying student : ', err);
         } finally { setIsSubmitting(false) }
     }
+
+    // Filter data based on view mode and search
+    const getFilteredData = () => {
+        let filtered = allStudents;
+
+        // Filter by view mode
+        if (viewMode === 'pending') {
+            filtered = allStudents.filter(stu =>
+                stu.tutorVerification === 0
+            );
+        } else if (viewMode === 'completed') {
+            filtered = allStudents.filter(stu =>
+                stu.tutorVerification === 1
+            );
+        }
+
+        // Filter by search term
+        if (searchTerm.trim()) {
+            const search = searchTerm.toLowerCase().trim();
+            filtered = filtered.filter(st =>
+                st.registerNo?.toLowerCase().includes(search) ||
+                st.name?.toLowerCase().includes(search) ||
+                st.department?.toLowerCase().includes(search) ||
+                st.semester?.toLowerCase().includes(search)
+            );
+        }
+
+        return filtered;
+    };
 
     if (isLoading) {
         return (
@@ -152,57 +203,197 @@ function TutorVerify() {
         );
     }
 
+    const filteredData = getFilteredData();
+
     const isFormValid =
         verificationData.orphanOrSingleParent != null &&
         verificationData.hazrathOrMuaddin != null &&
         verificationData.eligibleForZakkath != null &&
         verificationData.needyButNotZakkath != null;
 
-
     return (
         <div>
             <HeaderTag label={`Tutor Verification`} />
+
+            {/* Staff Status Component */}
+            <StaffStatus counts={counts} />
+
+            {/* Search and Filter Section */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-6 mb-4">
+                {/* Search Bar - Left Side */}
+                <div className="relative w-full sm:w-72 md:w-96 group">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <svg
+                            className="h-4 w-4 text-gray-400 group-focus-within:text-gray-500 transition-colors duration-200"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2.5"
+                            stroke="currentColor"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Search by Reg No, Name, Dept..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-10 py-2.5 text-sm border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none text-gray-900 dark:text-gray-100 transition-all duration-200"
+                    />
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm('')}
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                        >
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    )}
+                </div>
+
+                {/* Filter Buttons - Right Side */}
+                <div className="flex items-center gap-1.5 p-2 bg-gray-100 dark:bg-gray-900 rounded-xl w-full sm:w-auto">
+                    <button
+                        onClick={() => setViewMode('pending')}
+                        className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 active:scale-[0.98] flex-1 sm:flex-none ${viewMode === 'pending'
+                            ? 'bg-amber-500 text-white shadow-sm shadow-amber-500/20'
+                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                            }`}
+                    >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Pending</span>
+                        <span className={`ml-0.5 px-1.5 py-0.5 text-[10px] font-bold rounded-md transition-colors duration-200 ${viewMode === 'pending'
+                            ? 'bg-white/20 text-white'
+                            : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                            }`}>
+                            {counts.pending}
+                        </span>
+                    </button>
+
+                    <button
+                        onClick={() => setViewMode('completed')}
+                        className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 active:scale-[0.98] flex-1 sm:flex-none ${viewMode === 'completed'
+                            ? 'bg-green-600 text-white shadow-sm shadow-green-600/20'
+                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                            }`}
+                    >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Completed</span>
+                        <span className={`ml-0.5 px-1.5 py-0.5 text-[10px] font-bold rounded-md transition-colors duration-200 ${viewMode === 'completed'
+                            ? 'bg-white/20 text-white'
+                            : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                            }`}>
+                            {counts.completed}
+                        </span>
+                    </button>
+                </div>
+            </div>
 
             <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
                 <div className="max-h-[700px] overflow-y-auto">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center table-auto">
                         <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
                             <tr>
-                                {["S.No", "Register No", "Name", "Department", "Semester", "Action"].map(header => (
-                                    <th
-                                        key={header}
-                                        className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap"
-                                    >
-                                        {header}
-                                    </th>
-                                ))}
+                                {viewMode === 'pending' ? (
+                                    // Pending view headers
+                                    ["S.No", "Register No", "Name", "Department", "Semester", "Action"].map(header => (
+                                        <th
+                                            key={header}
+                                            className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap"
+                                        >
+                                            {header}
+                                        </th>
+                                    ))
+                                ) : (
+                                    // Completed view headers
+                                    ["S.No", "Register No", "Name", "Department", "Semester", "Status"].map(header => (
+                                        <th
+                                            key={header}
+                                            className="px-4 py-3 text-xs sm:text-sm lg:text-base font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap"
+                                        >
+                                            {header}
+                                        </th>
+                                    ))
+                                )}
                             </tr>
                         </thead>
 
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                            {studentData.length > 0 ? (
-                                studentData.map((student, index) => (
-                                    <tr key={student._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200">
-                                        <td className="px-4 py-4">{index + 1}</td>
-                                        <td className="px-4 py-4">{student.registerNo || "—"}</td>
-                                        <td className="px-4 py-4">{student.name}</td>
-                                        <td className="px-4 py-4">{student.department || "—"}</td>
-                                        <td className="px-4 py-4">{student.semester || "—"}</td>
-
-                                        <td className="px-4 py-4">
-                                            <button
-                                                onClick={() => openModal(student)}
-                                                className="w-20 px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+                            {filteredData.length > 0 ? (
+                                filteredData.map((student, index) => {
+                                    if (viewMode === 'completed') {
+                                        // COMPLETED VIEW - Read-only display
+                                        return (
+                                            <tr
+                                                key={student._id}
+                                                className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200 bg-green-50/30 dark:bg-green-900/10"
                                             >
-                                                Verify
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
+                                                <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
+                                                    {index + 1}
+                                                </td>
+                                                <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                                    {student.registerNo || "—"}
+                                                </td>
+                                                <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                                    {student.name}
+                                                </td>
+                                                <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                                    {student.department || "—"}
+                                                </td>
+                                                <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                                    {student.semester || "—"}
+                                                </td>
+                                                <td className="px-4 py-4">
+                                                    <div className="px-3 py-1.5 bg-green-100 dark:bg-green-900/30 rounded-lg text-sm font-semibold text-green-700 dark:text-green-300 inline-block min-w-[80px]">
+                                                        Verified
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    }
+
+                                    // PENDING VIEW - With Verify button
+                                    return (
+                                        <tr key={student._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200">
+                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
+                                                {index + 1}
+                                            </td>
+                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                                {student.registerNo || "—"}
+                                            </td>
+                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                                {student.name}
+                                            </td>
+                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                                {student.department || "—"}
+                                            </td>
+                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                                {student.semester || "—"}
+                                            </td>
+                                            <td className="px-4 py-4">
+                                                <button
+                                                    onClick={() => openModal(student)}
+                                                    className="w-20 px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+                                                >
+                                                    Verify
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
                             ) : (
                                 <tr>
-                                    <td colSpan="6" className="p-4 text-center text-gray-500">
-                                        No students found.
+                                    <td
+                                        colSpan={viewMode === 'pending' ? 6 : 6}
+                                        className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base"
+                                    >
+                                        {searchTerm ? `No ${viewMode === 'pending' ? 'pending' : 'completed'} students found matching "${searchTerm}"` : `No ${viewMode === 'pending' ? 'pending' : 'completed'} student data available.`}
                                     </td>
                                 </tr>
                             )}

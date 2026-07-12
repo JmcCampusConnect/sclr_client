@@ -28,7 +28,7 @@ function AdminViewAppln() {
             const response = await axios.get(`${apiUrl}/api/admin/application/fetchDonors`);
             setDonors(response.data.donors);
         } catch (error) {
-            console.error("Error fetching students for admin application : ", error);
+            console.error("Error fetching donors for admin application : ", error);
         }
     };
 
@@ -74,6 +74,8 @@ function AdminViewAppln() {
         )
     }
 
+    const isInProgress = student.applicationStatus === 0;
+
     return (
         <div className="rounded-xl">
             <button
@@ -85,12 +87,16 @@ function AdminViewAppln() {
 
             <div className="container mx-auto">
                 <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
-                    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4">
+                    <div className="bg-gradient-to-r from-emerald-700 to-emerald-600 px-6 py-4">
                         <h2 className="text-xl font-bold text-white">{student.name}</h2>
                         <p className="text-indigo-100 text-md mt-2">Register No : {student.registerNo}</p>
                     </div>
                     <div className="p-6 space-y-7">
-                        <ApplicationStatus status={student.applicationStatus} />
+                        {/* Pass rejectionReasons to ApplicationStatus */}
+                        <ApplicationStatus
+                            status={student.applicationStatus}
+                            rejectionReasons={student.rejectionReasons}
+                        />
                         <div className="grid md:grid-cols-2 gap-6">
                             <InfoCard label="Scholarship Type" value={student.sclrType} />
                             <InfoCard label="Special Category" value={student.specialCategory} />
@@ -98,26 +104,51 @@ function AdminViewAppln() {
                         <PersonalDetails student={student} />
                         <EducationalDetails student={student} />
                         <DocumentsSection student={student} apiUrl={apiUrl} />
-                        <div className="flex justify-end gap-2">
-                            <button
-                                onClick={() => openAcceptModal(student)}
-                                className="w-20 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md"
-                            >
-                                Accept
-                            </button>
-                            <button
-                                onClick={() => openRejectModal(student)}
-                                className="w-20 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md"
-                            >
-                                Reject
-                            </button>
-                            <button
-                                onClick={() => navigate(-1)}
-                                className="w-20 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md"
-                            >
-                                Back
-                            </button>
-                        </div>
+
+                        {isInProgress ? (
+                            <div className="flex justify-end gap-2">
+                                <button
+                                    onClick={() => openAcceptModal(student)}
+                                    className="w-20 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md"
+                                >
+                                    Accept
+                                </button>
+                                <button
+                                    onClick={() => openRejectModal(student)}
+                                    className="w-20 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md"
+                                >
+                                    Reject
+                                </button>
+                                <button
+                                    onClick={() => navigate(-1)}
+                                    className="w-20 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md"
+                                >
+                                    Back
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex justify-end gap-2">
+                                <button
+                                    className="w-20 px-3 py-2 bg-gray-400 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md cursor-not-allowed"
+                                    disabled
+                                >
+                                    Accept
+                                </button>
+                                <button
+                                    className="w-20 px-3 py-2 bg-gray-400 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md cursor-not-allowed"
+                                    disabled
+                                >
+                                    Reject
+                                </button>
+                                <button
+                                    onClick={() => navigate(-1)}
+                                    className="w-20 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition text-xs sm:text-sm md:text-md"
+                                >
+                                    Back
+                                </button>
+                            </div>
+                        )}
+
                         <PrintApplication student={student} />
                         <AcceptModal
                             showAcceptModal={showAcceptModal}

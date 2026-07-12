@@ -4,7 +4,7 @@ import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChalkboard, faExclamationTriangle, faFileAlt, faIdCard, faTools, faSignOutAlt, faList,
-    faChartBar, faUserGroup, faMapSigns, faHandHoldingUsd, faChartLine, faSlidersH, faUpload
+    faChartBar, faUserGroup, faMapSigns, faHandHoldingUsd, faChartLine, faSlidersH
 } from '@fortawesome/free-solid-svg-icons';
 import { ChevronUp, ChevronDown } from "lucide-react";
 import '../App.css';
@@ -63,7 +63,7 @@ function AdminLayout() {
     const navItems = [
         { icon: faChalkboard, name: 'Dashboard', path: `/admin/dashboard`, show: true },
         { icon: faHandHoldingUsd, name: 'Scholarship Administration', path: '/admin/sclrAdministration', show: true },
-        { icon: faIdCard, name: 'Check Status', path: '/admin/checkStatus', show: true },
+        { icon: faIdCard, name: 'Review & Approval', path: '/admin/reviewApproval', show: true },
         { icon: faChartLine, name: 'Work Progress Report', path: '/admin/progressReport', show: true },
         { icon: faFileAlt, name: 'Distribution Statement', path: '/admin/distributionStatement', show: true },
         {

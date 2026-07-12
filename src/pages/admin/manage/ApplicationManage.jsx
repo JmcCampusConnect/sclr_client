@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Loading from "../../../assets/svg/Pulse.svg";
 
@@ -108,14 +108,14 @@ function ApplicationManage() {
         setApplications(prev =>
             prev.map(app =>
                 app.applicationId === updatedFormData.applicationId
-                    ? {...updatedFormData}
+                    ? { ...updatedFormData }
                     : app
             )
         );
         setFilteredApplications(prev =>
             prev.map(app =>
                 app.applicationId === updatedFormData.applicationId
-                    ? {...updatedFormData}
+                    ? { ...updatedFormData }
                     : app
             )
         );

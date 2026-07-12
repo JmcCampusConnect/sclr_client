@@ -15,6 +15,9 @@ import { useAdd } from '../../hook/useAdd';
 import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
 
+// Add the register number pattern validation
+const registerNoPattern = /^\d{2}[A-Za-z]{3}\d{3}$/;
+
 const schema = Yup.object().shape({
     specialCategory: Yup.string().required('Special Category is required'),
     hasAppliedOtherScholarships: Yup.string().required('Applied Scholarship is required'),
@@ -22,7 +25,7 @@ const schema = Yup.object().shape({
     category: Yup.string().required('Category is required'),
     semester: Yup.string().required('Semester is required'),
     hostelStatus: Yup.string().required('Hostel Status is required'),
-    registerNo: Yup.string().required('Register Number is required'),
+    registerNo: Yup.string().required('Register Number is required').matches(registerNoPattern, 'Register number is not valid.'),
     name: Yup.string().required('Name is required'),
     yearOfAdmission: Yup.number().required('Year of Admission is required').typeError('Must be a number'),
     department: Yup.string().required('Department is required'),
@@ -106,29 +109,56 @@ function AdminRegisterAppln() {
         resolver: yupResolver(schema), shouldUnregister: true
     });
     const navigate = useNavigate();
-    const { addData, addError } = useAdd();
+    const { addData } = useAdd();
     const [newStudent, setNewStudent] = useState(false);
     const [registerNo, setRegisterNo] = useState('');
+    const [registerNoError, setRegisterNoError] = useState('');
+    const [isChecking, setIsChecking] = useState(false);
 
     const checkRegisterNumber = async () => {
+        const normalizedRegisterNo = registerNo.trim().toUpperCase();
 
-        if (registerNo === '') { return alert('Please enter Register Number') }
+        // Validate format first
+        if (!normalizedRegisterNo) {
+            setRegisterNoError('Please enter a register number.');
+            return;
+        }
+
+        if (!registerNoPattern.test(normalizedRegisterNo)) {
+            setRegisterNoError('Register number is not valid. Format: 24MCAXXX');
+            return;
+        }
+
+        setRegisterNoError('');
+        setIsChecking(true);
 
         try {
             const response = await axios.get(
-                `${apiUrl}/api/student/checkRegisterNo?registerNo=${registerNo}`
-            )
-            // console.log(response)
-            if (response.data.message === 'Allow to apply') {
-                setValue('registerNo', registerNo);
-                setNewStudent(true)
+                `${apiUrl}/api/student/checkRegisterNo?registerNo=${normalizedRegisterNo}`
+            );
+
+            console.log('API Response:', response.data); // Debug log
+
+            const message = response?.data?.message || response?.data?.error || '';
+
+            if (response?.data?.success || message === 'Allow to apply') {
+                setValue('registerNo', normalizedRegisterNo);
+                setNewStudent(true);
+                setRegisterNoError('');
             } else {
-                const confirmed = window.confirm('You already registered with this Register Number \nDo you want go to Login Application');
-                if (confirmed) { navigate(`/admin/${registerNo}/adminLoginApplication`) }
+                const confirmed = window.confirm(
+                    'You are already registered with this Register Number.\nDo you want to go to Admin Login Application?'
+                );
+                if (confirmed) {
+                    navigate(`/admin/${normalizedRegisterNo}/adminLoginApplication`);
+                }
             }
         } catch (err) {
             console.error('Error checking register number : ', err);
-            alert('Something went wrong. Please try again.');
+            const serverMessage = err?.response?.data?.message || err?.response?.data?.error;
+            setRegisterNoError(serverMessage || 'Something went wrong. Please try again.');
+        } finally {
+            setIsChecking(false);
         }
     }
 
@@ -160,6 +190,13 @@ function AdminRegisterAppln() {
         }
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            checkRegisterNumber();
+        }
+    };
+
     return (
         <form className='space-y-7' onSubmit={handleSubmit(registerFormSubmit)}>
             {/* Register Number Check */}
@@ -175,20 +212,30 @@ function AdminRegisterAppln() {
                             </label>
                             <div className="flex items-center gap-4">
                                 <input
-                                    type="text" placeholder="Ex : 24MCAXXX"
+                                    type="text"
+                                    placeholder="Ex : 24MCAXXX"
                                     className="w-full border text-gray-900 transition border-gray-200 p-2 rounded-md bg-white shadow-xs mt-2.5"
                                     value={registerNo}
-                                    onChange={(e) => setRegisterNo(e.target.value.toUpperCase())}
+                                    onChange={(e) => {
+                                        setRegisterNo(e.target.value.toUpperCase());
+                                        setRegisterNoError('');
+                                    }}
+                                    onKeyDown={handleKeyDown}
+                                    disabled={isChecking}
                                     required
                                 />
                                 <button
                                     type="button"
-                                    className="bg-blue-600 text-white px-4 py-2.5 mt-2 rounded-md hover:bg-blue-700"
+                                    className="bg-blue-600 text-white px-4 py-2.5 mt-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={checkRegisterNumber}
+                                    disabled={isChecking}
                                 >
-                                    Check
+                                    {isChecking ? 'Checking...' : 'Check'}
                                 </button>
                             </div>
+                            {registerNoError && (
+                                <p className="text-red-500 text-sm mt-3">{registerNoError}</p>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -239,7 +286,8 @@ function AdminRegisterAppln() {
 
                     <div className='flex justify-end'>
                         <Button
-                            type="submit" label={isSubmitting ? "Submitting..." : "Submit"}
+                            type="submit"
+                            label={isSubmitting ? "Submitting..." : "Submit"}
                             customBtnStyle={`bg-blue-500 hover:bg-blue-700 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
                         />
                     </div>

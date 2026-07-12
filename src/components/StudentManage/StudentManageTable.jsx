@@ -6,10 +6,11 @@ function StudentManageTable({
     isLoading,
     onQuickSave,
     onEditStudent,
+    onDeleteStudent,
     pagination,
     totalCount,
     onPageChange,
-    onLimitChange
+    onLimitChange,
 }) {
 
     const [students, setStudents] = useState([]);
@@ -154,15 +155,13 @@ function StudentManageTable({
                         </thead>
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                             {students.length > 0 ? (
-
                                 students.map((student, index) => {
-
                                     const startIndex = (pagination.page - 1) * pagination.limit;
                                     const serialNumber = startIndex + index + 1;
                                     const isFieldEdited = editingFields[student.registerNo] || student.isEdited;
                                     const mobileError = validationErrors[`${student.registerNo}-mobileNo`];
                                     const aadharError = validationErrors[`${student.registerNo}-aadharNo`];
-
+                                    const hasDistributions = student.hasDistribution || false;
                                     return (
                                         <tr
                                             key={student._id}
@@ -174,7 +173,7 @@ function StudentManageTable({
                                             <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
                                                 {student.registerNo}
                                             </td>
-                                            <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            <td className="px-4 py-4 text-sm truncate lg:text-base text-gray-800 dark:text-white">
                                                 {student.name}
                                             </td>
                                             <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
@@ -243,7 +242,7 @@ function StudentManageTable({
                                                     <button
                                                         onClick={() => handleQuickSave(student)}
                                                         disabled={!isFieldEdited}
-                                                        className={`px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm ${isFieldEdited
+                                                        className={`w-18 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm ${isFieldEdited
                                                             ? "bg-indigo-500 hover:bg-indigo-600 text-white"
                                                             : "bg-gray-300 text-gray-700 cursor-not-allowed"
                                                             }`}
@@ -252,11 +251,26 @@ function StudentManageTable({
                                                     </button>
                                                     <button
                                                         onClick={() => onEditStudent(student)}
-                                                        // onClick={() => alert('Work under progress')}
-                                                        className="px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm bg-green-500 hover:bg-green-600 text-white"
+                                                        className="w-18 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm bg-green-500 hover:bg-green-600 text-white"
                                                     >
                                                         Edit
                                                     </button>
+                                                    <div className="relative group">
+                                                        <button
+                                                            onClick={() => {
+                                                                if (!hasDistributions) {
+                                                                    onDeleteStudent(student);
+                                                                }
+                                                            }}
+                                                            disabled={hasDistributions}
+                                                            className={`w-18 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm ${hasDistributions
+                                                                ? "bg-gray-300 cursor-not-allowed text-gray-700"
+                                                                : "bg-red-500 hover:bg-red-600 text-white"
+                                                                }`}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>

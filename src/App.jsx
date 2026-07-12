@@ -36,7 +36,7 @@ import StaffManage from './pages/admin/manage/StaffManage';
 import Student from './pages/admin/manage/StudentManage';
 import Tutor from './pages/admin/manage/TutorManage';
 import ApplicationManage from './pages/admin/manage/ApplicationManage';
-import CheckStatus from './pages/admin/CheckStatus';
+import CheckStatus from './pages/admin/ReviewApproval';
 import ProgressReport from './pages/admin/ProgressReport';
 import FundsAvailable from './pages/admin/report/FundsAvailable';
 import AdminChangePassword from './pages/admin/ChangePassword';
@@ -99,7 +99,7 @@ function App() {
                         <Route path="academicYear" element={<AcademicYear />} />
                         <Route path="applicationDate" element={<ApplicationDate />} />
                         <Route path="donor" element={<DonorManage />} />
-                        <Route path="checkStatus" element={<CheckStatus />} />
+                        <Route path="reviewApproval" element={<CheckStatus />} />
                         <Route path="distributionStatement" element={<DistributionStmt />} />
                         <Route path="sclrAdministration/*" element={<SclrAdministration />} >
                             <Route path="view" element={<AdminViewAppln />} />

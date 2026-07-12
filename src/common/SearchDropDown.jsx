@@ -37,7 +37,7 @@ function SearchDropdown({ label, name, value, options = [], onChange, required =
                                 : "0 0 0 1px #3b82f6"
                             : "none",
                         borderRadius: "8px",
-                        padding: "4.5px",
+                        padding: "3px",
                         "&:hover": {
                             borderColor: error ? "#ef4444" : "#3b82f6",
                         },

@@ -28,8 +28,24 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onS
         { value: "zakkathBal", label: "Zakkath" },
     ]
 
+    // Reset all state when modal is opened or closed
     useEffect(() => {
-        setLocalDonors(donors);
+        if (showAcceptModal) {
+            setLocalDonors(donors);
+            setSelectedDonor("");
+            setAmount("");
+            setDonorType("");
+            setSclrType("");
+            setFilteredDonors([]);
+            setAllowNegative(false);
+            setScholarships([]);
+        }
+    }, [showAcceptModal, donors]);
+
+    useEffect(() => {
+        if (showAcceptModal) {
+            setLocalDonors(donors);
+        }
     }, [donors, showAcceptModal]);
 
     useEffect(() => {
@@ -164,7 +180,20 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onS
             const message = err.response?.data?.message || "Something went wrong while submitting scholarships.";
             alert(message);
         }
-    }
+    };
+
+    // Handle modal close with reset
+    const handleCloseModal = () => {
+        setLocalDonors(donors);
+        setSelectedDonor("");
+        setAmount("");
+        setDonorType("");
+        setSclrType("");
+        setFilteredDonors([]);
+        setAllowNegative(false);
+        setScholarships([]);
+        closeModal();
+    };
 
     if (!showAcceptModal) return null;
 
@@ -202,7 +231,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onS
                     {/* Scholarship Input Fields */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <label className="block font-semibold text-gray-700 mb-1.5">
+                            <label className="block font-semibold text-gray-700 mb-2.5">
                                 Scholarship Amount : <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -276,7 +305,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onS
                                 {scholarships.map((s, i) => (
                                     <div
                                         key={s.id}
-                                        className="grid grid-cols-[40px_90px_1fr_100px_100px] gap-4 items-center bg-white rounded-md px-4 py-2 border text-md text-gray-700"
+                                        className="grid grid-cols-[40px_90px_1fr_100px_100px] gap-4 items-center bg-white rounded-md px-4 py-3 border border-slate-300 text-md text-gray-700"
                                     >
                                         <div>{i + 1}.</div>
                                         <div className="font-semibold">
@@ -307,7 +336,7 @@ function AcceptModal({ showAcceptModal, closeModal, selectedStudent, donors, onS
                         <div className="space-x-4">
                             <button
                                 type="button"
-                                onClick={closeModal}
+                                onClick={handleCloseModal}
                                 className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold transition"
                             >
                                 Close

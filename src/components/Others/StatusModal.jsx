@@ -3,9 +3,10 @@ import { FaHourglassHalf, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 function StatusModal({ data, onClose, onRelease }) {
 
-    const handleRelease = () => {
-        if (onRelease)
+    const handleScholarshipAction = () => {
+        if (onRelease) {
             onRelease(data);
+        }
         onClose();
     };
 
@@ -20,6 +21,19 @@ function StatusModal({ data, onClose, onRelease }) {
             </div>
         </div>
     );
+
+    const getActionButtonText = (status) => {
+        switch (status) {
+            case 0: // Pending
+                return "Award Scholarship";
+            case 1: // Approved
+                return "Increase Scholarship";
+            case 2: // Rejected
+                return "Approve & Award";
+            default:
+                return "Save";
+        }
+    };
 
     const Section = ({ title, children }) => (
         <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-6
@@ -201,10 +215,10 @@ function StatusModal({ data, onClose, onRelease }) {
                     </button>
 
                     <button
-                        onClick={handleRelease}
+                        onClick={handleScholarshipAction}
                         className="px-6 py-2.5 rounded-lg font-semibold bg-green-600 hover:bg-green-700
-                            text-white shadow-md transition">
-                        Release
+                        text-white shadow-md transition">
+                        {getActionButtonText(data.applicationStatus)}
                     </button>
                 </div>
 

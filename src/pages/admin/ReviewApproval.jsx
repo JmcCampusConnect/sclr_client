@@ -3,7 +3,7 @@ import axios from "axios";
 import StatusModal from "../../components/Others/StatusModal";
 import AcceptModal from "../../components/Others/AcceptModal";
 
-function CheckStatus() {
+function ReviewApproval() {
 
     const [registerNo, setRegisterNo] = useState("");
     const [modalData, setModalData] = useState(null);
@@ -21,34 +21,41 @@ function CheckStatus() {
                 console.error("Error fetching donors:", err);
             }
         };
+
         fetchDonors();
     }, [apiUrl]);
 
     const checkStatus = async () => {
 
-        if (!registerNo) {
+        if (!registerNo.trim()) {
             alert("Please enter a register number.");
             return;
         }
 
         try {
-            const response = await axios.get(`${apiUrl}/api/student/status`, { params: { registerNo } });
+            const response = await axios.get(`${apiUrl}/api/student/status`, {
+                params: { registerNo }
+            });
+
             if (response.data.success) {
                 setModalData(response.data.student);
             } else {
                 alert(response.data.message || "Failed to fetch application status.");
                 setModalData(null);
             }
+
         } catch (error) {
-            if (error.response && error.response.data && error.response.data.message) {
+
+            if (error.response?.data?.message) {
                 alert(error.response.data.message);
             } else {
                 alert("An error occurred while fetching the application status.");
             }
-            console.error("Error in checking status : ", error);
+
+            console.error("Error checking status:", error);
             setModalData(null);
         }
-    }
+    };
 
     const handleRelease = (student) => {
         setSelectedStudent(student);
@@ -58,7 +65,7 @@ function CheckStatus() {
     const closeAcceptModal = () => {
         setShowAcceptModal(false);
         setSelectedStudent(null);
-    }
+    };
 
     const formControlClass =
         "block w-full px-3 py-2 text-sm lg:text-base text-gray-700 bg-white " +
@@ -71,8 +78,7 @@ function CheckStatus() {
         "focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 shadow-md";
 
     return (
-        <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 
-            rounded-xl shadow-lg p-6">
+        <div className="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6">
 
             {/* Status Modal */}
             {modalData && (
@@ -89,12 +95,11 @@ function CheckStatus() {
                 closeModal={closeAcceptModal}
                 selectedStudent={selectedStudent}
                 donors={donors}
-
             />
 
             <header className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
-                    Application Status
+                    Application Review & Approval
                 </h1>
             </header>
 
@@ -103,6 +108,7 @@ function CheckStatus() {
                     <label className="block mb-3.5 text-md font-semibold text-gray-700 dark:text-gray-300">
                         Register Number :
                     </label>
+
                     <input
                         type="text"
                         name="registerNo"
@@ -110,6 +116,12 @@ function CheckStatus() {
                         className={formControlClass}
                         value={registerNo}
                         onChange={(e) => setRegisterNo(e.target.value.toUpperCase())}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                checkStatus();
+                            }
+                        }}
+                        placeholder="Enter Register Number"
                     />
                 </div>
             </div>
@@ -122,8 +134,15 @@ function CheckStatus() {
                     Check Status
                 </button>
             </div>
+
+            {/* Note */}
+            <div className="mt-6 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-4 text-md text-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+                <strong>Note :</strong> Administrators can award scholarships for
+                <strong> Pending</strong>, <strong>Approved</strong>, and <strong>Rejected</strong> applications.
+                Approved applications can be updated with additional scholarship amounts, and rejected applications can be approved by awarding a scholarship.
+            </div>
         </div>
     );
 }
 
-export default CheckStatus;
+export default ReviewApproval;

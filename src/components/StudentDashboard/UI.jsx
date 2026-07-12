@@ -15,9 +15,9 @@ export const Detail = ({ label, value }) => (
 )
 
 export const InfoCard = ({ label, value }) => (
-    <div className="p-6 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-md text-center">
+    <div className="p-6 bg-white border border-gray-200 rounded-xl shadow-md text-center">
         <p className="text-sm text-gray-500">{label}</p>
-        <p className="text-xl font-bold text-indigo-700 uppercase">{value}</p>
+        <p className="text-xl mt-1 font-bold text-emerald-700 uppercase">{value}</p>
     </div>
 )
 

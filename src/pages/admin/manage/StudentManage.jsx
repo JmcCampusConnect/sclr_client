@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import StudentFilterSection from "../../../components/StudentManage/StudentFilterSection";
 import StudentActionBar from "../../../components/StudentManage/StudentActionBar";
 import Loading from "../../../assets/svg/Pulse.svg";
@@ -25,6 +27,8 @@ function StudentManage() {
     });
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [studentToDelete, setStudentToDelete] = useState(null);
     const [toast, setToast] = useState(null);
 
     // Use ref to track if search is from user typing
@@ -123,6 +127,26 @@ function StudentManage() {
         },
     });
 
+    // Delete student mutation
+    const deleteStudentMutation = useMutation({
+        mutationFn: async (registerNo) => {
+            const response = await axios.delete(
+                `${apiUrl}/api/studentManage/deleteStudent/${registerNo}`
+            );
+            return response.data;
+        },
+        onSuccess: (data) => {
+            showToast('success', data.message || 'Student deleted successfully!');
+            queryClient.invalidateQueries(['students']);
+            setIsDeleteModalOpen(false);
+            setStudentToDelete(null);
+        },
+        onError: (error) => {
+            showToast('error', error.response?.data?.message || 'Failed to delete student. Please try again.');
+            setIsDeleteModalOpen(false);
+        },
+    });
+
     // Show toast notification - memoized
     const showToast = useCallback((type, message) => {
         setToast({ type, message });
@@ -153,6 +177,29 @@ function StudentManage() {
     const handleEditStudent = useCallback((student) => {
         setSelectedStudent(student);
         setIsModalOpen(true);
+    }, []);
+
+    // Handle delete student - open modal
+    const handleDeleteStudent = useCallback((student) => {
+        if (student.hasDistribution) {
+            showToast('error', 'Cannot delete student with distribution records.');
+            return;
+        }
+        setStudentToDelete(student);
+        setIsDeleteModalOpen(true);
+    }, [showToast]);
+
+    // Confirm delete
+    const confirmDelete = useCallback(async () => {
+        if (studentToDelete) {
+            await deleteStudentMutation.mutateAsync(studentToDelete.registerNo);
+        }
+    }, [studentToDelete, deleteStudentMutation]);
+
+    // Close delete modal
+    const handleCloseDeleteModal = useCallback(() => {
+        setIsDeleteModalOpen(false);
+        setStudentToDelete(null);
     }, []);
 
     // Handle quick save from table
@@ -244,6 +291,7 @@ function StudentManage() {
                 isLoading={isLoading || isFetching}
                 onQuickSave={handleQuickSave}
                 onEditStudent={handleEditStudent}
+                onDeleteStudent={handleDeleteStudent}
                 pagination={pagination}
                 totalCount={totalStudents}
                 onPageChange={handlePageChange}
@@ -258,6 +306,70 @@ function StudentManage() {
                     isLoading={updateStudentMutation.isLoading}
                     departments={departments}
                 />
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {isDeleteModalOpen && studentToDelete && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-[90%] max-w-2xl border border-gray-200 dark:border-gray-700 transform transition-all duration-200 scale-100">
+
+                        {/* Header with Icon */}
+                        <div className="flex flex-col items-center text-center px-8 pt-8 pb-6 border-b border-gray-200 dark:border-gray-700">
+                            <div className="bg-gradient-to-tr from-red-500 to-red-600 text-white rounded-full p-5 shadow-md mb-5">
+                                <FontAwesomeIcon icon={faTriangleExclamation} className="text-3xl" />
+                            </div>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                                Confirm Deletion
+                            </h2>
+                            <p className="text-gray-600 dark:text-gray-300 text-md leading-relaxed max-w-sm">
+                                This action <span className="font-semibold text-red-500">cannot be undone.</span>
+                                <span> Are you sure you want to permanently remove this student from the system?</span>
+                            </p>
+                        </div>
+
+                        {/* Student Summary Card */}
+                        <div className="px-8 py-5">
+                            <div className="rounded-xl dark:bg-gray-800/70 p-4 border border-gray-200 dark:border-gray-700 shadow-sm text-center">
+                                <p className="text-md text-gray-500 dark:text-gray-400 font-mono">
+                                    Register No : {studentToDelete.registerNo}
+                                </p>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                                    {studentToDelete.name}
+                                </h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    {studentToDelete.department} • {studentToDelete.category}
+                                </p>
+                                {studentToDelete.applicationCount > 0 && (
+                                    <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                                        <p className="text-blue-700 dark:text-blue-300 text-sm font-semibold">
+                                            ℹ️ This student has {studentToDelete.applicationCount} application record(s)
+                                        </p>
+                                        <p className="text-blue-600 dark:text-blue-400 text-xs mt-1">
+                                            These records will be permanently deleted
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Footer Actions */}
+                        <div className="flex justify-end gap-3 px-8 py-5 border-t border-gray-200 dark:border-gray-700">
+                            <button
+                                onClick={handleCloseDeleteModal}
+                                className="px-5 py-2.5 rounded-lg font-semibold bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100 transition"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                disabled={deleteStudentMutation.isLoading}
+                                className="px-5 py-2.5 rounded-lg font-semibold bg-gradient-to-tr from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {deleteStudentMutation.isLoading ? "Deleting..." : "Delete"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
 
             {toast && (

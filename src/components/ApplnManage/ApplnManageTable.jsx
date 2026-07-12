@@ -20,52 +20,65 @@ function ApplnManageTable({ applications, onDeleteClick, onRowClick }) {
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                         {applications?.length > 0 ? (
-                            applications.map((applications, index) => (
-                                <tr
-                                    key={applications?.applicationId}
-                                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
-                                >
-                                    <td className="px-8 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
-                                        {index + 1}
-                                    </td>
-                                    <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
-                                        {applications?.registerNo}
-                                    </td>
-                                    <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
-                                        {applications?.name}
-                                    </td>
-                                    <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-                                        {applications?.semester}
-                                    </td>
-                                    <td className="px-4 py-4 uppercase text-sm lg:text-base text-gray-800 dark:text-white">
-                                        {applications?.category}
-                                    </td>
-                                    <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-                                        {applications?.department}
-                                    </td>
-                                    <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
-                                        {applications?.yearOfAdmission}
-                                    </td>
-                                    <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
-                                        <div className="flex justify-center gap-2">
-                                            <button
-                                                key={applications?._id}
-                                                onClick={() => onRowClick?.(applications)}
-                                                // onClick={() => alert('Work under progress')}
-                                                className="w-20 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => onDeleteClick(applications)}
-                                                className="w-20 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))) : (
+                            applications.map((application, index) => {
+                                const hasDistribution = application.hasDistribution || false;
+
+                                return (
+                                    <tr
+                                        key={application?.applicationId}
+                                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200"
+                                    >
+                                        <td className="px-8 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
+                                            {index + 1}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
+                                            {application?.registerNo}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-900 dark:text-gray-100">
+                                            {application?.name}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {application?.semester}
+                                        </td>
+                                        <td className="px-4 py-4 uppercase text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {application?.category}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {application?.department}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base text-gray-800 dark:text-white">
+                                            {application?.yearOfAdmission}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
+                                            <div className="flex justify-center gap-2">
+                                                <button
+                                                    onClick={() => onRowClick?.(application)}
+                                                    className="w-20 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition text-xs sm:text-sm"
+                                                >
+                                                    Edit
+                                                </button>
+                                                <div className="relative group">
+                                                    <button
+                                                        onClick={() => {
+                                                            if (!hasDistribution) {
+                                                                onDeleteClick(application);
+                                                            }
+                                                        }}
+                                                        disabled={hasDistribution}
+                                                        className={`w-18 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm ${hasDistribution
+                                                            ? "bg-gray-300 cursor-not-allowed text-gray-700"
+                                                            : "bg-red-500 hover:bg-red-600 text-white"
+                                                            }`}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        ) : (
                             <tr>
                                 <td colSpan="8" className="px-4 py-4 text-sm lg:text-base text-gray-700 dark:text-gray-300">
                                     No applications found.

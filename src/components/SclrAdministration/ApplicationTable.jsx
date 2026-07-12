@@ -25,8 +25,10 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal, currentP
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                     {students.length > 0 ? (
                         students.map((app, index) => (
-                            <tr key={app.applicationId} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200">
-                                <td className="px-4 py-4">{(currentPage - 1) * pageSize + index + 1}</td>
+                            <tr key={app.applicationId || index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-200">
+                                <td className="px-4 py-4">
+                                    {(currentPage - 1) * pageSize + index + 1}
+                                </td>
                                 <td className="px-4 py-4">{app.registerNo}</td>
                                 <td className="px-4 py-4" style={{ minWidth: '300px' }}>{app.name}</td>
                                 <td className="px-4 py-4">{app.semester}</td>
@@ -56,7 +58,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal, currentP
                                         <button
                                             onClick={() => openAcceptModal(app)}
                                             className={`w-16 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm
-                      								${app.applicationStatus === 1 ? 'bg-green-400 text-white' :
+                                                ${app.applicationStatus === 1 ? 'bg-green-400 text-white' :
                                                     app.applicationStatus === 0 ? 'bg-green-600 hover:bg-green-700 text-white' :
                                                         'bg-gray-300 text-gray-500'}`}
                                             disabled={app.applicationStatus !== 0}
@@ -66,7 +68,7 @@ function ApplicationTable({ students, openAcceptModal, openRejectModal, currentP
                                         <button
                                             onClick={() => openRejectModal(app)}
                                             className={`w-16 px-3 py-1.5 rounded-lg font-medium transition text-xs sm:text-sm
-                      								${app.applicationStatus === 2 ? 'bg-red-400 text-white' :
+                                                ${app.applicationStatus === 2 ? 'bg-red-400 text-white' :
                                                     app.applicationStatus === 0 ? 'bg-red-500 hover:bg-red-600 text-white' :
                                                         'bg-gray-300 text-gray-500'}`}
                                             disabled={app.applicationStatus !== 0}

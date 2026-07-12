@@ -11,7 +11,7 @@ const STATUS = {
 const ApplicationStatus = ({ status, rejectionReasons = [] }) => {
 
     const renderMessage = () => {
-        
+
         switch (status) {
             case STATUS.PENDING:
                 return (
