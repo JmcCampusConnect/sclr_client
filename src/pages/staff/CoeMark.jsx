@@ -25,7 +25,6 @@ function CoeMark() {
     const [viewMode, setViewMode] = useState('pending');
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Headers for pending view
     const pendingHeaders = [
         { key: 'sno', label: 'S.No', className: 'w-[6%]' },
         { key: 'regNo', label: 'Reg No', style: { width: '12%' } },
@@ -38,7 +37,6 @@ function CoeMark() {
         { key: 'arrears', label: 'Arrears', style: { width: '10%' } },
     ];
 
-    // Headers for completed view (simplified)
     const completedHeaders = [
         { key: 'sno', label: 'S.No', className: 'w-[8%]' },
         { key: 'regNo', label: 'Reg No', style: { width: '15%' } },
@@ -56,15 +54,24 @@ function CoeMark() {
             setError(null);
             try {
                 const Students = await fetchData(`${apiUrl}/api/staff/coe/students`, {});
-                const semesterOrder = {
-                    I: 1, II: 2, III: 3,
-                    IV: 4, V: 5, VI: 6
-                };
-                const sortedData = (Students.data?.data || []).sort(
-                    (a, b) =>
-                        (semesterOrder[a.semester] || 99) -
-                        (semesterOrder[b.semester] || 99)
-                );
+                const semesterOrder = { I: 1, II: 2, III: 3, IV: 4, V: 5, VI: 6 };
+
+                const sortedData = (Students.data?.data || [])
+                    .sort((a, b) => (semesterOrder[a.semester] || 99) - (semesterOrder[b.semester] || 99))
+                    .map(st => {
+                        const rawPct = st.semesterMarkPercentage;
+                        const pctNum =
+                            rawPct === "" || rawPct === null || rawPct === undefined
+                                ? -1
+                                : Number(rawPct);
+
+                        return {
+                            ...st,
+                            semesterMarkPercentage: pctNum,
+                            isCompleted: pctNum !== -1,
+                        };
+                    });
+
                 setStudentsData(sortedData);
                 setStatusCount(Students.data.counts);
             } catch (err) {
@@ -79,17 +86,19 @@ function CoeMark() {
     }, [apiUrl]);
 
     // FOR HANDLE INPUT CHANGE FOR PERCENTAGE
-    const handleMarkChange = (index, field, value) => {
+    const handleMarkChange = (studentId, field, value) => {
         setStudentsData((prev) => {
+            const idx = prev.findIndex((s) => s._id === studentId);
+            if (idx === -1) return prev;
+
             const updated = [...prev];
-            const student = { ...updated[index] };
+            const student = { ...updated[idx] };
+
             if (field === "maxMark" || field === "markSecured") {
                 let newVal = value === "" ? "" : Number(value);
                 if (field === "markSecured") {
                     const max = Number(student.maxMark) || 0;
-                    if (newVal > max) {
-                        newVal = "";
-                    }
+                    if (newVal > max) newVal = "";
                 }
                 student[field] = newVal;
                 const secured = Number(student.markSecured) || 0;
@@ -98,26 +107,30 @@ function CoeMark() {
             } else if (field === "arrears") {
                 student.semesterArrear = value === "" ? "" : Number(value);
             }
-            updated[index] = student;
-            setChangedStudents((prev) => {
-                const existsIndex = prev.findIndex(s => s.registerNo === student.registerNo);
+
+            updated[idx] = student;
+
+            setChangedStudents((prevChanged) => {
+                const existsIndex = prevChanged.findIndex((s) => s.registerNo === student.registerNo);
                 const changedStudent = {
                     _id: student._id,
                     registerNo: student.registerNo,
                     semesterMarkPercentage: student.semesterMarkPercentage,
                     semesterArrear: student.semesterArrear,
-                }
+                };
                 if (existsIndex > -1) {
-                    const newArr = [...prev];
+                    const newArr = [...prevChanged];
                     newArr[existsIndex] = changedStudent;
                     return newArr;
-                } else { return [...prev, changedStudent] }
+                }
+                return [...prevChanged, changedStudent];
             });
+
             return updated;
         });
-    }
+    };
 
-    // SAVING MARK 
+    // SAVING MARK
     const handleSubmitMark = async () => {
 
         const invalidStudent = StudentsData.find(st =>
@@ -160,24 +173,12 @@ function CoeMark() {
     const getFilteredData = () => {
         let filtered = StudentsData;
 
-        // Filter by view mode
         if (viewMode === 'pending') {
-            filtered = StudentsData.filter(st =>
-                st.semesterMarkPercentage === -1 ||
-                st.semesterMarkPercentage === null ||
-                st.semesterMarkPercentage === "" ||
-                st.semesterMarkPercentage === undefined
-            );
+            filtered = StudentsData.filter(st => !st.isCompleted);
         } else if (viewMode === 'completed') {
-            filtered = StudentsData.filter(st =>
-                st.semesterMarkPercentage !== -1 &&
-                st.semesterMarkPercentage !== null &&
-                st.semesterMarkPercentage !== "" &&
-                st.semesterMarkPercentage !== undefined
-            );
+            filtered = StudentsData.filter(st => st.isCompleted);
         }
 
-        // Filter by search term
         if (searchTerm.trim()) {
             const search = searchTerm.toLowerCase().trim();
             filtered = filtered.filter(st =>
@@ -208,7 +209,6 @@ function CoeMark() {
         )
     }
 
-    // DOWNLOAD EXCEL
     const handleDownloadExcel = () => {
         if (!StudentsData.length) {
             alert("No data available to download");
@@ -231,7 +231,6 @@ function CoeMark() {
         saveAs(file, "Scholarship Mark Entry Data.xlsx");
     }
 
-    // UPLOAD EXCEL
     const handleUploadClick = async () => {
 
         if (!selectedFile) {
@@ -279,7 +278,6 @@ function CoeMark() {
             <HeaderTag label="Semester Mark Entry" />
             <StaffStatus counts={statusCount} />
 
-            {/* UPLOAD + DOWNLOAD SECTION */}
             <div className='flex flex-col sm:flex-row justify-end items-start sm:items-center mt-4'>
                 <div className="flex flex-col space-y-3 w-full lg:w-auto lg:flex-row lg:space-y-0 lg:space-x-4 items-center">
                     <div className="flex flex-row space-x-4 w-full lg:w-auto">
@@ -342,17 +340,14 @@ function CoeMark() {
                         </button>
                     </div>
 
-                    {/* UPLOAD STATUS MESSAGE */}
                     {uploadMessage && (
                         <p className={`text-xs font-medium w-full text-center lg:text-left ${uploadStatus ? "text-green-600" : "text-red-600"}`}>
                             {uploadMessage}
                         </p>
                     )}
 
-                    {/* SEPARATOR */}
                     <div className="hidden lg:block w-px h-6 bg-gray-200"></div>
 
-                    {/* DOWNLOAD BUTTON */}
                     <button
                         onClick={() => { handleDownloadExcel() }}
                         className="
@@ -368,9 +363,7 @@ function CoeMark() {
                 </div>
             </div>
 
-            {/* Search and Filter Section */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-6 mb-4">
-                {/* Search Bar - Left Side */}
                 <div className="relative w-full sm:w-72 md:w-96 group">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                         <svg
@@ -403,7 +396,6 @@ function CoeMark() {
                     )}
                 </div>
 
-                {/* Filter Buttons - Right Side */}
                 <div className="flex items-center gap-1.5 p-2 bg-gray-100 dark:bg-gray-900 rounded-xl w-full sm:w-auto">
                     <button
                         onClick={() => setViewMode('pending')}
@@ -490,7 +482,7 @@ function CoeMark() {
                                                         type="number"
                                                         className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                                                         value={student.maxMark ?? ""}
-                                                        onChange={(e) => handleMarkChange(index, "maxMark", e.target.value)}
+                                                        onChange={(e) => handleMarkChange(student._id, "maxMark", e.target.value)}
                                                         onFocus={(e) => {
                                                             e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false });
                                                         }}
@@ -501,7 +493,7 @@ function CoeMark() {
                                                         type="number"
                                                         className="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                                                         value={student.markSecured ?? ""}
-                                                        onChange={(e) => handleMarkChange(index, "markSecured", e.target.value)}
+                                                        onChange={(e) => handleMarkChange(student._id, "markSecured", e.target.value)}
                                                         onFocus={(e) => {
                                                             e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false });
                                                         }}
@@ -524,7 +516,7 @@ function CoeMark() {
                                                         type="number"
                                                         className="w-20 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                                                         value={student.semesterArrear === 0 ? "" : student.semesterArrear}
-                                                        onChange={(e) => handleMarkChange(index, "arrears", e.target.value)}
+                                                        onChange={(e) => handleMarkChange(student._id, "arrears", e.target.value)}
                                                         onFocus={(e) => {
                                                             e.target.addEventListener("wheel", (ev) => ev.preventDefault(), { passive: false });
                                                         }}
@@ -533,7 +525,6 @@ function CoeMark() {
                                             </tr>
                                         );
                                     } else {
-                                        // COMPLETED VIEW - Read-only display with percentage and arrear
                                         return (
                                             <tr
                                                 key={student._id}
@@ -586,7 +577,6 @@ function CoeMark() {
                 </div>
             </div>
 
-            {/* Submit button - only show in pending view */}
             {viewMode === 'pending' && (
                 <div className="text-right">
                     <Button
